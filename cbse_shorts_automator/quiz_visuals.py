@@ -1,11 +1,17 @@
 """
 File: quiz_visuals.py
 Handles the visual composition for the Quiz Template.
-Currently implements the Standard Static Layout (Legacy).
-UPDATED: Added 'test_render_limit' provision for rapid testing.
+STEP 2: Implements Glass Panel for QUESTION element ONLY.
+FIXED: NameError by correctly initializing p_theme and PREMIUM_THEMES dependency.
 """
 
-from moviepy.editor import TextClip, ColorClip, vfx
+from moviepy.editor import TextClip, ColorClip, vfx, VideoFileClip 
+import os # Required for internal helpers/cleanup
+import glob # Required for internal helpers/cleanup
+
+# --- REQUIRED IMPORTS FOR PREMIUM VISUALS ---
+from visual_fx_utils import PREMIUM_THEMES, create_glass_panel 
+# --------------------------------------------
 
 WIDTH = 1080
 HEIGHT = 1920
@@ -19,91 +25,128 @@ def force_rgb(clip):
     return clip
 
 def filter_and_trim_clips(clips, limit):
-    """
-    Helper to enforce the render limit on a list of clips.
-    Drops clips that start after the limit.
-    Trims clips that extend past the limit.
-    """
-    if not limit or limit <= 0:
-        return clips
-        
+    # ... (Trimming/Filtering logic remains unchanged) ...
+    if not limit or limit <= 0: return clips
     valid_clips = []
-    
-    print(f"    ✂️ TRIMMING DIAGNOSTIC (Target Limit: {limit}s):")
     
     for i, clip in enumerate(clips):
         
-        # Determine Clip Name for easier debugging
-        clip_name = f"Clip {i}: {type(clip).__name__}"
-        if hasattr(clip, 'text'): clip_name += f" ('{clip.text[:15]}...')"
-        
-        # Safety check for missing start attribute
         if not hasattr(clip, 'start') or clip.start is None:
             clip.start = 0
             
         current_dur = clip.duration if clip.duration is not None else (limit * 2)
             
-        # 1. Drop if starts after limit
         if clip.start >= limit:
-            print(f"       DROPPED: {clip_name} (Starts at {clip.start:.2f}s > Limit)")
             continue
             
-        # 2. Trim if ends after limit
         if clip.start + current_dur > limit:
             new_dur = limit - clip.start
-            print(f"       TRIMMED: {clip_name} (Dur: {current_dur:.2f}s -> {new_dur:.2f}s)")
             clip = clip.set_duration(new_dur)
-        else:
-            print(f"       KEPT: {clip_name} (Dur: {current_dur:.2f}s)")
             
         valid_clips.append(clip)
-        #print(f" valid_clips.duration= {valid_clips.duration})")
     
     return valid_clips
 
 def build_quiz_visuals(engine, video_proc, video_path, script, timings, total_dur, config):
     """
     Constructs the visual layers for the quiz.
-    Returns a list of MoviePy clips ready for CompositeVideoClip.
+    STEP 2: Implements Glass Panel for QUESTION.
     """
     
     # 0. Check for Test Render Limit
     render_limit = config.get('test_render_limit')
+    original_total_dur = total_dur 
     if render_limit and isinstance(render_limit, (int, float)) and render_limit > 0:
-        print(f"    ✂️ TEST MODE (Visuals): limiting duration to {render_limit}s")
-        # We limit the background generation to this limit immediately
         total_dur = min(total_dur, render_limit)
     
-    # 1. Prepare Background & Source Video
-    print(f"    🧠 AI Watching video to find relevant clips ({int(total_dur)}s)...")
-    src_vid = video_proc.prepare_video_for_short(video_path, total_dur, script=script, width=WIDTH)
-    src_vid = src_vid.set_position(('center', 0))
+    # --- FIX: INITIALIZE PREMIUM THEME FOR GLASS PANEL STYLING ---
+    p_theme_key = config.get('theme', 'midnight_gold') # Use config theme or default
+    p_theme = PREMIUM_THEMES.get(p_theme_key, PREMIUM_THEMES['midnight_gold'])
+    # -------------------------------------------------------------
     
-    bg = engine.create_background(config.get('theme'), total_dur, video_clip=src_vid)
-    clips = [bg, src_vid]
+    # 1. VISUAL LAYERING: CINEMA STACK LAYERS (Scene Synced)
+    print(f"    🧠 Building Cinema Stack Layers...")
 
-    # 2. Get Theme Data
+    # --- MASTER CLIP CREATION ---
+    master_scene_clip = video_proc.prepare_video_for_short(video_path, original_total_dur, script=script, width=WIDTH)
+
+    # --- LAYER 1: AMBIENCE (Background) ---
+    ambience_raw = master_scene_clip.copy()
+    ambience_raw = ambience_raw.resize(height=HEIGHT)
+    ambience_raw = ambience_raw.crop(x1=(ambience_raw.w - WIDTH) // 2, width=WIDTH, height=HEIGHT)
+    
+    bg = engine.create_background(config.get('theme'), original_total_dur, video_clip=ambience_raw)
+    clips = [bg]
+
+    # --- LAYER 2: THE STAGE (Synchronized Content View) ---
+    STAGE_W = 1000
+    
+    # FIX: Use the scene-cut master clip copy instead of loading the raw file. 
+    # This guarantees scene sync. 
+    stage_video = master_scene_clip.copy() 
+    
+    # We apply the sizing for the Stage frame to the synchronized clip
+    stage_video = stage_video.resize(width=STAGE_W) 
+    
+    STAGE_X = (WIDTH - STAGE_W) // 2
+    STAGE_Y = 400 
+    
+    stage_border = ColorClip(size=(STAGE_W + 10, stage_video.h + 10), color=(255,255,255)).set_duration(original_total_dur)
+    stage_border = stage_border.set_position((STAGE_X - 5, STAGE_Y - 5))
+    
+    stage_video = stage_video.set_position((STAGE_X, STAGE_Y)).set_duration(original_total_dur)
+    clips.extend([stage_border, stage_video])
+
+    # 2. Get Theme Data (Legacy colors still needed for Timer/Options)
     theme = engine.get_theme(config.get('theme', 'energetic_yellow'))
     
-    # 3. Text Overlays Logic (Legacy Layout)
-    CARD_START_Y = 750 
+    # 3. UI OVERLAYS (Question Glass Panel Implemented)
+    print("    > Building UI Overlays...")
     
-    # A. Hook (Watch Till End)
-    hook_box = theme['highlight']
-    hook_txt = engine.get_contrast_color(hook_box)
-    
+    # A. Hook (WATCH TILL END) - UNCHANGED
+    CARD_START_Y = 100 
+    hook_box = theme['highlight']; hook_txt = engine.get_contrast_color(hook_box)
     hook_clip = TextClip("🔥 WATCH TILL END 🔥", fontsize=45, color=hook_txt, bg_color=hook_box, font='Arial-Bold', method='label', size=(WIDTH, 110))
     hook_clip = hook_clip.set_position(('center', CARD_START_Y)).set_start(0).set_duration(2)
     clips.append(force_rgb(hook_clip))
     
-    # B. Question
-    QUESTION_Y = CARD_START_Y + 130 
-    q_clip = engine.create_text_clip(script['question_visual'], fontsize=55, color=theme['highlight'], bold=True, wrap_width=25, align='North', stroke_color='black', stroke_width=2)
-    q_clip = q_clip.set_position(('center', QUESTION_Y)).set_start(timings['t_q']).set_duration(total_dur - timings['t_q'])
-    clips.append(force_rgb(q_clip))
+    # B. Question - IMPLEMENTING GLASS PANEL
+    print("      -> Building Question Glass Panel")
     
-    # C. Options
-    OPT_START_Y = QUESTION_Y + 350
+    Q_W, Q_H = 960, 220 
+    Q_X = (WIDTH - Q_W) // 2
+    Q_Y = 150 
+    
+    # 1. Create Glass Panel (Background)
+    q_panel_img = create_glass_panel(
+        Q_W, Q_H, 
+        color=p_theme['glass_fill'], 
+        border_color=p_theme['glass_border']
+    )
+    
+    # FIX: Apply force_rgb to the ImageClip output 
+    q_panel_clip = force_rgb(q_panel_img)
+    
+    q_panel_clip = q_panel_clip.set_position((Q_X, Q_Y)).set_start(timings['t_q']).set_duration(original_total_dur - timings['t_q'])
+    clips.append(q_panel_clip) # Add Panel first
+    
+    # 2. Create Text (Foreground)
+    QUESTION_Y = CARD_START_Y + 130
+    q_clip = engine.create_text_clip(
+        script['question_visual'], 
+        fontsize=55, 
+        color=p_theme['text_main'], 
+        bold=True, 
+        wrap_width=25, 
+        align='center',
+        bg_color=None # Removed solid background
+    )
+    # Position text relative to the panel center
+    q_clip = q_clip.set_position(('center', Q_Y + 40)).set_start(timings['t_q']).set_duration(original_total_dur - timings['t_q'])
+    clips.append(force_rgb(q_clip)) # Add Text second
+    
+    # C. Options - UNCHANGED (Legacy Layout)
+    OPT_START_Y = STAGE_Y + stage_video.h + 50 
     GAP = 110
     opt_bg = theme['bg_color']
     
@@ -120,14 +163,16 @@ def build_quiz_visuals(engine, video_proc, video_path, script, timings, total_du
     ]
     
     for i, (txt, t) in enumerate(options):
+        # Keeps legacy text clip with solid color background
         o_clip = engine.create_text_clip(txt, fontsize=45, color='white', bg_color=opt_bg, wrap_width=30, align='West')
-        o_clip = o_clip.set_position(('center', OPT_START_Y + GAP * i)).set_start(t).set_duration(total_dur - t)
+        o_clip = o_clip.set_position(('center', OPT_START_Y + GAP * i)).set_start(t).set_duration(original_total_dur - t)
         clips.append(force_rgb(o_clip))
 
-    # D. Timer (Segments + Big Number)
+    # D. Timer (Segments + Big Number) - UNCHANGED
     THINK_TIME = 3.0
-    timer_base_y = OPT_START_Y + GAP * 4 + 30
+    timer_base_y = OPT_START_Y + GAP * 4 + 30 
     timer_bar_y = timer_base_y + 160
+    
     bar_color = theme['correct']
     if isinstance(bar_color, str) and bar_color.startswith('#'):
          bar_color = tuple(int(bar_color.lstrip('#')[i:i+2], 16) for i in (0, 2, 4))
@@ -146,54 +191,27 @@ def build_quiz_visuals(engine, video_proc, video_path, script, timings, total_du
         n_clip = n_clip.set_position(('center', timer_base_y)).set_start(timings['t_think'] + i).set_duration(1)
         clips.append(force_rgb(n_clip))
     
-    # E. Answer Reveal
-    ans_bg = theme['correct']
-    ans_txt = engine.get_contrast_color(ans_bg)
-    
-    stroke_col = 'black' if ans_txt == 'white' else None
-    stroke_wid = 3 if ans_txt == 'white' else 0
+    # E. Answer Reveal - UNCHANGED
+    ans_bg = theme['correct']; ans_txt = engine.get_contrast_color(ans_bg)
+    stroke_col = 'black' if ans_txt == 'white' else None; stroke_wid = 3 if ans_txt == 'white' else 0
 
     visual_content = script.get('explanation_visual', script.get('explanation_spoken', ''))
     visual_display = f"✅ {script['correct_opt']}: {visual_content}"
     
-    summary_clip = engine.create_text_clip(
-        visual_display, 
-        fontsize=50, 
-        color=ans_txt, 
-        bg_color=ans_bg, 
-        stroke_color=stroke_col,
-        stroke_width=stroke_wid,
-        bold=True, 
-        wrap_width=25, 
-        align='center'
-    )
-    
-    # Use aud_expl duration passed in timings if available, else calculate
+    summary_clip = engine.create_text_clip(visual_display, fontsize=50, color=ans_txt, bg_color=ans_bg, stroke_color=stroke_col, stroke_width=stroke_wid, bold=True, wrap_width=25, align='center')
     summary_clip = summary_clip.set_position(('center', OPT_START_Y)).set_start(timings['t_ans']).set_duration(timings['expl_duration'])
     clips.append(force_rgb(summary_clip))
 
     # F. CTA
-    cta_bg = theme['highlight']
-    cta_txt_color = 'black'
-    cta_display = f"🚀 {script['cta_spoken']}"
+    cta_bg = theme['highlight']; cta_txt_color = 'black'; cta_display = f"🚀 {script['cta_spoken']}"
     
-    clips.append(engine.create_text_clip(
-        cta_display, 
-        fontsize=65, 
-        color=cta_txt_color, 
-        bg_color=cta_bg, 
-        bold=True, 
-        wrap_width=20
-    ).set_position(('center', HEIGHT - 350)).set_start(timings['t_cta']).set_duration(timings['cta_duration']))
+    clips.append(engine.create_text_clip(cta_display, fontsize=65, color=cta_txt_color, bg_color=cta_bg, bold=True, wrap_width=20).set_position(('center', HEIGHT - 350)).set_start(timings['t_cta']).set_duration(timings['cta_duration']))
 
     # G. Outro
-    outro = engine.create_outro(
-        duration=4.0, 
-        cta_text="SUBSCRIBE FOR MORE!"
-    ).set_start(timings['t_outro'])
+    outro = engine.create_outro(duration=4.0, cta_text="SUBSCRIBE FOR MORE!").set_start(timings['t_outro'])
     clips.append(outro)
     
     # 4. FILTER & TRIM (Provision for Render Limit)
     final_clips = filter_and_trim_clips(clips, render_limit)
-    
+        
     return final_clips
