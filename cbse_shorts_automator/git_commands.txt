@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "implemented preliminary webgl piepline"
+git commit -m "implemented network independency in visual visual_engine_v3"
 
 # 3. Push the new commit to the remote GitHub repository
 git push

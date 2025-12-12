@@ -2,13 +2,17 @@ import json
 import random
 import os
 import urllib.request
+import ssl
+import shutil
 
-# Try to import USPContent from the existing project file
+# Fix SSL issues in some environments
+ssl._create_default_https_context = ssl._create_unverified_context
+
+# Try to import USPContent
 try:
     from usp_content_variations import USPContent
     print("✅ Loaded USPContent variations.")
 except ImportError:
-    print("⚠️  usp_content_variations.py not found. Using fallback strings.")
     class USPContent:
         HOOKS = ["⚡ 7-MINUTE CHAPTER MASTERY ⚡"]
         TIMER_LABELS = ["⚡ THINK FAST"]
@@ -27,78 +31,113 @@ except ImportError:
         @staticmethod
         def get_random_outro(): return random.choice(USPContent.OUTRO_MESSAGES)
 
-def generate_mock_scenario():
-    # 1. Generate Random Seed & ID
-    vid_id = f"mock_{random.randint(1000, 9999)}"
-    seed = random.randint(0, 999999)
-    
-    # 2. Get USP Content
-    hook_text = USPContent.get_random_hook()
-    cta_social, cta_link = USPContent.get_random_cta()
-    outro_1, outro_2 = USPContent.get_random_outro()
-    
-    # 3. Setup Paths (Writes directly to Frontend Public Folder)
-    frontend_public_dir = os.path.join("visual_engine_v3", "public")
-    os.makedirs(frontend_public_dir, exist_ok=True)
-
-    # 4. Download Audio Asset (Ensures Offline Stability)
-    audio_filename = "mock_audio.mp3"
-    local_audio_path = os.path.join(frontend_public_dir, audio_filename)
-    
-    # Public domain test track (SoundHelix)
-    remote_audio_url = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
-    
-    if not os.path.exists(local_audio_path):
-        print(f"⬇️  Downloading mock audio to {local_audio_path}...")
+def download_asset(url, filepath, description):
+    if not os.path.exists(filepath):
+        print(f"⬇️  Downloading {description}...")
         try:
-            # Attempt download
-            urllib.request.urlretrieve(remote_audio_url, local_audio_path)
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as response, open(filepath, 'wb') as out_file:
+                out_file.write(response.read())
         except Exception as e:
-            print(f"⚠️ Audio download failed: {e}. Creating dummy empty file (Silence).")
-            # Create a silent dummy file to prevent Remotion crash
-            with open(local_audio_path, 'wb') as f: f.write(b'')
+            print(f"⚠️ Failed to download {description}: {e}")
+            # Create dummy file to prevent crash
+            with open(filepath, 'wb') as f: f.write(b'')
+    else:
+        print(f"✅ Found local {description}.")
 
-    # 5. Construct the JSON Payload
+def generate_mock_scenario():
+    # 1. Setup Directory Structure
+    root_dir = os.getcwd()
+    public_dir = os.path.join(root_dir, "visual_engine_v3", "public")
+    assets_dir = os.path.join(public_dir, "assets")
+    
+    os.makedirs(assets_dir, exist_ok=True)
+
+    # 2. Define Assets (Remote URL -> Local Filename)
+    assets = {
+        "audio": {
+            "url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+            "path": os.path.join(assets_dir, "mock_audio.mp3"),
+            "rel_path": "/assets/mock_audio.mp3"
+        },
+        "video": {
+            "url": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4",
+            "path": os.path.join(assets_dir, "mock_video.mp4"),
+            "rel_path": "/assets/mock_video.mp4"
+        },
+        "hdr": {
+            "url": "https://dl.polyhaven.org/file/ph-assets/HDRIs/hdr/1k/studio_small_09_1k.hdr",
+            "path": os.path.join(assets_dir, "environment.hdr"),
+            "rel_path": "/assets/environment.hdr"
+        },
+        "font": {
+            "url": "https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2",
+            "path": os.path.join(assets_dir, "font.woff2"),
+            "rel_path": "/assets/font.woff2"
+        },
+        "cloud": {
+            "url": "https://raw.githubusercontent.com/pmndrs/drei-assets/456060a26bbeb8fdf9d32ff4d4804d7595209441/cloud.png",
+            "path": os.path.join(assets_dir, "cloud.png"),
+            "rel_path": "/assets/cloud.png"
+        }
+    }
+
+    # 3. Download/Copy Assets
+    # Special Check for Local Video Source
+    user_source_path = os.path.join(root_dir, "temp", "test_source.mp4")
+    if os.path.exists(user_source_path):
+        print(f"📂 Found local source video. Copying...")
+        shutil.copy2(user_source_path, assets["video"]["path"])
+    else:
+        download_asset(assets["video"]["url"], assets["video"]["path"], "Fallback Video")
+
+    # Download others
+    download_asset(assets["audio"]["url"], assets["audio"]["path"], "Audio")
+    download_asset(assets["hdr"]["url"], assets["hdr"]["path"], "Studio Lighting (HDR)")
+    download_asset(assets["font"]["url"], assets["font"]["path"], "Poppins Font")
+    download_asset(assets["cloud"]["url"], assets["cloud"]["path"], "Cloud Texture")
+
+    # 4. Generate JSON Payload (Strictly Local Paths)
     scenario = {
         "meta": {
             "version": "3.1",
             "resolution": { "w": 1080, "h": 1920 },
-            "seed": seed,
-            "duration_seconds": 35.0 
+            "seed": random.randint(0, 999999),
+            "duration_seconds": 10.0 
         },
         "assets": {
-            "audio_url": f"/{audio_filename}", # Points to the local file in public/
-            "video_source_url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            "thumbnail_url": "https://via.placeholder.com/1080x1920",
+            "audio_url": assets["audio"]["rel_path"], 
+            "video_source_url": assets["video"]["rel_path"],
+            "thumbnail_url": "https://via.placeholder.com/1080x1920", # Placeholder is fine, usually skipped in mock
             "channel_logo_url": "https://via.placeholder.com/150",
-            "font_url": "https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2"
+            "font_url": assets["font"]["rel_path"],
+            "env_map_url": assets["hdr"]["rel_path"], # New field for clarity
+            "cloud_map_url": assets["cloud"]["rel_path"] # New field
         },
         "timeline": {
-            "hook": { "start_time": 0.0, "text_content": hook_text },
+            "hook": { "start_time": 0.0, "text_content": USPContent.get_random_hook() },
             "quiz": {
-                "question": { "text": "Orbital Shape Quantum No.?", "start_time": 3.5 },
+                "question": { "text": "Orbital Shape Quantum No.?", "start_time": 1.5 },
                 "options": [
-                    { "id": "A", "text": "Principal (n)", "start_time": 6.0 },
-                    { "id": "B", "text": "Azimuthal (l)", "start_time": 7.5 },
-                    { "id": "C", "text": "Magnetic (m)", "start_time": 9.0 },
-                    { "id": "D", "text": "Spin (s)", "start_time": 10.5 }
+                    { "id": "A", "text": "Principal (n)", "start_time": 3.0 },
+                    { "id": "B", "text": "Azimuthal (l)", "start_time": 4.0 },
+                    { "id": "C", "text": "Magnetic (m)", "start_time": 5.0 },
+                    { "id": "D", "text": "Spin (s)", "start_time": 6.0 }
                 ]
             },
-            "timer": { "start_time": 15.0, "duration": 5.0, "label_text": USPContent.get_random_timer_label() },
-            "answer": { "start_time": 20.5, "correct_option_id": "B", "explanation_text": "Determines Shape", "celebration_text": USPContent.get_random_answer_prefix() },
-            "cta": { "start_time": 25.0, "social_text": cta_social, "link_text": cta_link },
-            "outro": { "start_time": 29.0, "line_1": outro_1, "line_2": outro_2 }
+            "timer": { "start_time": 7.0, "duration": 3.0, "label_text": USPContent.get_random_timer_label() },
+            "answer": { "start_time": 8.5, "correct_option_id": "B", "explanation_text": "Determines Shape", "celebration_text": USPContent.get_random_answer_prefix() },
+            "cta": { "start_time": 9.0, "social_text": "SUBSCRIBE", "link_text": "LINK IN BIO" },
+            "outro": { "start_time": 9.5, "line_1": "THANKS", "line_2": "WATCH MORE" }
         },
         "yt_overlay": { "progress_start": 0.15, "progress_end": 0.25 }
     }
     
-    # 6. Write JSON Artifact
-    output_path = os.path.join(frontend_public_dir, "scenario_mock.json")
+    output_path = os.path.join(public_dir, "scenario_mock.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(scenario, f, indent=4)
     
-    print(f"✨ Mock Payload Ready: {output_path}")
-    print(f"   Audio Asset: {local_audio_path}")
+    print(f"✨ Mock Payload & Assets Ready at: {output_path}")
 
 if __name__ == "__main__":
     generate_mock_scenario()

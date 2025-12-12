@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text } from '@react-three/drei';
+import { staticFile } from 'remotion';
 
 interface NanoTextProps {
     text: string;
@@ -8,22 +9,28 @@ interface NanoTextProps {
     color?: string;
     anchorX?: 'center' | 'left' | 'right';
     anchorY?: 'middle' | 'top' | 'bottom';
-    fontUrl?: string; // Optional custom font
+    fontUrl?: string;
 }
 
 export const NanoText: React.FC<NanoTextProps> = ({ 
     text, position, fontSize = 0.5, color = 'white', anchorX = 'center', anchorY='middle', fontUrl 
 }) => {
-    
-    // Elastic Logic: Auto-shrink if text is too long
     const adjustedSize = text.length > 20 ? fontSize * 0.75 : fontSize;
+    
+    // Logic: If fontUrl is provided (from JSON), use it (wrapped in staticFile if it's local path).
+    // If not, use default local font.
+    // The JSON generator now gives us "/assets/font.woff2", so we wrap it.
+    
+    const finalFontUrl = fontUrl 
+        ? staticFile(fontUrl) 
+        : staticFile('/assets/font.woff2');
 
     return (
         <Text
             position={position}
             fontSize={adjustedSize}
             color={color}
-            font={fontUrl || "https://fonts.gstatic.com/s/poppins/v20/pxiByp8kv8JHgFVrLGT9Z1xlFQ.woff2"} // Poppins Fallback
+            font={finalFontUrl} 
             anchorX={anchorX}
             anchorY={anchorY}
             outlineWidth={0.02}
