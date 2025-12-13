@@ -18,7 +18,7 @@ export const NanoText: React.FC<NanoTextProps> = ({
     text, position, fontSize = 0.5, color = 'white', anchorX = 'center', anchorY='middle', fontUrl,maxWidth,    // <--- Receive prop
     textAlign = 'center' // <--- Default to center 
 }) => {
-    const adjustedSize = text.length > 20 ? fontSize * 0.75 : fontSize;
+    const adjustedSize = text.length > 70 ? fontSize * 0.75 : fontSize;
     
     // Logic: If fontUrl is provided (from JSON), use it (wrapped in staticFile if it's local path).
     // If not, use default local font.

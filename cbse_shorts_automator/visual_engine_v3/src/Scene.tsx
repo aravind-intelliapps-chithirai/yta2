@@ -14,6 +14,7 @@ import { Watermark } from './components/Watermark';
 import { AnimatedHook } from './components/AnimatedHook';
 import { TypewriterQuestion, estimateQuestionHeight } from './components/TypewriterQuestion';
 import { OptionCard } from './components/OptionCard';
+import { TimerVisual } from './components/TimerVisual';
 
 
 
@@ -48,6 +49,7 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     //const optionsStartY = nvuToWorld(ZONES.INTERACTION_TOP - 0.05);
 
     // --- STATE MACHINE ---
+    const isTiming = currentTime >= timeline.timer.start_time && currentTime < timeline.answer.start_time; // <--- NEW STATE
     const showHook = currentTime < timeline.quiz.question.start_time;
     const showQuestion = currentTime >= timeline.quiz.question.start_time;
     const showOptions = currentTime >= timeline.quiz.options[0].start_time-0.4;
@@ -55,7 +57,41 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const showCTA = currentTime >= timeline.cta.start_time;
 
     // --- CAMERA ANIMATION ---
-    const camZ = interpolate(frame, [0, 50], [6, 5], { extrapolateRight: 'clamp' });
+    //const camZ = interpolate(frame, [0, 50], [6, 5], { extrapolateRight: 'clamp' });
+
+    // --- CAMERA ANIMATION ---
+    const initialCamZ = interpolate(frame, [0, 50], [6, 5], { extrapolateRight: 'clamp' });
+    
+    // 1. Camera Z-Pull: Pull back by 0.2 units during the timing phase
+    const Z_PULL_START_FRAME = timeline.timer.start_time * fps;
+    const Z_PULL_END_FRAME = timeline.answer.start_time * fps;
+    const camZPull = interpolate(
+        frame,
+        [Z_PULL_START_FRAME, Z_PULL_END_FRAME],
+        [initialCamZ, initialCamZ + 0.2], // 0.2 unit increase
+        { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+    );
+    const camZ = isTiming ? camZPull : initialCamZ;
+
+
+    // 2. Anxiety Shake (Subtle, high-frequency noise)
+    const shakeIntensity = isTiming ? 1 : 0; // Only shake during timing
+    const shakeX = Math.sin(frame * 15.7) * 0.005 * shakeIntensity; // Fast X shake
+    const shakeY = Math.cos(frame * 12.3) * 0.005 * shakeIntensity; // Fast Y shake
+    
+    const cameraPosition: [number, number, number] = [shakeX, shakeY, camZ]; // Apply shake
+
+    // 3. THE BLACKOUT (Ambient Light Dimming)
+    const AMBIENT_INTENSITY_START = 0.5;
+    const AMBIENT_INTENSITY_DIMMED = 0.0; // 70% drop
+    const TimerambientIntensity = interpolate(
+        frame,
+        [Z_PULL_START_FRAME, Z_PULL_END_FRAME], // Use the same timing window
+        [AMBIENT_INTENSITY_START, AMBIENT_INTENSITY_DIMMED],
+        { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } // Clamp to start/end values
+    );
+
+    const ambientIntensity = isTiming ? TimerambientIntensity : AMBIENT_INTENSITY_START;
 
     const viewportWidth = height * (9/16); // Assuming Vertical 9:16 Video
     const questionText = timeline.quiz.question.text;
@@ -78,10 +114,19 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const GAP = height * 0.03; // 3% vertical gap
     const optionsStartY = questionY - (questionHeight / 2) - GAP;
 
+    // Timer Visual Positioning: Slightly above the option cards, below the question
+    const timerYPos = optionsStartY + height * 0.03;
+
     return (
         <>
-            <PerspectiveCamera makeDefault position={[0, 0, camZ]} fov={50} />
-            <ambientLight intensity={0.5} />
+           {/* CAMERA: ANXIETY SHAKE + Z-PULL */}
+            <PerspectiveCamera 
+                makeDefault 
+                position={cameraPosition} // Dynamic position applied here
+                fov={50} 
+            />
+            {/* LIGHTING: THE BLACKOUT */}
+            <ambientLight intensity={ambientIntensity} /> 
             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
 
             {/* 1. PARTICLE SYSTEM */}
@@ -91,9 +136,23 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
             {/* 2. THE STAGE (Dynamic Positioning) */}
             <group position={[0, stageY, 0]}>
                 <Suspense fallback={null}>
-                     <ThreeStage videoUrl={scenario.assets.video_source_url} overlayProgress={0.2} />
+                     <ThreeStage videoUrl={scenario.assets.video_source_url} overlayProgress={0.2} 
+                     width={viewportWidth*0.9} // <--- Makes it 50% bigger
+                     />
                 </Suspense>
             </group>
+
+            {/* 3. TIMER VISUAL (New Component) */}
+            {isTiming && (
+                <TimerVisual
+                    startTime={timeline.timer.start_time}
+                    endTime={timeline.answer.start_time}
+                    theme={theme}
+                    fps={fps}
+                    height={height}
+                    positionY={timerYPos}
+                />
+            )}
 
             {/* 3. THE BRIDGE (Question Card) */}
             {showQuestion && (
@@ -148,7 +207,7 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
                     text={timeline.hook.text_content}
                     seed={scenario.meta.seed+0}
                     theme={theme}
-                    fontSize={height * 0.06}
+                    fontSize={height * 0.05}
                     fontUrl={scenario.assets.font_url}
                 />
             )}
@@ -159,7 +218,7 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 };
 
 export const Scene: React.FC<SceneProps> = ({ scenario }) => {
-    const theme = getTheme(scenario.meta.seed);
+    const theme = getTheme(scenario.meta.seed+5);
     const { width, height } = useVideoConfig();
     const variant = getVariant(scenario.meta.seed);
     console.log("ParticleSystem Variant:", variant);

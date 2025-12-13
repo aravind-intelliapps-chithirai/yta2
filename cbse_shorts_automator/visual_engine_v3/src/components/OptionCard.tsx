@@ -38,8 +38,8 @@ export const OptionCard: React.FC<OptionCardProps> = ({
 
     // Spring Config (Controlled Motion)
     const springConfig = useMemo(() => ({
-        mass: 1, 
-        stiffness: 100,
+        mass: 0.5, 
+        stiffness: 280,
         damping: 20,
     }), []);
     
