@@ -105,13 +105,13 @@ class USPContent:
     # Format: (Line 1, Line 2)
     # -------------------------------------------------------------------------
     OUTRO_MESSAGES = [
-        ("🚀 7-MINUTE CHAPTERS", "📚 Every Concept, Zero Boredom"),
-        ("⚡ FASTEST REVISIONS", "🎯 Subscribe for Quick Mastery"),
-        ("💯 EXAM READY FAST", "⏱️ Full Chapters in 7 Minutes"),
+        ("🚀 7-MINUTE CHAPTERS",  "📚 Every Concept, Zero Boredom"),
+        ("⚡ FASTEST REVISIONS",   "🎯 Subscribe for Quick Mastery"),
+        ("💯 EXAM READY FAST",    "⏱️ Full Chapters in 7 Minutes"),
         ("✨ NO BORING LECTURES", "🔥 Subscribe for Speed Learning"),
-        ("🎯 QUICK CONCEPTS", "💪 Big Scores, Short Videos"),
-        ("⚡ SPEED LEARNING", "🚀 Fast, Fun, Effective"),
-        ("💥 RAPID MASTERY", "📖 Subscribe for Quick Prep")
+        ("🎯 QUICK CONCEPTS",     "💪 Big Scores, Short Videos"),
+        ("⚡ SPEED LEARNING",      "🚀 Fast, Fun, Effective"),
+        ("💥 RAPID MASTERY",      "📖 Subscribe for Quick Prep")
     ]
     
     # -------------------------------------------------------------------------

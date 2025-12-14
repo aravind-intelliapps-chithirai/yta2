@@ -554,8 +554,8 @@ class QuizTemplate:
         
         final_raw = CompositeVideoClip(clips, size=(WIDTH, HEIGHT)).set_audio(final_audio)
 
-        try:
-            self.engine.render_with_effects(final_raw, script, output_path)
+        #try:
+        #    self.engine.render_with_effects(final_raw, script, output_path)
         finally:
             if self.engine.config.get('DELETE_TEMP_FILES', True):
                 import glob

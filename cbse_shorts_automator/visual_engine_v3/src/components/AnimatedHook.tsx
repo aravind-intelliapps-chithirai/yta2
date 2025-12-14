@@ -30,12 +30,12 @@ export const AnimatedHook: React.FC<AnimatedHookProps> = ({
         // 2. Estimate current text width
         // Heuristic: Average character width is roughly 0.6x the font size for standard fonts.
         // We add a small buffer (text.length * 0.6)
-        const estimatedWidthAtTargetSize = text.length * (fontSize * 0.6);
+        const estimatedWidthAtTargetSize = text.length * (fontSize * 0.5);
 
         // 3. If estimated width exceeds limit, scale down. Otherwise, keep target fontSize.
         if (estimatedWidthAtTargetSize > maxAvailableWidth) {
             // Formula: NewSize = (TargetWidth / CharacterCount) / AspectRatioFactor
-            return maxAvailableWidth / (text.length * 0.6);
+            return maxAvailableWidth / (text.length * 0.5);
         }
         
         return fontSize;
@@ -99,6 +99,7 @@ export const AnimatedHook: React.FC<AnimatedHookProps> = ({
                 fontUrl={fontUrl}
                 anchorX="center"
                 anchorY="middle"
+                maxWidth={viewport.width*0.8}
             />
         </group>
     );

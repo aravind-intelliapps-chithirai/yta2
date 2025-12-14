@@ -1,9 +1,9 @@
 import React, { Suspense, useState } from 'react';
-import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
+import { useCurrentFrame, useVideoConfig, interpolate, Easing, spring } from 'remotion';
 import { Canvas, useThree } from '@react-three/fiber';
 import { ThreeCanvas } from '@remotion/three';
 import { AbsoluteFill,staticFile } from 'remotion';
-import { PerspectiveCamera, Environment } from '@react-three/drei';
+import { PerspectiveCamera, Environment, OrbitControls } from '@react-three/drei';
 import { VisualScenario } from './types/schema';
 import { getTheme, getVariant } from './utils/theme';
 import { ZONES } from './utils/animation';
@@ -17,6 +17,7 @@ import { OptionCard, OptionState, AnimationMode } from './components/OptionCard'
 import { TimerVisual } from './components/TimerVisual';
 import { ExplanationCard, estimateExplanationLayout } from './components/ExplanationCard';
 import { SceneFinale } from './components/SceneFinale';
+import { OutroStage } from './components/OutroStage';
 
 
 
@@ -41,6 +42,10 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const { timeline } = scenario;
     const t_cta_start = timeline.cta.start_time; // <--- The mandatory explicit trigger time
 
+    // SAFE ACCESS: timeline.outro might be undefined in older JSON versions
+    const t_outro_start = timeline.outro?.start_time ?? (t_cta_start + 4);
+
+
     // --- DYNAMIC LAYOUT CALCULATIONS ---
     // 1. Stage Center: Average of Top (1.0) and Bridge Top (0.65)
     const stageY = nvuToWorld((ZONES.STAGE_TOP + ZONES.STAGE_BOTTOM) / 2);
@@ -60,27 +65,13 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const showAnswer = currentTime >= timeline.answer.start_time;
     // CRITICAL: ExplanationCard must vanish exactly at t_cta_start
     //const showExplanation = currentTime >= t_reveal && currentTime < t_cta_start; // <-- CORRECTED
-    const showCTA = currentTime >= t_cta_start; // <-- NEW
+    //const showCTA = currentTime >= t_cta_start; // <-- NEW
     
 // NEW BOOLEAN: All main quiz elements must vanish (implode) exactly at t_cta_start + 0.2s
     const isQuizElementsVisible = currentTime < t_cta_start + 0.2; // Quiz elements visible until Expl.Card Shreds
-    const isImploding = currentTime >= t_cta_start && currentTime < t_cta_start + 0.2; // <--- RETAINED
+    //const isImploding = currentTime >= t_cta_start && currentTime < t_cta_start + 0.2; // <--- RETAINED
     
-    // --- RETAINED: Implosion Scale (for Question Box/Correct Option) ---
-    // Start: t_cta_start + 0.0s, End: t_cta_start + 0.2s, Duration: 0.2s
-    const IMPLOSION_START_FRAME = t_cta_start * fps;
-    const IMPLOSION_END_FRAME = (t_cta_start + 0.2) * fps;
-    const implosionScale = interpolate(
-        frame,
-        [IMPLOSION_START_FRAME, IMPLOSION_END_FRAME],
-        [1, 0], // Scale from 1 to 0
-        { 
-            extrapolateLeft: 'clamp', 
-            extrapolateRight: 'clamp', 
-            easing: Easing.out(Easing.exp) // Exponentials.easeIn curve
-        }
-    ); // <--- RETAINED
-
+    
 
 
     // --- CAMERA ANIMATION ---
@@ -105,8 +96,22 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const shakeIntensity = isTiming ? 1 : 0; // Only shake during timing
     const shakeX = Math.sin(frame * 15.7) * 0.005 * shakeIntensity; // Fast X shake
     const shakeY = Math.cos(frame * 12.3) * 0.005 * shakeIntensity; // Fast Y shake
+    // Spring X from 0 to 100 starting at t_outro_start
+    /*const panProgress = spring({
+        frame: frame - (t_outro_start * fps),
+        fps,
+        config: { stiffness: 60, damping: 15 },
+        from: 0,
+        to: 100 // Target: Move camera to the Outro Stage at X=100
+    });*/
     
-    const cameraPosition: [number, number, number] = [shakeX, shakeY, camZ]; // Apply shake
+    // Apply pan only if we have reached the outro time
+    const camPanX = frame >= (t_outro_start * fps) ? 0 : 0;
+    const camPanZ = frame >= (t_outro_start * fps) ? 0 : 0;
+    
+    // UPDATE: Add camPanX to the X position
+    const cameraPosition: [number, number, number] = [shakeX + camPanX, shakeY, camZ+camPanZ];
+    //const cameraTarget: [number, number, number] = [shakeX + camPanX, 0, 0];
 
     // 3. THE BLACKOUT (Ambient Light Dimming)
     const AMBIENT_INTENSITY_START = 0.5;
@@ -118,7 +123,18 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
         { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } // Clamp to start/end values
     );
 
-    const ambientIntensity = isTiming ? TimerambientIntensity : AMBIENT_INTENSITY_START;
+    let ambientIntensity = isTiming ? TimerambientIntensity : AMBIENT_INTENSITY_START;
+
+    // ADD THIS BLOCK: Outro "Fade to Black" Override
+    if (currentTime >= t_outro_start) {
+         ambientIntensity = interpolate(
+            frame,
+            [t_outro_start * fps, (t_outro_start + 0.5) * fps],
+            [AMBIENT_INTENSITY_START, 0.05], // Drop ambient light to near zero
+            { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+        );
+    }
+
 
     const viewportWidth = height * (9/16); // Assuming Vertical 9:16 Video
     const questionText = timeline.quiz.question.text;
@@ -207,6 +223,16 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
                 makeDefault 
                 position={cameraPosition} // Dynamic position applied here
                 fov={50} 
+                
+            />
+            {/* Use OrbitControls to define the target point for the default camera */}
+            <OrbitControls 
+                // You want the target to be [cameraPosition[0], 0, 0]
+                target={[cameraPosition[0], 0, -2000]} 
+                // Disable user interaction if you only want it to manage the target
+                enableRotate={false} 
+                enableZoom={false} 
+                enablePan={false}
             />
             {/* LIGHTING: THE BLACKOUT */}
             <ambientLight intensity={ambientIntensity} /> 
@@ -350,6 +376,13 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
                     CARD_COLOR={CARD_COLOR}
                 />
             )}
+
+            {/* --- NEW: SCENE 7 (OUTRO STAGE) --- */}
+            <OutroStage 
+                scenario={scenario}
+                fps={fps}
+                t_outro_start={t_outro_start}
+            />
 
 
             {/* 5. HOOK (Overlay) - DYNAMIC ANIMATION */}

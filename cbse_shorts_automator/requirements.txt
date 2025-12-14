@@ -11,4 +11,4 @@ requests
 numpy
 google-cloud-texttospeech
 openai-whisper
-install ffmpeg
+ffmpeg
