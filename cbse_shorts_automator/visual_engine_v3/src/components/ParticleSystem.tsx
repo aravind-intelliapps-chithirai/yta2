@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Cloud, Sparkles, Stars } from '@react-three/drei';
-import { Group } from 'three';
 
 interface ParticleSystemProps {
     variant: number; // 0, 1, or 2
@@ -9,7 +8,7 @@ interface ParticleSystemProps {
 }
 
 export const ParticleSystem: React.FC<ParticleSystemProps> = ({ variant, color }) => {
-    const ref = useRef<Group>(null);
+    const ref = useRef<any>();
 
     useFrame((state) => {
         if (ref.current) {

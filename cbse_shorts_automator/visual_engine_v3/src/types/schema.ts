@@ -10,7 +10,7 @@ export interface VisualScenario {
         video_source_url: string;
         thumbnail_url: string;
         channel_logo_url: string;
-        font_url?: string;
+        font_url: string;
     };
     timeline: {
         hook: { start_time: number; text_content: string };

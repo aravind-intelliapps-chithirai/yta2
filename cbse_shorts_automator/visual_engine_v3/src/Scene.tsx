@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
-import { useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
+import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
 import { Canvas, useThree } from '@react-three/fiber';
 import { ThreeCanvas } from '@remotion/three';
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill,staticFile } from 'remotion';
 import { PerspectiveCamera, Environment } from '@react-three/drei';
 import { VisualScenario } from './types/schema';
 import { getTheme, getVariant } from './utils/theme';
@@ -13,8 +13,9 @@ import { NanoText } from './components/Typography';
 import { Watermark } from './components/Watermark';
 import { AnimatedHook } from './components/AnimatedHook';
 import { TypewriterQuestion, estimateQuestionHeight } from './components/TypewriterQuestion';
-import { OptionCard } from './components/OptionCard';
+import { OptionCard, OptionState, AnimationMode } from './components/OptionCard';
 import { TimerVisual } from './components/TimerVisual';
+import { ExplanationCard } from './components/ExplanationCard';
 
 
 
@@ -37,10 +38,12 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const theme = getTheme(scenario.meta.seed);
     const variant = getVariant(scenario.meta.seed);
     const { timeline } = scenario;
+    const t_cta_start = timeline.cta.start_time; // <--- The mandatory explicit trigger time
 
     // --- DYNAMIC LAYOUT CALCULATIONS ---
     // 1. Stage Center: Average of Top (1.0) and Bridge Top (0.65)
     const stageY = nvuToWorld((ZONES.STAGE_TOP + ZONES.STAGE_BOTTOM) / 2);
+    
     
     // 2. Question Anchor: Slightly above the bottom of the Bridge zone
     //const questionY = nvuToWorld(ZONES.BRIDGE_BOTTOM + 0.03); 
@@ -54,7 +57,13 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const showQuestion = currentTime >= timeline.quiz.question.start_time;
     const showOptions = currentTime >= timeline.quiz.options[0].start_time-0.4;
     const showAnswer = currentTime >= timeline.answer.start_time;
-    const showCTA = currentTime >= timeline.cta.start_time;
+    // CRITICAL: ExplanationCard must vanish exactly at t_cta_start
+    //const showExplanation = currentTime >= t_reveal && currentTime < t_cta_start; // <-- CORRECTED
+    const showCTA = currentTime >= t_cta_start; // <-- NEW
+    
+
+
+
 
     // --- CAMERA ANIMATION ---
     //const camZ = interpolate(frame, [0, 50], [6, 5], { extrapolateRight: 'clamp' });
@@ -95,6 +104,7 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 
     const viewportWidth = height * (9/16); // Assuming Vertical 9:16 Video
     const questionText = timeline.quiz.question.text;
+    const explanationText = timeline.answer.explanation_text; 
     
     // 1. NEW SYMMETRICAL SAFE ZONE (10% - 90%)
     // Left: 0.1, Right: 0.9
@@ -112,10 +122,52 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     
     // Options Start Y: Question Y - Half Question Height - Padding
     const GAP = height * 0.03; // 3% vertical gap
+    // 1. Calculate Question Bottom (The ceiling for the dock)
+    const questionBottomWorld = questionY - (questionHeight / 2);
     const optionsStartY = questionY - (questionHeight / 2) - GAP;
+    // --- CHOREOGRAPHY TIMELINE ---
+    const t_answer = timeline.answer.start_time;
+    const t_clearance = t_answer + 0.4; // Step 2: Drop & Dock
+    const t_reveal = t_clearance + 1; // Step 4: Explanation Pop
+
+    // Boolean States
+    const isPostAnswer = currentTime >= t_clearance;
+    // STRICT CUTOFF: Explanation Card vanishes exactly when CTA starts
+    const showExplanation = currentTime >= t_reveal && currentTime < timeline.cta.start_time + .01;
+    // --- SAFETY BOUNDARY ---
+    // Safe Zone = 0.15 NVU. 
+    const SAFE_ZONE_Y = nvuToWorld(0.15);
 
     // Timer Visual Positioning: Slightly above the option cards, below the question
     const timerYPos = optionsStartY + height * 0.03;
+
+    // --- COLOR SYNCHRONIZATION ---
+    // Define the specific color here to ensure the Card and Particles match exactly.
+    // If theme.surface is undefined, fallback to the standard 'Sticky Note' yellow or white.
+    const CARD_COLOR = theme.secondary || '#fff9c4';
+
+    const explanationY = questionBottomWorld - 0.6 - GAP - (height * 0.09);
+
+    // --- NEW: CTA LAYOUT CALCULATIONS ---
+    const THUMBNAIL_HEIGHT = viewportWidth * (9/16) * 0.7; // ~70% of the video slate height (Adjust as needed)
+    const THUMBNAIL_WIDTH = viewportWidth * 0.9; // 90% of viewport width
+    const CTA_PILL_HEIGHT = height * 0.08; // Fixed CTA pill height for the 50% font size rule
+    const CTA_GAP = height * 0.02; // Small visual gap between Thumbnail and Pill
+
+    // 1. Thumbnail Final Resting Y: Top edge is slightly below the video slate (stageY - 0.5 * StageHeight)
+    // The Video Slate is in ThreeStage (viewportWidth*0.9 wide). Let's anchor to the stage group's Y.
+    // Since StageY is the center of the Stage, the top of the video slate is roughly stageY + (StageHeight/2).
+    // Let's use a fixed NVU anchor for the thumbnail top: NVU 0.65
+    const THUMBNAIL_TOP_NVU = 0.65;
+    const THUMBNAIL_TOP_WORLD_Y = nvuToWorld(THUMBNAIL_TOP_NVU); 
+    
+    // Thumbnail's Final Center Y = Anchor Top Y - Half Thumbnail Height
+    const thumbnailFinalY = THUMBNAIL_TOP_WORLD_Y - (THUMBNAIL_HEIGHT / 2);
+
+    // 2. CTA Pill Final Resting Y: Below the bottom of the Thumbnail
+    const thumbnailBottomY = thumbnailFinalY - (THUMBNAIL_HEIGHT / 2);
+    // CTA Pill Center Y = Thumbnail Bottom Y - Gap - Half Pill Height
+    const ctaPillFinalY = thumbnailBottomY - CTA_GAP - (CTA_PILL_HEIGHT / 2);
 
     return (
         <>
@@ -131,7 +183,10 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 
             {/* 1. PARTICLE SYSTEM */}
             
-            <ParticleSystem variant={variant} color={theme.primary} />
+            <ParticleSystem variant={variant} color={theme.primary} 
+            
+                // This is the ExplanationCard's expected Y-Center. ParticleSystem will calculate height.
+            />
 
             {/* 2. THE STAGE (Dynamic Positioning) */}
             <group position={[0, stageY, 0]}>
@@ -156,6 +211,7 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
             )}
 
             {/* 3. THE BRIDGE (Question Card) */}
+            
             {showQuestion && (
                 <TypewriterQuestion
                     text={questionText}
@@ -170,8 +226,13 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 
             {/* 4. OPTION CARDS (Centered, Synced, Sliding) */}
             {showOptions && timeline.quiz.options.map((opt, i) => {
+                
+                const isCorrect = opt.id === timeline.answer.correct_option_id;
+
                 // State Logic
-                let cardState: 'neutral' | 'correct' | 'dimmed' | 'wrong' = 'neutral';
+                let cardState: OptionState = 'neutral';
+                if (showAnswer) cardState = isCorrect ? 'correct' : 'wrong';
+
                 if (showAnswer) {
                     cardState = opt.id === timeline.answer.correct_option_id 
                         ? 'correct' 
@@ -187,7 +248,17 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 
                 // x=0 for center, z=0 for base depth
                 const positionZ = 0; 
-                
+
+                // Docking Layout (Only calculated for correct answer)
+                // Target: Strictly below Question Box
+                const dockYPos = questionBottomWorld - GAP - (cardHeight / 2);
+
+                // Mode Selector
+                let mode: AnimationMode = 'intro';
+                if (isPostAnswer) {
+                    mode = isCorrect ? 'dock' : 'drop';
+                }
+                const STAGGER = 0.15;
                 return (
                     <OptionCard
                         key={opt.id}
@@ -198,12 +269,35 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
                         height={cardHeight}
                         landingTime={opt.start_time} // SYNC TRIGGER
                         finalY={finalYPos} // FINAL RESTING Y
+                        dockY={dockYPos} // <--- Pass Dock Target
+                        sequenceStartTime={t_clearance+(i * STAGGER)} // <--- Sync Trigger
+                        mode={mode} // <--- Physics Selector
                         positionZ={positionZ} // BASE Z// --- NEW DETERMINISTIC PROPS ---
                         seed={scenario.meta.seed+1}
                         index={i}
                     />
                 );
             })}
+
+           
+
+            {/* EXPLANATION CARD (The sticky note) */}
+            {showExplanation && (
+                <ExplanationCard
+                    text={explanationText}
+                    width={SAFE_MAX_WIDTH * 0.9} // 90% of Layout Width
+                    // Anchor is the BOTTOM of the Docked Card
+                    // DockedCardY (Center) - HalfHeight = Docked Bottom
+                    anchorY={questionBottomWorld - GAP - (height * 0.09)} 
+                    safeZoneY={SAFE_ZONE_Y}
+                    startTime={t_reveal}
+                    ExpCardcolor={CARD_COLOR} // <--- Pass Explicit Color to Cardt
+                />
+            )}
+
+           
+
+
             {/* 5. HOOK (Overlay) - DYNAMIC ANIMATION */}
             {showHook && (
                 <AnimatedHook 

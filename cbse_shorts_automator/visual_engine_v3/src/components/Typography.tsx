@@ -12,6 +12,9 @@ interface NanoTextProps {
     fontUrl?: string;// NEW PROPS FOR WRAPPING
     maxWidth?: number;
     textAlign?: 'left' | 'right' | 'center' | 'justify';
+    // --- NEW PROPS ADDED HERE ---
+    outlineWidth?: number;
+    outlineColor?: string;
 }
 
 export const NanoText: React.FC<NanoTextProps> = ({ 
