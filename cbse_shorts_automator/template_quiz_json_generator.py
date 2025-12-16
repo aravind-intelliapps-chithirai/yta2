@@ -9,12 +9,14 @@ Purpose: Calculates timings and asset data, generates the final audio file,
 import imagemagick_setup
 import os
 import math
+import concurrent.futures
 import json 
 import glob
 import random 
 from moviepy.editor import VideoFileClip, AudioFileClip, CompositeAudioClip
 from voice_manager import VoiceManager 
 from sfx_manager import SFXManager
+from video_processor import VideoProcessor
 from usp_content_variations import USPContent 
 from visual_effects_quiz import res_scale, set_resolution
 
@@ -50,6 +52,7 @@ class QuizTemplate:
         
         voice_name = config.get('voice', 'NeeraNeural2')
         selected_voice_key = voice_name if voice_name else voice_mgr.get_random_voice_name()
+        video_proc = VideoProcessor(temp_dir=self.engine.config['DIRS']['TEMP'])
         
         vid_id = os.path.basename(output_path).split('.')[0]
         temp_dir = self.engine.config['DIRS']['TEMP']
@@ -65,6 +68,8 @@ class QuizTemplate:
         # Define asset file paths (relative to BASE_PUBLIC_DIR/assets)
         FINAL_AUDIO_FILENAME = f"{vid_id}_final_audio.mp3"
         FINAL_AUDIO_PATH = f"{FINAL_ASSETS_DIR}/{FINAL_AUDIO_FILENAME}"
+
+        SOURCE_VIDEO_PATH = f"{FINAL_ASSETS_DIR}/source_video.mp4"
         
         # Asset URLs (All relative to the public root)
         FINAL_AUDIO_URL = f"/assets/{FINAL_AUDIO_FILENAME}"
@@ -91,27 +96,43 @@ class QuizTemplate:
         
         def generate_single_audio(key, text):
             path = f"{temp_dir}/{vid_id}_{key}.mp3"
-            voice_mgr.generate_audio_with_specific_voice(text, path, selected_voice_key, provider='edge')
+            voice_mgr.generate_audio_with_specific_voice(text, path, selected_voice_key, provider='google')
             return key, path
 
-        for k, t in audio_tasks.items():
-            try:
-                k_result, path = generate_single_audio(k, t)
-                generated_audio_paths[k_result] = path
-                audio_files.append(path)
-                aud_clips[k_result] = AudioFileClip(path) 
-            except Exception as e:
-                print(f"Error processing task for key {k}: {e}. Halting operation.")
-                if self.engine.config.get('DELETE_TEMP_FILES', True):
-                    for f in audio_files:
-                        if os.path.exists(f): os.remove(f)
-                raise 
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            futures = [executor.submit(generate_single_audio, k, t) for k, t in audio_tasks.items()]
+            for future in concurrent.futures.as_completed(futures):
+                k, path = future.result()
+                generated_audio_paths[k] = path
+                audio_files.append(path)    
 
+        # for k, t in audio_tasks.items():
+        #     try:
+        #         k_result, path = generate_single_audio(k, t)
+        #         generated_audio_paths[k_result] = path
+        #         audio_files.append(path)
+        #         aud_clips[k_result] = AudioFileClip(path) 
+        #     except Exception as e:
+        #         print(f"Error processing task for key {k}: {e}. Halting operation.")
+        #         if self.engine.config.get('DELETE_TEMP_FILES', True):
+        #             for f in audio_files:
+        #                 if os.path.exists(f): os.remove(f)
+        #         raise 
+        aud_hook = AudioFileClip(generated_audio_paths['hook'])
+        aud_q = AudioFileClip(generated_audio_paths['question'])
+        aud_a = AudioFileClip(generated_audio_paths['opt_a'])
+        aud_b = AudioFileClip(generated_audio_paths['opt_b'])
+        aud_c = AudioFileClip(generated_audio_paths['opt_c'])
+        aud_d = AudioFileClip(generated_audio_paths['opt_d'])
+        aud_think = AudioFileClip(generated_audio_paths['think'])
+        aud_expl = AudioFileClip(generated_audio_paths['explanation'])
+        aud_cta = AudioFileClip(generated_audio_paths['cta'])
+   
         # 2. Timing Calculations
-        aud_hook, aud_q, aud_a, aud_b, aud_c, aud_d, aud_expl, aud_cta = (
-            aud_clips['hook'], aud_clips['question'], aud_clips['opt_a'], aud_clips['opt_b'], 
-            aud_clips['opt_c'], aud_clips['opt_d'], aud_clips['explanation'], aud_clips['cta']
-        )
+        # aud_hook, aud_q, aud_a, aud_b, aud_c, aud_d, aud_expl, aud_cta = (
+        #     aud_clips['hook'], aud_clips['question'], aud_clips['opt_a'], aud_clips['opt_b'], 
+        #     aud_clips['opt_c'], aud_clips['opt_d'], aud_clips['explanation'], aud_clips['cta']
+        # )
         
         THINK_TIME = 3.0 
         t_hook = 0
@@ -125,8 +146,16 @@ class QuizTemplate:
         t_cta = t_ans + aud_expl.duration
         t_outro = t_cta + max(aud_cta.duration,6)
         
-        OUTRO_DURATION = 5.0
+        OUTRO_DURATION = 7.0
         total_dur = t_outro + OUTRO_DURATION
+
+        # print(f"   🧠 AI Watching video to find relevant clips ({int(total_dur)}s)...")
+        # src_vid = video_proc.prepare_video_for_short(video_path, total_dur, script=script, width=WIDTH)
+        # src_vid.write_videofile(
+        #     SOURCE_VIDEO_PATH,
+        #     codec='libx264',  # Standard codec for MP4 files # Standard audio codec
+        #     fps=10             # Set the desired frames per second (e.g., 24, 30, or original fps)
+        # )
 
         # 3. Final Audio Generation
         print("   🔊 Compiling final audio track...")
@@ -139,7 +168,7 @@ class QuizTemplate:
         audio_list = [
             aud_hook.set_start(t_hook), aud_q.set_start(t_q), aud_a.set_start(t_a),
             aud_b.set_start(t_b), aud_c.set_start(t_c), aud_d.set_start(t_d),
-            aud_clips['think'].set_start(t_think), aud_expl.set_start(t_ans), aud_cta.set_start(t_cta)
+            aud_think.set_start(t_think), aud_expl.set_start(t_ans), aud_cta.set_start(t_cta)
         ]
         full_audio_stack = audio_list + sfx_clips
         composite_audio = CompositeAudioClip(full_audio_stack)

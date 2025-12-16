@@ -74,7 +74,7 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
         if (videoTexture && videoTexture.image) {
             const vid = videoTexture.image as HTMLVideoElement;
             const targetTime = frame / fps;
-            if (Math.abs(vid.currentTime - targetTime) > 0.05) vid.currentTime = targetTime;
+            if (Math.abs(vid.currentTime - targetTime) > 0.1) vid.currentTime = targetTime;
             videoTexture.needsUpdate = true;
         }
     });

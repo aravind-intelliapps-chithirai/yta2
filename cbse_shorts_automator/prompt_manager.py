@@ -62,9 +62,9 @@ class PromptManager:
               * ACTION: Must mention "Link in description", "Check the link", or "Full video below".
             - TOTAL LENGTH: Max 25 words.
 
-        7. CONTENT VARIETY (ANTI-REPETITION):
-            - ⚠️ PROBLEM: Do NOT just pick the "Main Title" or the first paragraph of the text.
-            - ✅ SOLUTION: Scan the ENTIRE text (Beginning, Middle, and End).
+        7. CONTENT VARIETY (IMPORTAN FOR ANTI-REPETITION):
+            - ⚠️ PROBLEM: Do NOT just pick the "Main Title" or the first paragraph of the text in a lazy manner.
+            - ✅ SOLUTION: Scan the ENTIRE text (Beginning, Middle, and End). Strictly enforce Random Selection of content.
             - FOR QUIZZES: Find a specific date, name, or exception deep in the text.
             - FOR FACTS: Find a counter-intuitive or surprising detail.
             - FOR TIPS: Find a complex list or hard formula that needs a memory hack.

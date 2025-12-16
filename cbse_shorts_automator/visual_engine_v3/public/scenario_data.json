@@ -2,11 +2,11 @@
     "meta": {
         "version": "1.0.0",
         "resolution": {
-            "w": 1080,
-            "h": 1920
+            "w": 540,
+            "h": 960
         },
-        "seed": 6503,
-        "duration_seconds": 42.18
+        "seed": 9689,
+        "duration_seconds": 47.22
     },
     "assets": {
         "audio_url": "/assets/TEST_FULL_QUIZ_V1_final_audio.mp3",
@@ -20,60 +20,60 @@
     "timeline": {
         "hook": {
             "start_time": 0,
-            "text_content": "\u26a1 SPEED LEARNING MODE ON \u26a1"
+            "text_content": "\ud83d\udcaf QUICK CONCEPTS, BIG SCORES \ud83d\udcaf"
         },
         "quiz": {
             "question": {
-                "text": "Orbital Shape Quantum No.?",
-                "start_time": 2.66
+                "text": "Daniell cell, E_ext = 1.1V. What happens?",
+                "start_time": 3.43
             },
             "options": [
                 {
                     "id": "A",
-                    "text": "Principal (n)",
-                    "start_time": 5.95
+                    "text": "Current flows from Cu to Zn",
+                    "start_time": 7.82
                 },
                 {
                     "id": "B",
-                    "text": "Azimuthal (l)",
-                    "start_time": 8.18
+                    "text": "No current, no reaction",
+                    "start_time": 10.440000000000001
                 },
                 {
                     "id": "C",
-                    "text": "Magnetic (m)",
-                    "start_time": 10.629999999999999
+                    "text": "Zn deposits at anode",
+                    "start_time": 12.840000000000002
                 },
                 {
                     "id": "D",
-                    "text": "Spin (s)",
-                    "start_time": 12.979999999999999
+                    "text": "Functions as electrolytic cell",
+                    "start_time": 15.170000000000002
                 }
             ]
         },
         "timer": {
-            "start_time": 15.159999999999998,
+            "start_time": 17.64,
             "duration": 3.0,
-            "label_text": "\u26a1 THINK FAST"
+            "label_text": "\ud83c\udfaf FAST BRAIN"
         },
         "answer": {
-            "start_time": 18.159999999999997,
-            "correct_option_id": "D",
-            "explanation_text": "Determines Shape",
+            "start_time": 20.64,
+            "correct_option_id": "B",
+            "explanation_text": "At E_ext = 1.1V, the opposing voltage balances cell potential.",
             "celebration_text": "Great job!"
         },
         "cta": {
-            "start_time": 26.179999999999996,
-            "social_text": "\u26a1 SUBSCRIBE FOR QUICK CONCEPTS",
-            "link_text": "\ud83d\udd25 No-Boring Full Video in Link"
+            "start_time": 34.22,
+            "social_text": "\ud83d\udcaf JOIN THE FAST LEARNERS CLUB",
+            "link_text": "\ud83c\udfaf Complete Fast Revision in Link"
         },
         "outro": {
-            "start_time": 32.17999999999999,
-            "line_1": "✨ NO BORING LECTURES",
-            "line_2": "🔥 Subscribe for Speed Learning"
+            "start_time": 40.22,
+            "line_1": "\u26a1 SPEED LEARNING",
+            "line_2": "\ud83d\ude80 Fast, Fun, Effective"
         }
     },
     "yt_overlay": {
-        "progress_start": 2.66,
-        "progress_end": 19.159999999999997
+        "progress_start": 3.43,
+        "progress_end": 21.64
     }
 }

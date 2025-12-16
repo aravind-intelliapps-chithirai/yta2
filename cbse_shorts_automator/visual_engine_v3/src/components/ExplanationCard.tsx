@@ -15,15 +15,19 @@ interface ExplanationCardProps {
     //onHeightCalculated?: (height: number) => void;
 }
 // --- NEW HELPER FUNCTION (Exported) ---
-export const estimateExplanationLayout = (text: string, width: number, fontSize: number) => {
-    const padding = width * 0.035;
+export const estimateExplanationLayout = (text: string, width: number, fontSizeInp: number) => {
+    const padding = width * 0.02;
     const textWidth = width - (padding * 2);
-    //const fontSize = width * 0.07; 
-    const lineHeight = fontSize * 0.9;
+    const maxLines=4;
+    let charsPerLine=Math.ceil(text.length / maxLines);
+    const MaxCharWidth=textWidth/charsPerLine;
+    const CharWidthFactor=0.8;
+    const fontSize = MaxCharWidth / CharWidthFactor; 
+    const lineHeight = fontSize * 1.5;
     
     // Estimate Height
-    const avgCharWidth = fontSize * 1.1;
-    const charsPerLine = textWidth / avgCharWidth;
+    const avgCharWidth = fontSize * CharWidthFactor;
+    //charsPerLine = textWidth / avgCharWidth;
     const lines = Math.ceil(text.length / charsPerLine);
     const textHeight = lines * lineHeight;
     const boxHeight = textHeight + (padding * 2);
@@ -47,12 +51,12 @@ export const ExplanationCard: React.FC<ExplanationCardProps> = ({
     // --- 1. DYNAMIC LAYOUT & SAFETY PROTOCOL ---
     const layout = useMemo(() => {
         //const padding = width * 0.040;
-        const fontSize = ExplanationFontSize; // Smaller than Question text
+         // Smaller than Question text
         //const lineHeight = fontSize * 1;
         
         // Estimate Height
         // CALL THE HELPER HERE
-        const estimated = estimateExplanationLayout(text, width, fontSize);
+        const estimated = estimateExplanationLayout(text, width, ExplanationFontSize);
 
         const textWidth = estimated.textWidth;
         
@@ -61,6 +65,7 @@ export const ExplanationCard: React.FC<ExplanationCardProps> = ({
         const lines = Math.ceil(text.length / charsPerLine);
         const textHeight = lines * estimated.lineHeight;
         const boxHeight = estimated.boxHeight;
+        const fontSize = estimated.fontSize;
 
 
         

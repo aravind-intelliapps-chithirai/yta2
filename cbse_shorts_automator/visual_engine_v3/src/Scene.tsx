@@ -186,7 +186,7 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const explanationY = questionBottomWorld - 0.6 - GAP - (height * 0.09);
     // --- NEW: CTA LAYOUT CALCULATIONS ---
     const explCardWidth = SAFE_MAX_WIDTH * .9;
-    const ExplanationFontSize=0.06*viewportWidth;
+    const ExplanationFontSize=0.001*viewportWidth;
     const explLayout = estimateExplanationLayout(explanationText, explCardWidth, ExplanationFontSize);
     
     const EXPLANATION_CARD_HEIGHT = explLayout.boxHeight; // Approximation from ExplanationCard logic (REQUIRED)

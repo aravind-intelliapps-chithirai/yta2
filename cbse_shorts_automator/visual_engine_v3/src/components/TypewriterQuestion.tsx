@@ -5,10 +5,10 @@ import { NanoText } from './Typography';
 
 // Allows the parent to know how tall this box will be
 export const estimateQuestionHeight = (text: string, maxWidth: number, viewportWidth: number) => {
-    const baseFontSize = viewportWidth * 0.055;
+    const baseFontSize = viewportWidth * 0.07;
     
     // Logic matches the component's internal sizing
-    const avgCharWidth = baseFontSize * 0.6;
+    const avgCharWidth = baseFontSize * 0.7;
     const charsPerLine = maxWidth / avgCharWidth;
     const estimatedLines = Math.ceil(text.length / charsPerLine);
 
@@ -17,11 +17,11 @@ export const estimateQuestionHeight = (text: string, maxWidth: number, viewportW
     if (estimatedLines > 3 && estimatedLines <= 5) finalFontSize = baseFontSize * 0.80;
     else if (estimatedLines > 5) finalFontSize = baseFontSize * 0.65;
 
-    const finalLineHeight = finalFontSize * 0.9;
-    const padding = maxWidth * 0.05;
+    const finalLineHeight = finalFontSize * 1.5;
+    const padding = maxWidth * 0.02;
     
     // Recalculate lines with final font size
-    const finalAvgCharWidth = finalFontSize * 0.6;
+    const finalAvgCharWidth = finalFontSize * 0.7;
     const finalCharsPerLine = maxWidth / finalAvgCharWidth;
     const finalLines = Math.ceil(text.length / finalCharsPerLine);
 
@@ -53,9 +53,9 @@ export const TypewriterQuestion: React.FC<TypewriterQuestionProps> = ({
     const layout = useMemo(() => {
         // 1. Setup Constraints
         const maxBoxWidth = viewportWidth * 0.85; 
-        const padding = maxBoxWidth * 0.01;
+        const padding = maxBoxWidth * 0.02;
         const textMaxWidth = maxBoxWidth - (padding * 2);
-        const baseFontSize = viewportWidth * 0.065; // Standard Large Size
+        const baseFontSize = viewportWidth * 0.07; // Standard Large Size
 
         // 2. Estimate Lines at Base Size
         // Average char width is approx 0.6 * fontSize for standard sans-serif

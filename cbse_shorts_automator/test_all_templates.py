@@ -82,11 +82,11 @@ def run_full_test():
         try:
             # A. Generate Script
             print(f"   🤖 Asking Gemini for a {template_type} script...")
-            #script = gemini.get_script(
-            #    full_text, 
-            #    class_level=11, # Assuming Class 11 based on PDF content
-            #    template=template_type
-            #)
+            script = gemini.get_script(
+                full_text, 
+                class_level=11, # Assuming Class 11 based on PDF content
+                template=template_type
+            )
             #print(f"   📝 Script Received:{script.fulltext}")
             mock_script = {
                 # 1. Hook
@@ -117,10 +117,10 @@ def run_full_test():
                 # 5. CTA
                 "cta_spoken": "Subscribe for more exam prep!"
             }
-            script=mock_script
+            #script=mock_script
             # Validation Preview
             if template_type == 'quiz':
-                preview = f"Q: {script.get('question_text', '')[:40]}..."
+                preview = f"Q: {script.get('question_visual', '')[:40]}..."
             elif template_type == 'fact':
                 preview = f"Fact: {script.get('fact_title', '')[:40]}..."
             else:

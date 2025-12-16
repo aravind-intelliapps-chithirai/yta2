@@ -186,7 +186,7 @@ export const OptionCard: React.FC<OptionCardProps> = ({
             <NanoText 
                 text={text}
                 position={[0, 0, 0.08]}
-                fontSize={height * 0.45}
+                fontSize={height * 0.4}
                 color={styles.textColor}
                 maxWidth={width * 0.9}
                 textAlign="center"

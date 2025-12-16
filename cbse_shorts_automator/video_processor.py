@@ -78,7 +78,7 @@ class VideoProcessor:
         
         # Strategy 2: Linear Flow (Fallback)
         # Jumps 1.5s forward to ensure visual change
-        return last_end_time + 1.5
+        return last_end_time + 45
 
     def apply_micro_zoom(self, clip, index, duration):
         """
@@ -161,7 +161,7 @@ class VideoProcessor:
         while current_generated_duration < total_duration:
             
             # 1. Pick a Random Duration (Strict Pacing)
-            this_clip_len = random.uniform(2.5, 4.0)
+            this_clip_len = random.uniform(1.5, 2.5)
             
             remaining = total_duration - current_generated_duration
             if remaining < this_clip_len:

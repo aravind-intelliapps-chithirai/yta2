@@ -30,9 +30,12 @@ export const OutroStage: React.FC<OutroStageProps> = ({ scenario, fps, t_outro_s
     const finalScaleY = globalScaleFactor * 1;
     const finalScaleZ = globalScaleFactor * 0.1;
     
+    const OutroShowSTartTime=t_outro_start;
+
     // --- NEW: SCALE-IN ANIMATION LOGIC ---
-    const scaleInDuration = 2; // 0.5 seconds
-    const scaleInStartFrame = t_outro_start * fps;
+    const scaleInDuration = 2; 
+    const scaleInStartFrame = (OutroShowSTartTime) * fps;
+    const scaleInEndTime = (OutroShowSTartTime + scaleInDuration);
 
     const scaleSpring = spring({
         frame: frame - scaleInStartFrame, // Start spring animation at t_outro_start
@@ -57,13 +60,13 @@ export const OutroStage: React.FC<OutroStageProps> = ({ scenario, fps, t_outro_s
     const textureUrl = staticFile(assets.channel_logo_url || assets.thumbnail_url);
     const logoTexture = useTexture(textureUrl);
     
-    const showOutro = frame >= t_outro_start * fps;
+    const showOutro = frame >= (scaleInEndTime) * fps;
     const logoRef = useRef<THREE.Group>(null!);
 
     // --- ANIMATION 1: CONTINUOUS LOGO ROTATION (TIMELINE BOUND) ---
     useFrame(() => {
         if (logoRef.current && showOutro) {
-            const rotationStartFrame = (t_outro_start + 0.5) * fps;
+            const rotationStartFrame = (OutroShowSTartTime + 0.1) * fps;
             const timeDelta = Math.max(0, frame - rotationStartFrame);
             logoRef.current.rotation.y = timeDelta * 0.05; 
         }
@@ -71,7 +74,7 @@ export const OutroStage: React.FC<OutroStageProps> = ({ scenario, fps, t_outro_s
 
     // --- ANIMATION 2: TEXT SLAM PHYSICS (t_outro_start + delay) ---
     const slamAnimation = (delay: number) => {
-        const startFrame = (t_outro_start + delay) * fps;
+        const startFrame = (scaleInEndTime + delay) * fps;
         const spr = spring({
             frame: frame - startFrame,
             fps,
@@ -90,7 +93,7 @@ export const OutroStage: React.FC<OutroStageProps> = ({ scenario, fps, t_outro_s
     const usp1 = slamAnimation(1); // Starts 1.0s after outro starts
     const usp2 = slamAnimation(2); // Starts 2.0s after outro starts
 
-    if (frame < (t_outro_start - 1) * fps) return null;
+    if (frame < (OutroShowSTartTime - 1) * fps) return null;
 
     const line1Text = timeline.outro?.line_1 || "SUBSCRIBE";
     const line2Text = timeline.outro?.line_2 || "FOR MORE";
@@ -111,7 +114,7 @@ export const OutroStage: React.FC<OutroStageProps> = ({ scenario, fps, t_outro_s
             <pointLight position={[2, 4, 4]} intensity={5.0} distance={10} decay={.20} />
 
             {/* 1. ROTATING CERAMIC BADGE LOGO */}
-            {frame >= (t_outro_start + 0.5) * fps && (
+            {frame >= (OutroShowSTartTime + 0.0) * fps && (
                 <group ref={logoRef} position={[0, 1/(LogoScaleFactor/2), 1]} scale={[1/LogoScaleFactor,1/LogoScaleFactor,.1]}>
                     <mesh>
                         {/* Volumetric Badge */}
@@ -140,7 +143,7 @@ export const OutroStage: React.FC<OutroStageProps> = ({ scenario, fps, t_outro_s
                 </group>
             )}
             {/* 4. Z-PLANE SEPARATOR (White Rectangle) */}
-            {frame >= (t_outro_start + 0.5) * fps && (
+            {frame >= (OutroShowSTartTime + 0.0) * fps && (
                 <mesh position={[0, 0, -1]}>
                 {/* 10 units wide/tall should ensure it covers the visible area */}
                 <boxGeometry args={[viewport.width/planeScaleFactor, viewport.height/planeScaleFactor, 0.01]} /> 
