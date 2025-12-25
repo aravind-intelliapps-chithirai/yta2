@@ -70,6 +70,33 @@ export const LAYOUT = {
   S3_BADGE_OFFSET_X: 0.25
 };
 
+export const S3_CTA_CONFIG = {
+    // Spatial (Relative to Slate dimensions)
+    BADGE_RADIUS_PCT: 0.15,
+    BADGE_X_OFFSET_PCT: 0.42, 
+    BADGE_Y_OFFSET_PCT: 0.42,
+    
+    // Hand Primitive Dimensions
+    HAND_PALM_WIDTH: 0.15,
+    HAND_FINGER_LENGTH: 0.1,
+    
+    // Timings (Seconds relative to t_cta)
+    SLATE_DROP_DURATION: 0.8,
+    HAND_ENTRY_DELAY: 0.5,
+    HAND_FLIGHT_DURATION: 0.6,
+    CLICK_TIME_OFFSET: 1.2,
+    LINK_CARD_DELAY: 2.0,
+    EXIT_TRANSITION_START_OFFSET: 0.5, // Seconds before t_outro
+    
+    BADGE_TEXT_BANK: [
+        "Exams Decoded", 
+        "7-Min Mastery", 
+        "Zero Fluff", 
+        "Quick Recap", 
+        "Score Booster"
+    ]
+};
+
 // Scene 1 specific constants from visual spec
 export const SCENE_1_CONFIG = {
     TUNNEL_LENGTH: 200,

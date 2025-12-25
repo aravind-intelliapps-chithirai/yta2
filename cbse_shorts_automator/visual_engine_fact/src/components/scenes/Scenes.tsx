@@ -1,9 +1,13 @@
 import React, { useMemo } from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
+import { TravelingBackground } from '../3d/TravelingBackground';
 import { SceneContent } from './Scene1'; 
 import { Scene2_Fact } from './Scene2_Fact'; 
 import { Scene2 } from './Scene2'; 
+import { S3_CTA_Overlay } from '../overlays/S3_CTA_Overlay'; 
+import { S4_Outro_Overlay } from '../overlays/S4_Outro_Overlay';
 import { ThreeCanvas } from '@remotion/three';
+import { ParticleField } from '../3d/ParticleField';
 import { FactScenario } from '../../types/schema';
 import { getTheme } from '../../theme/palettes';
 import { SCENE_1_CONFIG, LAYOUT } from '../../constants';
@@ -18,6 +22,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
     // 1. Global Timings
     const tTitleFrame = Math.round(scenario.timings.t_title * fps);
     const tCtaFrame = Math.round(scenario.timings.t_cta * fps);
+    const tOutroFrame = Math.round(scenario.timings.t_outro * fps);
 
     // 2. SHARED 3D POSITIONS
     // We re-calculate the final anchor points here so BOTH scenes are synced
@@ -157,20 +162,32 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
 
 
     return (
-        <AbsoluteFill>
+        <AbsoluteFill style={{ backgroundColor: '#FFFFFF' }}>
+            {frame < tOutroFrame && (
+                <>
             {/* LAYER 1: THE PERSISTENT 3D STAGE */}
+
             <ThreeCanvas
                 linear
                 width={width}
                 height={height}
-                style={{ backgroundColor: theme.bg_gradient[0] }}
+                //style={{ backgroundColor: theme.bg_gradient[0] }}
             >
+                
+                <TravelingBackground theme={theme} />
+
+            {/* 3. Add Fog to blend the Tunnel into the background gradient */}
+            <fog attach="fog" args={[theme.bg_gradient[0], 10, 80]} />
+
+            <ParticleField color={theme.accent_secondary} count={150} />
                 {/* We pass the pre-calculated anchors to Scene 1 */}
                 <SceneContent 
                     scenario={scenario} 
                     lockedDestinationY={lockedDestinationY} 
                     finalStopZ={finalStopZ} 
                 />
+
+                
 
                 {/* We pass the SAME anchors to Scene 2 so pipes attach perfectly */}
                 {frame >= tTitleFrame && frame < tCtaFrame && (
@@ -186,6 +203,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
                     
                 )}
             </ThreeCanvas>
+            
                 {/* LAYER 2: THE 2D HTML OVERLAYS */}
                 {frame >= tTitleFrame && (
                     <Scene2 
@@ -196,6 +214,23 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
                         slateZ={finalStopZ}
                         cameraZ={cameraFinalZ}
                         cameraY={finalCamY} // The center of the camera's view
+                    />
+                )}
+                {/* Scene 3 Overlay (CTA Cards + White-out) */}
+                {frame >= tCtaFrame && (
+                    <S3_CTA_Overlay 
+                        scenario={scenario} 
+                        theme={theme} 
+                        tCtaFrame={tCtaFrame}
+                    />
+                )}
+                </>
+            )}
+                {/* 🏁 LAYER 3: OUTRO (Replaces everything at t_outro) */}
+                {frame >= tOutroFrame && (
+                    <S4_Outro_Overlay 
+                        scenario={scenario} 
+                        theme={theme} 
                     />
                 )}
         </AbsoluteFill>

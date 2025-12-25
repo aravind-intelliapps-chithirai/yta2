@@ -9,6 +9,8 @@ import { FactScenario } from '../../types/schema';
 import { Theme } from '../../theme/palettes';
 import { InfiniteTunnel } from '../3d/InfiniteTunnel';
 import { KnowledgeSlate } from '../3d/KnowledgeSlate';
+import { USPBadge } from '../3d/USPBadge';
+import { HandCursor } from '../3d/HandCursor';
 import { TIMING,LAYOUT,SCENE_1_CONFIG } from '../../constants';
 import { easings } from '../../utils/animation';
 import { getTheme } from '../../theme/palettes';
@@ -327,7 +329,7 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
         extrapolateRight: 'clamp'
     });
 
-    const isScene2Active = frame > (scenario.timings.t_title * fps);
+    const isScene2Active = frame > (scenario.timings.t_title * fps) && frame < (scenario.timings.t_cta * fps);
     // [Insert this logic before your return statement]
 
     // --- TEXT VIBRATION LOGIC ---
@@ -337,6 +339,31 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
     
     const vibrationX = (Math.sin(frame * 0.8) + Math.cos(frame * 1.3)) * shakeAmp;
     const vibrationY = (Math.cos(frame * 0.9) + Math.sin(frame * 1.4)) * shakeAmp;
+
+    const tCtaFrame = (scenario.timings.t_cta) * fps;
+    const isCtaPhase = frame > tCtaFrame;
+
+// Drop Slate to Center and Level Tilt
+const currentSlateY = interpolate(
+    frame, 
+    [tCtaFrame, tCtaFrame + 24], 
+    [animatedY, cameraFinalY], 
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+);
+
+const currentTiltX = interpolate(
+    frame,
+    [tCtaFrame, tCtaFrame + 24],
+    [-0.15, 0],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+);
+
+const currentRotationY = interpolate(
+    frame,
+    [tCtaFrame, tCtaFrame + 24],
+    [0, -Math.PI],
+    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
+);
 
     return (
         <>
@@ -354,11 +381,11 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
                         </group>
                         )}
                 {!isScene2Active && (<pointLight 
-                    position={[HookTextPosX, HookTextPosY+boxheight_plus_gap*.25, HookTextPosZ-TEXT_DISTANCE*0.5]} 
-                    intensity={20} 
+                    position={[HookTextPosX, HookTextPosY+boxheight_plus_gap*2.5, HookTextPosZ+TEXT_DISTANCE*0.5]} 
+                    intensity={1.0} 
                     color={"white"} 
-                    distance={TEXT_DISTANCE*2}
-                    decay={TEXT_DISTANCE*0.5}
+                    distance={TEXT_DISTANCE*20}
+                    decay={TEXT_DISTANCE*.1}
                 />)}
 
                  {hasCollided && (<pointLight 
@@ -451,15 +478,41 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
                 >
                 <KnowledgeSlate 
                     theme={theme} 
-                    position={[TARGET_COORDINATE.x, animatedY, slateZ]} // Centered X/Y, Moving Z
+                    position={[TARGET_COORDINATE.x, currentSlateY, slateZ]} // Centered X/Y, Moving Z
                     isPlaying={isPlaying}
                     slateWidth={slateWidth}
-                    tiltX={tiltDown}
-                    RotationY={rotationY}
+                    tiltX={currentTiltX}
+                    RotationY={currentRotationY}
                     clickFrame={clickFrame}
                     scenario={scenario}
                 />
                 </group>
+                {/* SCENE 3 SPECIFIC ELEMENTS */}
+                    {isCtaPhase && (
+                        <group position={[TARGET_COORDINATE.x, cameraFinalY, slateZ]}>
+                            {/* The God Ray: Anchored to the center of the slate */}
+                            {/* <pointLight 
+                                position={[0, 0, 2]} 
+                                intensity={interpolate(frame, [tCtaFrame, tCtaFrame + 20], [0, 6])} 
+                                color="white" 
+                            /> */}
+                            
+                            {/* 3D Badge: Positioned relative to Slate Center (cameraFinalY) */}
+                            {/* <USPBadge 
+                                theme={theme} 
+                                seed={scenario.meta.theme_seed} 
+                                tCtaFrame={tCtaFrame} 
+                                slateWidth={slateWidth} 
+                            /> */}
+                            
+                            {/* 3D Hand: Logic needs to target [0, 0, 0] of this group */}
+                            {/* <HandCursor 
+                                theme={theme} 
+                                tCtaFrame={tCtaFrame} 
+                                slateWidth={slateWidth} 
+                            /> */}
+                        </group>
+                    )}
 
         </>
 

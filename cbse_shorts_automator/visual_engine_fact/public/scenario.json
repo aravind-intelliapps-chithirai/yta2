@@ -17,16 +17,16 @@
     "t_details": 15,
     "detailsAudioDuration": 14,
     "t_cta": 33,
-    "t_outro": 35,
-    "total_duration": 40
+    "t_outro": 40,
+    "total_duration": 45
   },
   "content": {
     "hook_3d": "DID\nYOU\nKNOW?",
     "fact_title": "The Blue Whale's Heart",
     "fact_body_html": "A blue whale's heart is so massive that a human could swim through its arteries! It beats only 10 times per minute. 🌊",
     "cta_content": {
-      "social_text": "Subscribe for More!",
-      "link_text": "Full Video Below 👇"
+      "social_text": "🔔 SUBSCRIBE FOR 7-MIN CHAPTER",
+      "link_text": "⚡ Quick Full Chapter in Description 👇"
     },
     "outro_content": {
       "usp_line_1": "Exam Ready in 7 Mins",

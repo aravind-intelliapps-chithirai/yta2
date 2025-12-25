@@ -159,26 +159,46 @@ export const InfiniteTunnel: React.FC<{ theme: Theme;
                     
                     {/* Sides of the block use theme accent */}
                     <meshStandardMaterial attach="material-0" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity}/>
+                    opacity={opacity} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
+                    emissiveIntensity={0}            // Keep at 0. Let the PointLight/SpotLight reveal them.
+                    roughness={0.2}                  // Low roughness = High polish (Premium look)
+                    metalness={0.7}                  // High metalness = Catches realistic reflections
+                    />
                     <meshStandardMaterial attach="material-1" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity}/>
+                    opacity={opacity} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
+                    emissiveIntensity={0}            // Keep at 0. Let the PointLight/SpotLight reveal them.
+                    roughness={0.2}                  // Low roughness = High polish (Premium look)
+                    metalness={0.7}                  // High metalness = Catches realistic reflections
+                    />
                     <meshStandardMaterial attach="material-2" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity}/>
+                    opacity={opacity} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
+                    emissiveIntensity={0}            // Keep at 0. Let the PointLight/SpotLight reveal them.
+                    roughness={0.2}                  // Low roughness = High polish (Premium look)
+                    metalness={0.7}                  // High metalness = Catches realistic reflections
+                    />
                     <meshStandardMaterial attach="material-3" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity}/>
+                    opacity={opacity} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
+                    emissiveIntensity={0}            // Keep at 0. Let the PointLight/SpotLight reveal them.
+                    roughness={0.2}                  // Low roughness = High polish (Premium look)
+                    metalness={0.7}                  // High metalness = Catches realistic reflections
+                    />
                     
                     {/* Front Face: White background SVG */}
                     <meshStandardMaterial 
                         attach="material-4" 
                         map={item.texture} 
-                        roughness={0.1}
+                        roughness={0.4}
                         metalness={0}
                         transparent={true}
-                        opacity={opacity}
+                        opacity={opacity} 
                     />
                     
                     {/* Back Face */}
-                    <meshStandardMaterial attach="material-5" color={theme.accent_secondary} />
+                    <meshStandardMaterial attach="material-5" color={theme.accent_secondary}  emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
+                    emissiveIntensity={0}            // Keep at 0. Let the PointLight/SpotLight reveal them.
+                    roughness={0.2}                  // Low roughness = High polish (Premium look)
+                    metalness={0.7}                  // High metalness = Catches realistic reflections
+                    />
                 </mesh>
             ))}
         </group>

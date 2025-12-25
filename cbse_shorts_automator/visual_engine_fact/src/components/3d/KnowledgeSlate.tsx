@@ -79,6 +79,7 @@ export const KnowledgeSlate: React.FC<Props> = ({
     const uiZOffset = depth / 2 + 0.01;
     const barWidth = slateWidth * 0.9;
     const barHeight = height * 0.018;
+    
 
     return (
         <group position={position} rotation={[tiltX, RotationY, 0]}>
@@ -92,16 +93,18 @@ export const KnowledgeSlate: React.FC<Props> = ({
             </RoundedBox>
 
             {/* FRONT SCREEN */}
-            <mesh position={[0, 0, uiZOffset]}>
+            {Math.abs(RotationY) < Math.PI / 2 && (<mesh position={[0, 0, uiZOffset]}>
                 <planeGeometry args={[slateWidth * 0.95, height * 0.9]} />
                 <meshBasicMaterial map={texture} toneMapped={false} transparent />
             </mesh>
+            )}
 
             {/* BACK SCREEN */}
             <mesh position={[0, 0, -uiZOffset]} rotation={[0, Math.PI, 0]}>
                 <planeGeometry args={[slateWidth * 0.96, height * 0.96]} />
-                <meshBasicMaterial map={backTexture} toneMapped={false} />
+                <meshStandardMaterial map={backTexture} roughness={0.2} metalness={0.5} />
             </mesh>
+            
 
             {/* INTERACTION UI (Play Button) */}
             {(!isPlaying || clickFrame < 20) && (

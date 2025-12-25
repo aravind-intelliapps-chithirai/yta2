@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
 import { FactScenario } from '../../types/schema';
 import { HTMLTextOverlay } from '../overlays/HTMLTextOverlay';
+import { CTAOverlay } from '../overlays/CTAOverlay';
 import { LAYOUT } from '../../constants';
 import { Theme } from '../../theme/palettes';
 
@@ -52,7 +53,12 @@ export const Scene2: React.FC<{
             return { boxStartPercent };
         }, [layout.textAnchorY, cameraY, cameraZ, slateZ, layout.TextHeight]); */
 
+    
+    const tCtaFrame = (scenario.timings.t_cta) * fps;
+    const isCtaPhase = frame > tCtaFrame;
+
     if (frame < scenario.timings.t_title * fps) return null;
+
 
     return (
         <AbsoluteFill>
@@ -67,6 +73,13 @@ export const Scene2: React.FC<{
                 slateZ={slateZ}
                 theme={theme}
             />
+            {/* THE NEW CTA OVERLAY LAYER */}
+            {isCtaPhase && (
+                <CTAOverlay 
+                    scenario={scenario} 
+                    theme={theme} 
+                />
+            )}
         </AbsoluteFill>
     );
 };
