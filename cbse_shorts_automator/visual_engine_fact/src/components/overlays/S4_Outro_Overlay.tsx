@@ -54,7 +54,7 @@ export const S4_Outro_Overlay: React.FC<{
             </div>
 
             {/* --- CONTENT BLOCK --- */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5vh' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6.5vh' }}>
                 {/* USP LINE 1 - Uses theme accent */}
                 <div style={{
                     opacity: usp1Ent,
@@ -72,7 +72,7 @@ export const S4_Outro_Overlay: React.FC<{
                 <div style={{
                     opacity: usp2Ent,
                     transform: `translateY(${interpolate(usp2Ent, [0, 1], [15, 0])}px)`,
-                    fontSize: vid_height * 0.028,
+                    fontSize: vid_height * 0.038,
                     color: theme.text_body_light, 
                     fontWeight: 500
                 }}>
@@ -83,7 +83,7 @@ export const S4_Outro_Overlay: React.FC<{
                 <div style={{
                     opacity: copyEnt,
                     marginTop: '5vh',
-                    fontSize: vid_height * 0.016,
+                    fontSize: vid_height * 0.026,
                     color: theme.text_muted,
                     letterSpacing: '1px'
                 }}>

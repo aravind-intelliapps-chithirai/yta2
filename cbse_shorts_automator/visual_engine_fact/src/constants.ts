@@ -63,7 +63,7 @@ export const LAYOUT = {
   },
   S2_BODY_CARD: {
         GAP_FROM_TITLE_BOTTOM: .02,    // Controls distance from Title to Glass Card
-        WIDTH_VW: 0.8,                 // 85% of screen width
+        WIDTH_VW: 0.85,                 // 85% of screen width
         PADDING_VH: 0.01,               // Internal padding of the card
     },
   S3_CTA_CENTER_Y: 0.65,
@@ -101,12 +101,12 @@ export const S3_CTA_CONFIG = {
 export const SCENE_1_CONFIG = {
     TUNNEL_LENGTH: 200,
     FOG_DENSITY: 0.02,
-    GRID_X_COUNT: 5,
-    GRID_Y_COUNT: 9,
-    GRID_Z_COUNT: 20,
+    //GRID_X_COUNT: 5,
+    //GRID_Y_COUNT: 9,
+    //GRID_Z_COUNT: 20,
     BOX_W_FACT:0.5,
     BOX_H_FACT:0.5,
-    TARGET_SLATE_ITEM: { x: 1, y:7, z: 16 },
-    TARGET_COORDINATE: { x: 10, y: 5, z: -300 }, // [cite: 145]
+    //TARGET_SLATE_ITEM: { x: 0, y:0, z: 15 },
+    //TARGET_COORDINATE: { x: 10, y: 5, z: -300 }, // [cite: 145]
     TEXT_SCALE_MAX: 0.15,
 };

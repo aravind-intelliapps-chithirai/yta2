@@ -1,16 +1,18 @@
 import React, { useMemo } from 'react';
-import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, staticFile } from 'remotion';
 import { TravelingBackground } from '../3d/TravelingBackground';
 import { SceneContent } from './Scene1'; 
 import { Scene2_Fact } from './Scene2_Fact'; 
 import { Scene2 } from './Scene2'; 
 import { S3_CTA_Overlay } from '../overlays/S3_CTA_Overlay'; 
 import { S4_Outro_Overlay } from '../overlays/S4_Outro_Overlay';
+import { Watermark } from '../overlays/Watermark';
 import { ThreeCanvas } from '@remotion/three';
 import { ParticleField } from '../3d/ParticleField';
 import { FactScenario } from '../../types/schema';
 import { getTheme } from '../../theme/palettes';
 import { SCENE_1_CONFIG, LAYOUT } from '../../constants';
+import { Audio } from 'remotion';
 import * as THREE from 'three';
 import { estimateExplanationLayout } from '../../utils/layout-utils';
 
@@ -29,9 +31,16 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
     // ... inside Scenes.tsx ...
 
     // 1. REPLICATE SCENE 1 GRID MATH EXACTLY
-    const { TARGET_SLATE_ITEM, GRID_Z_COUNT, TUNNEL_LENGTH, BOX_W_FACT, BOX_H_FACT, GRID_Y_COUNT,GRID_X_COUNT } = SCENE_1_CONFIG;
+    //const { TARGET_SLATE_ITEM, GRID_Z_COUNT, TUNNEL_LENGTH, BOX_W_FACT, BOX_H_FACT, GRID_Y_COUNT,GRID_X_COUNT } = SCENE_1_CONFIG;
+    const { TUNNEL_LENGTH, BOX_W_FACT, BOX_H_FACT } = SCENE_1_CONFIG;
+
     const slateWidth = LAYOUT.S1_SLATE_WIDTH;
     const fov = 50;
+
+    const TARGET_SLATE_ITEM = scenario.meta.target_item;
+    const GRID_X_COUNT=scenario.meta.config.grid_counts.x;
+    const GRID_Y_COUNT=scenario.meta.config.grid_counts.y;
+    const GRID_Z_COUNT=scenario.meta.config.grid_counts.z;
 
     // 2. CALCULATE CAMERA & SLATE POSITIONS (Z-AXIS)
     // NOTE: Tunnel goes into Negative Z
@@ -53,6 +62,8 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
     const boxHeightWithGap = boxHeight / BOX_H_FACT;
     const finalCamX = (TARGET_SLATE_ITEM.x - (GRID_X_COUNT - 1.05) / 2) * boxWidthWithGap;
     const finalCamY = (TARGET_SLATE_ITEM.y - (GRID_Y_COUNT - 1.05) / 2) * boxHeightWithGap;
+
+    const TARGET_COORDINATE={ x: finalCamX, y: finalCamY, z: targetZ }
 
     // 4. CALCULATE LOCKED VIEWPORT Y (Top of Screen)
     const lockedDestinationY = useMemo(() => {
@@ -160,11 +171,17 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
             };
         }, [cameraFinalZ, finalStopZ, width, height, scenario.content.fact_title, lockedDestinationY]);
 
+        const audioSource = staticFile(scenario.assets.audio_track);
 
     return (
         <AbsoluteFill style={{ 
             background: `radial-gradient(circle at center, ${theme.bg_gradient_inner} 0%, ${theme.bg_gradient_outer} 100%)`
         }}>
+             <Audio 
+        src={audioSource} 
+        volume={0.7}
+      />
+
             {frame < tOutroFrame && (
                 <>
             {/* LAYER 1: THE PERSISTENT 3D STAGE */}
@@ -182,12 +199,13 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
             {/* 3. Add Fog to blend the Tunnel into the background gradient */}
             <fog attach="fog" args={[theme.bg_gradient_outer, 10, 80]} />
 
-            <ParticleField color={theme.accent_highlight} count={50} />
+             {/* <ParticleField color={theme.accent_secondary} count={50} />  */}
                 {/* We pass the pre-calculated anchors to Scene 1 */}
                 <SceneContent 
                     scenario={scenario} 
                     lockedDestinationY={lockedDestinationY} 
-                    finalStopZ={finalStopZ} 
+                    finalStopZ={finalStopZ}
+                    TARGET_COORDINATE={TARGET_COORDINATE} 
                 />
 
                 
@@ -227,6 +245,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
                         tCtaFrame={tCtaFrame}
                     />
                 )}
+                <Watermark scenario={scenario} cameraZ={cameraFinalZ}/>
                 </>
             )}
                 {/* 🏁 LAYER 3: OUTRO (Replaces everything at t_outro) */}

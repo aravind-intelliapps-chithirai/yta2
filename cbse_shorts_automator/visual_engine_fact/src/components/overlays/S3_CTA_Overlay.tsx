@@ -151,7 +151,17 @@ const localFrame = frame - tCtaFrame;
                     </div>
                 </div>
                 {/* Independent Bouncing Icon */}
-                <div style={{ fontSize: '5vh', marginTop: '1vh', transform: `translateY(${Math.sin(frame * 0.3) * 6}px)` }}>
+                <div style={{ fontSize: '8vh', marginTop: '1vh', transform: `translateY(${Math.sin(frame * 0.3) * 6}px)` ,
+                
+                // --- NEW BACKGROUND STYLES ---
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Black with 50% opacity
+                    padding: '1vh',                         // Space around the emoji
+                    borderRadius: '50%',                    // Makes it a perfect circle
+                    width: 'fit-content',                   // Wraps tight around content
+                    marginLeft: 'auto',                     // Centers it horizontally
+                    marginRight: 'auto',
+                    lineHeight: '1'                         // Fixes vertical alignment issues
+                }}>
                     👇
                 </div>
             </div>

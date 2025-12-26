@@ -109,7 +109,7 @@ export const CircuitPipes: React.FC<CircuitPipesProps> = ({
                             metalness={0.1}          // Not metallic
                             clearcoat={1.0}          // Shiny top layer
                             emissive={theme.accent_primary} 
-                            emissiveIntensity={0.1}  // Very faint glow from the fluid inside
+                            emissiveIntensity={0.6}  // Very faint glow from the fluid inside
                         />
                     </mesh>
                 ))}

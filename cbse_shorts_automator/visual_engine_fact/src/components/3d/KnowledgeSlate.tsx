@@ -86,7 +86,7 @@ export const KnowledgeSlate: React.FC<Props> = ({
             {/* MAIN SLATE BODY */}
             <RoundedBox args={[slateWidth, height, depth]} radius={height / 18}>
                 <meshStandardMaterial 
-                    color="#1a1a1a"
+                    color="#a7a7a7"
                     emissive={theme.accent_secondary} // Subtle theme tint from within
                     emissiveIntensity={0.1} 
                     metalness={0.9} 
@@ -96,14 +96,14 @@ export const KnowledgeSlate: React.FC<Props> = ({
 
             {/* FRONT SCREEN */}
             {Math.abs(RotationY) < Math.PI / 2 && (<mesh position={[0, 0, uiZOffset]}>
-                <planeGeometry args={[slateWidth * 0.95, height * 0.9]} />
+                <planeGeometry args={[slateWidth * 0.90, height * 0.90]} />
                 <meshBasicMaterial map={texture} toneMapped={false} transparent />
             </mesh>
             )}
 
             {/* BACK SCREEN */}
             <mesh position={[0, 0, -uiZOffset]} rotation={[0, Math.PI, 0]}>
-                <planeGeometry args={[slateWidth * 0.96, height * 0.96]} />
+                <planeGeometry args={[slateWidth * 0.92, height * 0.92]} />
                 <meshStandardMaterial map={backTexture} roughness={0.2} metalness={0.5} />
             </mesh>
             

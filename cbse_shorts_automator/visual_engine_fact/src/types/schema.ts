@@ -2,14 +2,27 @@ export interface Resolution {
   w: number;
   h: number;
 }
+export interface GridCounts {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface TargetItem {
+  x: number;
+  y: number;
+  z: number;
+}
 
 export interface Config {
   resolution: Resolution;
   fps: number;
+  grid_counts: GridCounts; // Added
 }
 
 export interface Meta {
   theme_seed: number;
+  target_item: TargetItem; // Added
   config: Config;
 }
 

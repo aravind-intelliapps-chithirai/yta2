@@ -19,9 +19,10 @@ interface SceneProps {
     scenario?: FactScenario;
     lockedDestinationY: number;
     finalStopZ: number;
+    TARGET_COORDINATE:any;
 }
 
-export const SceneContent: React.FC<SceneProps> = ({ scenario, lockedDestinationY, finalStopZ  }) => {
+export const SceneContent: React.FC<SceneProps> = ({ scenario, lockedDestinationY, finalStopZ,TARGET_COORDINATE  }) => {
     const frame = useCurrentFrame();
     const { fps,width:vid_width, height:vid_height } = useVideoConfig();
     
@@ -83,10 +84,15 @@ export const SceneContent: React.FC<SceneProps> = ({ scenario, lockedDestination
 
     //const { TARGET_COORDINATE, TEXT_SCALE_MAX } = SCENE_1_CONFIG;
     const { TEXT_SCALE_MAX } = SCENE_1_CONFIG;
-    const { TARGET_SLATE_ITEM } = SCENE_1_CONFIG;
-    const { GRID_X_COUNT,GRID_Y_COUNT,GRID_Z_COUNT, TUNNEL_LENGTH,BOX_W_FACT,BOX_H_FACT } = SCENE_1_CONFIG;
-    
+    //const { TARGET_SLATE_ITEM } = SCENE_1_CONFIG;
+    //const { GRID_X_COUNT,GRID_Y_COUNT,GRID_Z_COUNT, TUNNEL_LENGTH,BOX_W_FACT,BOX_H_FACT } = SCENE_1_CONFIG;
+    const {  TUNNEL_LENGTH,BOX_W_FACT,BOX_H_FACT } = SCENE_1_CONFIG;
+    //const TARGET_SLATE_ITEM = scenario.meta.target_item;
+    //const GRID_X_COUNT=scenario.meta.config.grid_counts.x;
+    //const GRID_Y_COUNT=scenario.meta.config.grid_counts.y;
+    const GRID_Z_COUNT=scenario.meta.config.grid_counts.z;
 
+    
     //const slateWidth=.75;
 
     const boxwidth_plus_gap = slateWidth/BOX_W_FACT;
@@ -95,10 +101,10 @@ export const SceneContent: React.FC<SceneProps> = ({ scenario, lockedDestination
     const boxdepth=boxheight*0.05;
     const boxheight_plus_gap = boxheight / BOX_H_FACT;
     const boxdepth_plus_gap = TUNNEL_LENGTH / GRID_Z_COUNT;
-    const TARGET_COORDINATEx=(TARGET_SLATE_ITEM.x - (GRID_X_COUNT - 1.05) / 2) * boxwidth_plus_gap;
-    const TARGET_COORDINATEy=(TARGET_SLATE_ITEM.y - (GRID_Y_COUNT - 1.05) / 2) * boxheight_plus_gap;
-    const TARGET_COORDINATEz=(boxdepth_plus_gap*(TARGET_SLATE_ITEM.z));
-    const TARGET_COORDINATE={ x: TARGET_COORDINATEx, y: TARGET_COORDINATEy, z: -TARGET_COORDINATEz }
+    //const TARGET_COORDINATEx=(TARGET_SLATE_ITEM.x - (GRID_X_COUNT - 1.05) / 2) * boxwidth_plus_gap;
+    //const TARGET_COORDINATEy=(TARGET_SLATE_ITEM.y - (GRID_Y_COUNT - 1.05) / 2) * boxheight_plus_gap;
+    //const TARGET_COORDINATEz=(boxdepth_plus_gap*(TARGET_SLATE_ITEM.z));
+    //const TARGET_COORDINATE={ x: TARGET_COORDINATEx, y: TARGET_COORDINATEy, z: -TARGET_COORDINATEz }
 
     //console.log("Hello1");
 
@@ -307,7 +313,7 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
         [MOVE_START_FRAME, MOVE_END],
         [0, -0.15], // Transition from flat to tilted
         { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
-        );
+        ); 
 
     // Flip Logic using scenario timings
     const flipStartFrame = (scenario.timings.t_cta - scenario.timings.t_title) * fps;
@@ -354,7 +360,7 @@ const currentSlateY = interpolate(
 const currentTiltX = interpolate(
     frame,
     [tCtaFrame, tCtaFrame + 24],
-    [-0.0, 0],
+    [tiltDown, 0],
     { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
 );
 
@@ -413,7 +419,7 @@ const keyLightInt = interpolate(
 {/*                 <hemisphereLight 
                     args={[theme.accent_secondary, '#000000', 0.6]} 
                 /> */}
-                { <ambientLight intensity={isScene2Active||!hasCollided ? 0.1 : 3} />
+                { <ambientLight intensity={isScene2Active||!hasCollided ? 0.6 : 3.5} />
                    }
 
                 {/* For the target block */} 
@@ -428,7 +434,7 @@ const keyLightInt = interpolate(
                         </group>
                         )}
                 {/* For the Hook Text */} 
-                 {!isScene2Active && 
+                 {/* {!isScene2Active &&  */}
                 (<pointLight 
                     position={[HookTextPosX, HookTextPosY+boxheight_plus_gap*2.5, HookTextPosZ+TEXT_DISTANCE*0.5]} 
                     intensity={isScene2Active ? 0.8 : 1.2} 
@@ -438,19 +444,19 @@ const keyLightInt = interpolate(
                     distance={TEXT_DISTANCE*20}
                     decay={TEXT_DISTANCE*.1}
                 />)
-                 }
+                 {/* } */}
 
                  {hasCollided && (<pointLight 
-                    position={[TARGET_COORDINATE.x, currentSlateY-boxheight_plus_gap, slateZ]} 
-                    intensity={1} 
+                    position={[TARGET_COORDINATE.x-0.0*boxwidth, currentSlateY-0.5*boxheight_plus_gap, slateZ-0.15]} 
+                    intensity={100} 
                     color={"white"} 
-                    distance={boxheight_plus_gap}
-                    decay={boxheight_plus_gap*0.1}
+                    distance={boxheight_plus_gap*2}
+                    decay={boxheight_plus_gap*0.01}
                 />)}
 
                 {/* Rim Light*/} 
 
-                 {hasCollided && (<spotLight 
+                 {hasCollided && (<spotLight
                     position={[rimLightPos.x, rimLightPos.y, rimLightPos.z]} 
                     intensity={2} 
                     target-position={[TARGET_COORDINATE.x, TARGET_COORDINATE.y, TARGET_COORDINATE.z]}
@@ -463,11 +469,11 @@ const keyLightInt = interpolate(
                 />)}
 
                   {hasCollided && (<pointLight 
-                    position={[TARGET_COORDINATE.x-0.0*boxwidth, currentSlateY+0.5*boxheight, slateZ+boxdepth_plus_gap*.5]} 
-                    intensity={isScene2Active ? 0.8 : 0.02} 
+                    position={[TARGET_COORDINATE.x-0.5*boxwidth, currentSlateY-1.50*boxheight, slateZ-0.15]} 
+                    intensity={isScene2Active ? 0.0 : 0.02} 
                     color={"white"} 
-                    distance={boxheight_plus_gap*20}
-                    decay={boxheight_plus_gap*0.001}
+                    distance={boxheight_plus_gap*4}
+                    decay={boxheight_plus_gap*0.01}
                 />)} 
                  
 
@@ -488,6 +494,7 @@ const keyLightInt = interpolate(
                         theme={theme} 
                         vp_width={width}
                         slateWidth={slateWidth}
+                        scenario={scenario}
                         opacity={tunnelOpacity} // Ensure your tunnel materials use this
                     />
                 </group>
@@ -497,9 +504,9 @@ const keyLightInt = interpolate(
                     <Billboard position={[HookTextPosX+ vibrationX, HookTextPosY+ vibrationY, HookTextPosZ]}>
                      <Center    key={hookText}  > {/* Apply your desired position here */}   
                          <Text3D
-                            font={staticFile("assets/fonts/bold.json")} 
-                            size={0.8}
-                            height={0.1}
+                            font={staticFile("assets/fonts/Anton.json")} 
+                            size={1.3}
+                            height={0.2}
                             curveSegments={12}
                             bevelEnabled
                             bevelThickness={0.1}
@@ -629,7 +636,7 @@ const Explosion = ({ origin, theme, startTime, duration }: any) => {
 };
 
 
-export const Scene1: React.FC<SceneProps> = ({ scenario, lockedDestinationY, finalStopZ }) => {
+export const Scene1: React.FC<SceneProps> = ({ scenario, lockedDestinationY, finalStopZ,TARGET_COORDINATE }) => {
     const theme = getTheme(scenario.meta.theme_seed+5);
     const { width, height } = useVideoConfig();
     //const variant = getVariant(scenario.meta.seed);
@@ -652,7 +659,7 @@ export const Scene1: React.FC<SceneProps> = ({ scenario, lockedDestinationY, fin
             
             
                 
-                <SceneContent scenario={scenario} lockedDestinationY={lockedDestinationY} finalStopZ={finalStopZ}/>
+                <SceneContent scenario={scenario} lockedDestinationY={lockedDestinationY} finalStopZ={finalStopZ} TARGET_COORDINATE={TARGET_COORDINATE}/>
             </ThreeCanvas>
             {/* Layer 100: The Ghost UI Overlay */}
             {/*<Watermark scenario={scenario} />*/}

@@ -28,7 +28,7 @@ export const RemotionRoot: React.FC = () => {
 
     useEffect(() => {
         // 1. Fetch the scenario data from the public folder
-        fetch(staticFile('scenario.json')) 
+        fetch(staticFile('scenario_data.json')) 
             .then(res => {
                 if (!res.ok) {
                     throw new Error(`HTTP error! status: ${res.status}`);

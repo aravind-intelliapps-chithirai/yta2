@@ -58,8 +58,8 @@ export const HTMLTextOverlay: React.FC<HTMLTextOverlayProps> = ({
 
     // --- 2. LAYOUT CALCULATIONS ---
     const dynamicStyles = useMemo(() => {
-        const CharWidthFactor = 0.55;
-        const CharHeightFactor = 1.6;
+        const CharWidthFactor = 0.65;
+        const CharHeightFactor = 1.35;
         const safetyBottomPx = vid_height * 0.9;
         const boxStartPx = (boxStartPercent) * vid_height;
         
@@ -73,11 +73,11 @@ export const HTMLTextOverlay: React.FC<HTMLTextOverlayProps> = ({
         const cardWidthPx = vid_width * LAYOUT.S2_BODY_CARD.WIDTH_VW;
         const charPerLine = (cardWidthPx - (paddingPx * 2)) / (baseFontSizePx * CharWidthFactor);
         const estimatedLines = Math.ceil(bodyText.length / charPerLine);
-        const estimatedTextHeight = estimatedLines * (baseFontSizePx * 1.0);
+        const estimatedTextHeight = estimatedLines * (baseFontSizePx * CharHeightFactor);
 
         let finalFontSizePx = baseFontSizePx;
         if (estimatedTextHeight > textBudgetPx) {
-            finalFontSizePx = Math.sqrt(Math.abs(textBudgetPx * (cardWidthPx - (paddingPx * 2)) / (bodyText.length * CharWidthFactor * CharHeightFactor)));
+            finalFontSizePx = 0.9*Math.sqrt(Math.abs(textBudgetPx * (cardWidthPx - (paddingPx * 2)) / (bodyText.length * CharWidthFactor * CharHeightFactor)));
         }
 
         return {
@@ -85,7 +85,8 @@ export const HTMLTextOverlay: React.FC<HTMLTextOverlayProps> = ({
             availableHeightPx,
             finalFontSizePx,
             cardWidthPx,
-            paddingPx
+            paddingPx,
+            CharHeightFactor
         };
     }, [vid_height, vid_width, boxStartPercent, scenario.content.fact_body_html]);
 
@@ -186,7 +187,7 @@ export const HTMLTextOverlay: React.FC<HTMLTextOverlayProps> = ({
                 
                 fontFamily: "'MontserratCustom', sans-serif",
                 fontSize: `${dynamicStyles.finalFontSizePx}px`,
-                lineHeight: '1.5',
+                lineHeight: `${dynamicStyles.CharHeightFactor}`,
                 whiteSpace: 'pre-wrap', 
                 wordBreak: 'break-word',
                 textAlign: 'center',

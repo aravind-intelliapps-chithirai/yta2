@@ -61,7 +61,7 @@ export const getTheme = (seed: number): Theme => {
   // C. Return The Palette
   return {
     // 1. ENVIRONMENT
-    bg_gradient_inner: hsl(p.hue, 80, 8), 
+    bg_gradient_inner: hsl(p.hue, 80, 15), 
     bg_gradient_outer: '#000000', 
 
     // 2. ENERGY

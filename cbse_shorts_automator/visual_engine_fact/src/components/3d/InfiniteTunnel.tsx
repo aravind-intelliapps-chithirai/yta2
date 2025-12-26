@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { Theme } from '../../theme/palettes';
 import { SCENE_1_CONFIG } from '../../constants';
 import { Edges } from '@react-three/drei'
+import { FactScenario } from '../../types/schema';
 
 const createSVGTexture = (brandColor: string) => {
     const canvas = document.createElement('canvas');
@@ -88,18 +89,19 @@ const createSVGTexture = (brandColor: string) => {
 export const InfiniteTunnel: React.FC<{ theme: Theme; 
                                         vp_width:number
                                         slateWidth:number
-                                        opacity:number}> = 
+                                        opacity:number, scenario:FactScenario}> = 
                                         ({ theme, 
                                             vp_width, 
-                                            slateWidth,opacity}) => {
-    const { GRID_X_COUNT,GRID_Y_COUNT,GRID_Z_COUNT, TUNNEL_LENGTH, BOX_W_FACT, BOX_H_FACT} = SCENE_1_CONFIG;
+                                            slateWidth,opacity,scenario}) => {
+    const {  TUNNEL_LENGTH, BOX_W_FACT, BOX_H_FACT} = SCENE_1_CONFIG;
+    //const { GRID_X_COUNT,GRID_Y_COUNT,GRID_Z_COUNT, TUNNEL_LENGTH, BOX_W_FACT, BOX_H_FACT} = SCENE_1_CONFIG;
 
     //const vp_width=10;
     const vp_height=vp_width*1.777777;
 
-    //const GRID_X_COUNT = 5;
-    //const GRID_Y_COUNT = 5;
-    //const GRID_Z_COUNT = 30;
+    const GRID_X_COUNT = scenario.meta.config.grid_counts.x;
+    const GRID_Y_COUNT = scenario.meta.config.grid_counts.y;
+    const GRID_Z_COUNT = scenario.meta.config.grid_counts.z;
     const boxwidth_plus_gap = slateWidth/BOX_W_FACT;
     const boxwidth=slateWidth;
     const boxheight=boxwidth * 0.5625;
