@@ -18961,5 +18961,590 @@
     "voice": "RajeshNeural2",
     "video_id": null,
     "cost_usd": 0.004032
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.141840",
+    "account": "account1",
+    "provider": "google",
+    "chars": 26,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000416
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.274600",
+    "account": "account1",
+    "provider": "google",
+    "chars": 20,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.00032
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.282978",
+    "account": "account1",
+    "provider": "google",
+    "chars": 37,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000592
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.332105",
+    "account": "account1",
+    "provider": "google",
+    "chars": 70,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.00112
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.411593",
+    "account": "account1",
+    "provider": "google",
+    "chars": 85,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.00136
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.493503",
+    "account": "account1",
+    "provider": "google",
+    "chars": 29,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000464
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.595330",
+    "account": "account1",
+    "provider": "google",
+    "chars": 11,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000176
+  },
+  {
+    "timestamp": "2025-12-26T05:31:52.841874",
+    "account": "account1",
+    "provider": "google",
+    "chars": 130,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.00208
+  },
+  {
+    "timestamp": "2025-12-26T05:31:53.221864",
+    "account": "account1",
+    "provider": "google",
+    "chars": 259,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.004144
+  },
+  {
+    "timestamp": "2025-12-26T06:32:12.485960",
+    "account": "account1",
+    "provider": "google",
+    "chars": 23,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000368
+  },
+  {
+    "timestamp": "2025-12-26T06:32:12.607287",
+    "account": "account1",
+    "provider": "google",
+    "chars": 44,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000704
+  },
+  {
+    "timestamp": "2025-12-26T06:32:12.945931",
+    "account": "account1",
+    "provider": "google",
+    "chars": 110,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.00176
+  },
+  {
+    "timestamp": "2025-12-26T06:32:13.655071",
+    "account": "account1",
+    "provider": "google",
+    "chars": 235,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.00376
+  },
+  {
+    "timestamp": "2025-12-26T06:35:45.942328",
+    "account": "account1",
+    "provider": "google",
+    "chars": 24,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000384
+  },
+  {
+    "timestamp": "2025-12-26T06:35:46.227262",
+    "account": "account1",
+    "provider": "google",
+    "chars": 132,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.002112
+  },
+  {
+    "timestamp": "2025-12-26T06:35:46.383690",
+    "account": "account1",
+    "provider": "google",
+    "chars": 53,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000848
+  },
+  {
+    "timestamp": "2025-12-26T06:35:47.549298",
+    "account": "account1",
+    "provider": "google",
+    "chars": 304,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.004864
+  },
+  {
+    "timestamp": "2025-12-26T06:39:11.815483",
+    "account": "account1",
+    "provider": "google",
+    "chars": 78,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001248
+  },
+  {
+    "timestamp": "2025-12-26T06:39:11.917659",
+    "account": "account1",
+    "provider": "google",
+    "chars": 39,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000624
+  },
+  {
+    "timestamp": "2025-12-26T06:39:12.345693",
+    "account": "account1",
+    "provider": "google",
+    "chars": 103,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001648
+  },
+  {
+    "timestamp": "2025-12-26T06:39:14.310422",
+    "account": "account1",
+    "provider": "google",
+    "chars": 328,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.005248
+  },
+  {
+    "timestamp": "2025-12-26T06:43:06.126498",
+    "account": "account1",
+    "provider": "google",
+    "chars": 59,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.000944
+  },
+  {
+    "timestamp": "2025-12-26T06:43:06.137720",
+    "account": "account1",
+    "provider": "google",
+    "chars": 121,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.001936
+  },
+  {
+    "timestamp": "2025-12-26T06:43:06.179830",
+    "account": "account1",
+    "provider": "google",
+    "chars": 21,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.000336
+  },
+  {
+    "timestamp": "2025-12-26T06:43:07.772776",
+    "account": "account1",
+    "provider": "google",
+    "chars": 295,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.00472
+  },
+  {
+    "timestamp": "2025-12-26T06:51:55.203209",
+    "account": "account1",
+    "provider": "google",
+    "chars": 142,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.002272
+  },
+  {
+    "timestamp": "2025-12-26T06:51:55.225656",
+    "account": "account1",
+    "provider": "google",
+    "chars": 26,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.000416
+  },
+  {
+    "timestamp": "2025-12-26T06:51:55.271265",
+    "account": "account1",
+    "provider": "google",
+    "chars": 76,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.001216
+  },
+  {
+    "timestamp": "2025-12-26T06:51:56.330554",
+    "account": "account1",
+    "provider": "google",
+    "chars": 334,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.005344
+  },
+  {
+    "timestamp": "2025-12-26T07:01:52.388350",
+    "account": "account1",
+    "provider": "google",
+    "chars": 22,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.000352
+  },
+  {
+    "timestamp": "2025-12-26T07:01:52.458094",
+    "account": "account1",
+    "provider": "google",
+    "chars": 97,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001552
+  },
+  {
+    "timestamp": "2025-12-26T07:01:52.516317",
+    "account": "account1",
+    "provider": "google",
+    "chars": 63,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001008
+  },
+  {
+    "timestamp": "2025-12-26T07:01:53.434658",
+    "account": "account1",
+    "provider": "google",
+    "chars": 302,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.004832
+  },
+  {
+    "timestamp": "2025-12-26T07:24:25.312603",
+    "account": "account1",
+    "provider": "google",
+    "chars": 24,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.000384
+  },
+  {
+    "timestamp": "2025-12-26T07:24:25.417875",
+    "account": "account1",
+    "provider": "google",
+    "chars": 76,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001216
+  },
+  {
+    "timestamp": "2025-12-26T07:24:25.468687",
+    "account": "account1",
+    "provider": "google",
+    "chars": 122,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001952
+  },
+  {
+    "timestamp": "2025-12-26T07:24:26.587630",
+    "account": "account1",
+    "provider": "google",
+    "chars": 285,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.00456
+  },
+  {
+    "timestamp": "2025-12-26T07:32:51.953735",
+    "account": "account1",
+    "provider": "google",
+    "chars": 11,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000176
+  },
+  {
+    "timestamp": "2025-12-26T07:32:52.337083",
+    "account": "account1",
+    "provider": "google",
+    "chars": 100,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.0016
+  },
+  {
+    "timestamp": "2025-12-26T07:32:52.340739",
+    "account": "account1",
+    "provider": "google",
+    "chars": 58,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000928
+  },
+  {
+    "timestamp": "2025-12-26T07:32:53.901856",
+    "account": "account1",
+    "provider": "google",
+    "chars": 255,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.00408
+  },
+  {
+    "timestamp": "2025-12-26T07:37:10.750310",
+    "account": "account1",
+    "provider": "google",
+    "chars": 21,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000336
+  },
+  {
+    "timestamp": "2025-12-26T07:37:10.933082",
+    "account": "account1",
+    "provider": "google",
+    "chars": 63,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001008
+  },
+  {
+    "timestamp": "2025-12-26T07:37:10.945076",
+    "account": "account1",
+    "provider": "google",
+    "chars": 103,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001648
+  },
+  {
+    "timestamp": "2025-12-26T07:37:12.812011",
+    "account": "account1",
+    "provider": "google",
+    "chars": 279,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.004464
+  },
+  {
+    "timestamp": "2025-12-26T07:39:15.825212",
+    "account": "account1",
+    "provider": "google",
+    "chars": 24,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.000384
+  },
+  {
+    "timestamp": "2025-12-26T07:39:15.833850",
+    "account": "account1",
+    "provider": "google",
+    "chars": 68,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001088
+  },
+  {
+    "timestamp": "2025-12-26T07:39:16.080576",
+    "account": "account1",
+    "provider": "google",
+    "chars": 132,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.002112
+  },
+  {
+    "timestamp": "2025-12-26T07:39:16.944410",
+    "account": "account1",
+    "provider": "google",
+    "chars": 259,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.004144
+  },
+  {
+    "timestamp": "2025-12-26T10:06:03.942180",
+    "account": "account1",
+    "provider": "google",
+    "chars": 29,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000464
+  },
+  {
+    "timestamp": "2025-12-26T10:06:04.259162",
+    "account": "account1",
+    "provider": "google",
+    "chars": 131,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.002096
+  },
+  {
+    "timestamp": "2025-12-26T10:06:04.358765",
+    "account": "account1",
+    "provider": "google",
+    "chars": 73,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.001168
+  },
+  {
+    "timestamp": "2025-12-26T10:06:05.531842",
+    "account": "account1",
+    "provider": "google",
+    "chars": 274,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.004384
+  },
+  {
+    "timestamp": "2025-12-26T10:16:54.746702",
+    "account": "account1",
+    "provider": "google",
+    "chars": 24,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.000384
+  },
+  {
+    "timestamp": "2025-12-26T10:16:55.056723",
+    "account": "account1",
+    "provider": "google",
+    "chars": 131,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.002096
+  },
+  {
+    "timestamp": "2025-12-26T10:16:55.221377",
+    "account": "account1",
+    "provider": "google",
+    "chars": 84,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.001344
+  },
+  {
+    "timestamp": "2025-12-26T10:16:57.181824",
+    "account": "account1",
+    "provider": "google",
+    "chars": 247,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.003952
+  },
+  {
+    "timestamp": "2025-12-26T11:41:12.377975",
+    "account": "account1",
+    "provider": "google",
+    "chars": 29,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000464
+  },
+  {
+    "timestamp": "2025-12-26T11:41:12.592997",
+    "account": "account1",
+    "provider": "google",
+    "chars": 82,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001312
+  },
+  {
+    "timestamp": "2025-12-26T11:41:12.713197",
+    "account": "account1",
+    "provider": "google",
+    "chars": 141,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.002256
+  },
+  {
+    "timestamp": "2025-12-26T11:41:14.025847",
+    "account": "account1",
+    "provider": "google",
+    "chars": 250,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.004
+  },
+  {
+    "timestamp": "2025-12-26T11:55:03.885364",
+    "account": "account1",
+    "provider": "google",
+    "chars": 20,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.00032
+  },
+  {
+    "timestamp": "2025-12-26T11:55:03.910568",
+    "account": "account1",
+    "provider": "google",
+    "chars": 108,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001728
+  },
+  {
+    "timestamp": "2025-12-26T11:55:03.962113",
+    "account": "account1",
+    "provider": "google",
+    "chars": 75,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.0012
+  },
+  {
+    "timestamp": "2025-12-26T11:55:05.505015",
+    "account": "account1",
+    "provider": "google",
+    "chars": 267,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.004272
   }
 ]

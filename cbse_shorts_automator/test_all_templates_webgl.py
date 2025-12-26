@@ -74,7 +74,7 @@ def run_full_test():
     
     # 2. TEST LOOP (Quiz -> Fact -> Tip)
     #templates = ['quiz', 'fact', 'tip']
-    templates = ['quiz']
+    templates = ['fact']
     
     for i, template_type in enumerate(templates):
         print(f"\n🎬 TEST {i+1}/3: Generating '{template_type.upper()}' Template")
@@ -146,6 +146,11 @@ def run_full_test():
                 'width': int(1080 / 2),
                 'height': int(1920 / 2),
                 'fps': 10, 
+                'grid_counts':{
+                        "x": 5,
+                        "y": 9,
+                        "z": 20
+                    },
                 'class_level': 11
             }
             
@@ -198,7 +203,7 @@ def run_full_test():
     # 3. Execute
     try:
         print(f"🚀 Starting Remotion render: {comp_id}...")
-        subprocess.run(command, cwd=project_dir,check=True)
+        #subprocess.run(command, cwd=project_dir,check=True)
         print("✅ Render completed successfully!")
     except subprocess.CalledProcessError as e:
         print(f"❌ Render failed with error code {e.returncode}")

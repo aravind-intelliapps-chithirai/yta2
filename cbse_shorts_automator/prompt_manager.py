@@ -126,6 +126,7 @@ class PromptManager:
             {{
             "filename_slug": "[STRICTLY 1-word subject different from the chapter name for filename: e.g., 'blackhole', 'neurons']",
             "hook_spoken": "[Curiosity Hook: e.g., 'Bet you didn't know this!' - Max 15 words]",
+            "hook_visual": "[Hook Text for screen: e.g., 'Did you Know!' - Max 4 words]",
             "fact_title": "[Catchy Headline for SCREEN - STRICTLY Max 5 words]",
             "fact_visual": "[The core fact for SCREEN. Use proper notation: CO₂, 9.8 m/s². Max 20 words]",
             "fact_spoken": "[The Fact Explanation for AUDIO. Use phonetic rules: C O two, 9.8 meters per second squared. Approx 50 words. Explain 'Why' or 'How' energetically.]",

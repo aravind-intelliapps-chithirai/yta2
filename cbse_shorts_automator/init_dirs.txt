@@ -13,6 +13,8 @@ mkdir cbse_shorts_automator/logs/
 
 sudo apt-get update
 sudo apt-get install imagemagick
+sudo apt install ffmpeg
+pip install -r requirements.texttospeech
+
 pip install google-cloud-texttospeech
 pip install -U openai-whisper
-sudo apt install ffmpeg
