@@ -35,6 +35,7 @@ TEMP_OUT="output/out_video.mp4"
 #CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --gl=angle --log=info"
 #CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --gl=angle --log=verbose --enable-multiprocess-on-linux" 
 CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --concurrency=2 --enable-multiprocess-on-linux" 
+#CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --concurrency=2 --enable-multiprocess-on-linux --log=verbose --chromium-options="--enable-unsafe-swiftshader" --timeout=120000" 
 #CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --gl=vulkan --log=verbose"
 
 # Add Partial Render flag if specified

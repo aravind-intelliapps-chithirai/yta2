@@ -1,0 +1,217 @@
+------------------------------------------------
+🎬  STARTING RENDER JOB
+------------------------------------------------
+✂️  Partial Render Detected: Frames [0-20]
+⏳ Executing: npx remotion render src/index.ts NCERT-Shorts-FACT output/out_video.mp4 --concurrency=2 --enable-multiprocess-on-linux --log=verbose --frames=0-20
+Remotion root directory: /workspaces/yta2/cbse_shorts_automator/visual_engine_fact
+Applied configuration from /workspaces/yta2/cbse_shorts_automator/visual_engine_fact/remotion.config.ts.
+Checking if src/index.ts is the entry file
+Entry point = /workspaces/yta2/cbse_shorts_automator/visual_engine_fact/src/index.ts (argument passed - found in cwd)
+Ensuring browser executable
+Ensured browser is available.
+[openBrowser()] Opening browser: gl = null, executable = /workspaces/yta2/cbse_shorts_automator/visual_engine_fact/node_modules/.remotion/chrome-headless-shell/linux64/chrome-headless-shell-linux64/chrome-headless-shell, enableMultiProcessOnLinux = true
+Bundling 6%
+Bundling 12%
+Bundling 26%
+Bundling 51%
+Bundling 65%
+Bundling 71%
+Bundling 76%
+Bundling 81%
+Bundling 87%
+Bundling 92%
+Bundling 98%
+Bundling 100%
+Copying public dir 45.5 MB
+Copying public dir 53.9 MB
+Bundling done in 4338ms
+Copying done in 33ms
+Getting compositions
+Bundled under /tmp/remotion-webpack-bundle-vclXXi
+Created directory for temporary files /tmp/remotion-v4.0.393-assets57pxvx168p
+[compositor] Starting Rust process. Max video cache size: 2094MB, max threads = 2
+[Tab 0, delayRender()] "Loading root component - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 0ms
+[Tab 0, delayRender()] "Waiting for root component to load - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 2ms
+[Tab 0, delayRender()] A handle handle was cleared after 10ms
+[selectComposition()] Running calculateMetadata()...
+[Tab 0, delayRender()] "Running the calculateMetadata() function for composition NCERT-Shorts-FACT" handle was cleared after 0ms
+[selectComposition()] calculateMetadata() took 2ms
+Composition = NCERT-Shorts-FACT (Passed as argument)
+Codec = h264 (derived from out name)
+Output = output/out_video.mp4
+Concurrency = 2x
+[renderMedia()] Free memory: 4361515008 Estimated usage parallel encoding 2073600000
+[renderMedia()] Using concurrency: 2
+[renderMedia()] delayRender() timeout: 30000
+[renderMedia()] Codec supports parallel rendering: true
+[renderMedia()] Parallel encoding is enabled.
+[renderMedia()] Rendering frames 0-20
+[stitchFramesToVideo()] Encoder: libx264, hardware accelerated: false
+[prespawnFfmpeg()] Generated FFMPEG command:
+[prespawnFfmpeg()] -r,30 -f,image2pipe -s,1080x1920 -vcodec,mjpeg -i,- -c:v,libx264 -pix_fmt,yuv420p -video_track_timescale,90000 -crf,18 -y /tmp/react-motion-renderkzYu3A/pre-encode.mp4
+Rendered 0/21
+[Tab 0, delayRender()] "Loading root component - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 0ms
+[Tab 0, delayRender()] "Waiting for root component to load - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 4ms
+[Tab 1, delayRender()] "Loading root component - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 0ms
+[Tab 0, delayRender()] A handle handle was cleared after 14ms
+[Tab 0, src/components/scenes/Scenes.tsx:92] 🚨 SCENE 2 POSITIONAL DEBUGGING
+[Tab 0, src/components/scenes/Scenes.tsx:94] --------------------------------------------------
+[Tab 0, src/components/scenes/Scenes.tsx:95] 📸 CAMERA LOOK-AT Y (finalCamY): -2.510
+[Tab 0, src/components/scenes/Scenes.tsx:96] 📐 DISTANCE (Cam <-> Slate):     1.589
+[Tab 0, src/components/scenes/Scenes.tsx:97] 📺 VIEWPORT HEIGHT at Depth:     1.481
+[Tab 0, src/components/scenes/Scenes.tsx:98] --------------------------------------------------
+[Tab 0, src/components/scenes/Scenes.tsx:99] ⬆️  CALCULATED TOP EDGE Y:        -1.769
+[Tab 0, src/components/scenes/Scenes.tsx:100] 📏 MARGIN OFFSET (from top):     0.074
+[Tab 0, src/components/scenes/Scenes.tsx:101] 📉 SUBTRACT SLATE HALF-HEIGHT:   0.211
+[Tab 0, src/components/scenes/Scenes.tsx:102] --------------------------------------------------
+[Tab 0, src/components/scenes/Scenes.tsx:103] 🎯 FINAL DESTINATION Y:          -2.054
+[Tab 0, src/components/scenes/Scenes.tsx:104] 🏁 STARTING Y (Target Coord):    -2.510
+[Tab 0, src/components/scenes/Scenes.tsx:105] 🚀 MOVEMENT DELTA:               0.456
+[Tab 0, src/components/scenes/Scenes.tsx:109] ✅ CHECK PASSED: Destination is ABOVE Camera Center.
+[Tab 0, src/components/scenes/Scenes.tsx:111] console.groupEnd
+[Tab 1, delayRender()] "Waiting for root component to load - See https://remotion.dev/docs/troubleshooting/loading-root-component if you experience a timeout" handle was cleared after 27ms
+[Tab 1, delayRender()] A handle handle was cleared after 32ms
+[Tab 1, src/components/scenes/Scenes.tsx:92] 🚨 SCENE 2 POSITIONAL DEBUGGING
+[Tab 1, src/components/scenes/Scenes.tsx:94] --------------------------------------------------
+[Tab 1, src/components/scenes/Scenes.tsx:95] 📸 CAMERA LOOK-AT Y (finalCamY): -2.510
+[Tab 1, src/components/scenes/Scenes.tsx:96] 📐 DISTANCE (Cam <-> Slate):     1.589
+[Tab 1, src/components/scenes/Scenes.tsx:97] 📺 VIEWPORT HEIGHT at Depth:     1.481
+[Tab 1, src/components/scenes/Scenes.tsx:98] --------------------------------------------------
+[Tab 1, src/components/scenes/Scenes.tsx:99] ⬆️  CALCULATED TOP EDGE Y:        -1.769
+[Tab 1, src/components/scenes/Scenes.tsx:100] 📏 MARGIN OFFSET (from top):     0.074
+[Tab 1, src/components/scenes/Scenes.tsx:101] 📉 SUBTRACT SLATE HALF-HEIGHT:   0.211
+[Tab 1, src/components/scenes/Scenes.tsx:102] --------------------------------------------------
+[Tab 1, src/components/scenes/Scenes.tsx:103] 🎯 FINAL DESTINATION Y:          -2.054
+[Tab 1, src/components/scenes/Scenes.tsx:104] 🏁 STARTING Y (Target Coord):    -2.510
+[Tab 1, src/components/scenes/Scenes.tsx:105] 🚀 MOVEMENT DELTA:               0.456
+[Tab 1, src/components/scenes/Scenes.tsx:109] ✅ CHECK PASSED: Destination is ABOVE Camera Center.
+[Tab 1, src/components/scenes/Scenes.tsx:111] console.groupEnd
+[Tab 0, delayRender()] "Waiting for Composition "NCERT-Shorts-FACT"" handle was cleared after 79ms
+[Tab 1, delayRender()] "Waiting for Composition "NCERT-Shorts-FACT"" handle was cleared after 63ms
+[console.warning] [GroupMarkerNotSet(crbug.com/242999)!:A0F02700CC020000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.
+[console.warning] [GroupMarkerNotSet(crbug.com/242999)!:A0202800CC020000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.
+[Tab 0, delayRender()] "Waiting for <ThreeCanvas/> to be created" handle was cleared after 506ms
+[Tab 1, delayRender()] "Waiting for <ThreeCanvas/> to be created" handle was cleared after 547ms
+[console.warning] [.WebGL-0x3c54000aff00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[console.warning] [.WebGL-0x3c54000aff00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[Tab 0, delayRender()] "Setting the current frame to 0" handle was cleared after 0ms
+[console.warning] [.WebGL-0x30c000af800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[console.warning] [.WebGL-0x30c000af800]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)
+[Tab 1, delayRender()] "Setting the current frame to 1" handle was cleared after 0ms
+[console.warning] [GroupMarkerNotSet(crbug.com/242999)!:A0205612CC020000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.
+Seeking to frame 0 took 3184ms
+[console.warning] [GroupMarkerNotSet(crbug.com/242999)!:A0307E12CC020000]Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.
+Starting download [0]: http://localhost:3001/public/assets/audio_track.mp3
+Rendered 1/21, time remaining: 1m 23s
+Seeking to frame 1 took 4245ms
+[Tab 1, src/components/3d/KnowledgeSlate.tsx:40] UnResolved: { videoUrl: "assets/source_vid.mp4" }
+[Tab 1, src/components/3d/KnowledgeSlate.tsx:48] Resolved1: { resolvedSrc: "/public/assets/source_vid.mp4" }
+[Tab 0, src/components/3d/KnowledgeSlate.tsx:40] UnResolved: { videoUrl: "assets/source_vid.mp4" }
+[Tab 0, src/components/3d/KnowledgeSlate.tsx:48] Resolved1: { resolvedSrc: "/public/assets/source_vid.mp4" }
+Rendered 2/21, time remaining: 53s
+[Tab 1, delayRender()] "Setting the current frame to 3" handle was cleared after 49ms
+Seeking to frame 3 took 3289ms
+Rendered 3/21, time remaining: 54s
+[Tab 1, delayRender()] "Setting the current frame to 4" handle was cleared after 5ms
+[Tab 0, delayRender()] "Setting the current frame to 2" handle was cleared after 15ms
+Rendered 4/21, time remaining: 41s
+[Tab 1, delayRender()] "Setting the current frame to 5" handle was cleared after 3ms
+Rendered 5/21, time remaining: 39s
+[Tab 1, delayRender()] "Setting the current frame to 6" handle was cleared after 5ms
+Seeking to frame 2 took 8394ms
+Rendered 6/21, time remaining: 32s
+[Tab 1, delayRender()] "Setting the current frame to 7" handle was cleared after 27ms
+Seeking to frame 7 took 1150ms
+Rendered 7/21, time remaining: 28s
+[Tab 0, delayRender()] "Setting the current frame to 8" handle was cleared after 33ms
+Rendered 8/21, time remaining: 24s
+[Tab 1, delayRender()] "Setting the current frame to 9" handle was cleared after 3ms
+Seeking to frame 8 took 1305ms
+Rendered 9/21, time remaining: 21s
+[Tab 1, delayRender()] "Setting the current frame to 10" handle was cleared after 21ms
+Rendered 10/21, time remaining: 18s
+[Tab 0, delayRender()] "Setting the current frame to 11" handle was cleared after 15ms
+Seeking to frame 10 took 2482ms
+Rendered 11/21, time remaining: 17s
+[Tab 1, delayRender()] "Setting the current frame to 12" handle was cleared after 22ms
+Seeking to frame 11 took 2556ms
+Rendered 12/21, time remaining: 14s
+[Tab 0, delayRender()] "Setting the current frame to 13" handle was cleared after 2ms
+Rendered 13/21, time remaining: 12s
+[Tab 0, delayRender()] "Setting the current frame to 14" handle was cleared after 2ms
+Seeking to frame 12 took 2197ms
+Rendered 14/21, time remaining: 10s
+[Tab 1, delayRender()] "Setting the current frame to 15" handle was cleared after 12ms
+Rendered 15/21, time remaining: 8s
+[Tab 0, delayRender()] "Setting the current frame to 16" handle was cleared after 40ms
+Seeking to frame 15 took 2167ms
+Rendered 16/21, time remaining: 7s
+[Tab 1, delayRender()] "Setting the current frame to 17" handle was cleared after 2ms
+Seeking to frame 16 took 2187ms
+Rendered 17/21, time remaining: 5s
+[Tab 0, delayRender()] "Setting the current frame to 18" handle was cleared after 21ms
+Rendered 18/21, time remaining: 4s
+[Tab 1, delayRender()] "Setting the current frame to 19" handle was cleared after 11ms
+Seeking to frame 18 took 2217ms
+Rendered 19/21, time remaining: 2s
+[Tab 0, delayRender()] "Setting the current frame to 20" handle was cleared after 25ms
+Seeking to frame 19 took 2285ms
+Rendered 20/21, time remaining: 1s
+Seeking to frame 20 took 1539ms
+Rendered 21/21
+[compositor] Freed memory from compositor
+Rendered 21/21
+Encoded 3/21
+Encoded 8/21
+Encoded 12/21
+Encoded 17/21
+Rendering frames done in 30846ms
+[stitchFramesToVideo()] audioCodec aac
+[stitchFramesToVideo()] pixelFormat yuv420p
+[stitchFramesToVideo()] codec h264
+[stitchFramesToVideo()] shouldRenderAudio true
+[stitchFramesToVideo()] shouldRenderVideo true
+[audio] asset positions [{"src":"/tmp/remotion-v4.0.393-assets57pxvx168p/remotion-assets-dir/2760981742758304.mp3","type":"audio","duration":21,"id":"audio-0.23391806846484542-undefined-undefined-undefined","startInVideo":0,"trimLeft":0,"volume":0.7,"playbackRate":1,"toneFrequency":1,"audioStartFrame":0,"audioStreamIndex":0}]
+Preprocessing audio track: "-hide_banner -i /tmp/remotion-v4.0.393-assets57pxvx168p/remotion-assets-dir/2760981742758304.mp3 -ac 2 -filter_script:a /tmp/remotion-v4.0.393-assets57pxvx168p/remotion-complex-filter/complex-filter-0013185089524666016.txt -c:a pcm_s16le -ar 48000 -y /tmp/remotion-v4.0.393-assets57pxvx168p/remotion-audio-mixing/0.wav" Filter: [0:a]aformat=sample_fmts=s16:sample_rates=48000,atrim=0us:700000us,volume=0.7:eval=once[a0]
+[audio] Encoding progress: 70%
+Preprocessed audio track 15ms
+[audio] Encoding progress: 70%
+Merging audio tracks Command: ffmpeg -hide_banner -i /tmp/remotion-v4.0.393-assets57pxvx168p/remotion-audio-mixing/0.wav -filter_complex_script /tmp/remotion-v4.0.393-assets57pxvx168p/remotion-complex-filter/complex-filter-07080537139582037.txt -c:a pcm_s16le -map [outputaudio] -y /tmp/remotion-v4.0.393-assets57pxvx168p/remotion-audio-preprocessing/merged.wav Complex filter script: [0:a]acopy[padded0];[padded0]amix=inputs=1:dropout_transition=0:normalize=0[outputaudio]
+[audio] Encoding progress: 80%
+[audio] Encoding progress: 80%
+[audio] Encoding progress: 100%
+[stitchFramesToVideo()] Encoder: libx264, hardware accelerated: false
+[stitchFramesToVideo()] Generated final FFmpeg command:
+[stitchFramesToVideo()] -i /tmp/react-motion-renderkzYu3A/pre-encode.mp4 -i /tmp/remotion-v4.0.393-assets57pxvx168p/remotion-audio-preprocessing/audio.aac -c:a copy -c:v copy -movflags faststart -map_metadata -1 -metadata comment=Made with Remotion 4.0.393 -y /workspaces/yta2/cbse_shorts_automator/visual_engine_fact/output/out_video.mp4
+Encoded 21/21
+Stitching done in 274ms
+○                    output/out_video.mp4 1.3 MB
+Slowest frames:
+  Frame 0 (4173.000ms)
+  Frame 3 (3439.000ms)
+  Frame 5 (2446.000ms)
+  Frame 1 (1453.000ms)
+  Frame 2 (1277.000ms)
+  Frame 9 (1254.000ms)
+  Frame 6 (948.000ms)
+  Frame 4 (730.000ms)
+  Frame 7 (722.000ms)
+  Frame 8 (536.000ms)
+Render performance:
+  capture => 487ms (n = 21)
+  piping => 0ms (n = 21)
+Cleaning up...
+Cleanup job "Delete /tmp/remotion-webpack-bundle-vclXXi" done
+Cleanup job "Cleanup bundle" done
+Received SIGTERM signal. Killing browser process
+Trying to kill browser process group -24674
+Cleanup job "Closing browser instance" done
+Cleanup job "Close server" done
+Cleanup job "Delete /tmp/react-motion-renderkzYu3A" done
+Cleanup done in 22ms
+💾 Saving to Drive: ..//shorts/TEST_FULL_FACT_V1.mp4
+------------------------------------------------
+✅ RENDER SUCCESS
+⏱️  Time Taken: 37 seconds
+📂 Output: ..//shorts/TEST_FULL_FACT_V1.mp4
+------------------------------------------------

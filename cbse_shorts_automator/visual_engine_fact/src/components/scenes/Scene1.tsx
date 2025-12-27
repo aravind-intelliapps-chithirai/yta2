@@ -1,10 +1,19 @@
-import React, { useMemo, useRef } from 'react';
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
+import React, { useMemo, useRef, Suspense, useEffect, useState } from 'react';
+import { 
+    AbsoluteFill, 
+    useCurrentFrame, 
+    useVideoConfig, 
+    interpolate, 
+    staticFile, 
+    spring, 
+    Easing,
+    delayRender,   // Added
+    continueRender // Added
+} from 'remotion';
 import { ThreeCanvas } from '@remotion/three';
-import { Canvas, useThree } from '@react-three/fiber';
-import { Text3D, Billboard, CatmullRomLine, PerspectiveCamera, Center } from '@react-three/drei';
+import { Canvas, useThree, useFrame } from '@react-three/fiber';
+import { Text3D, Billboard, CatmullRomLine, PerspectiveCamera, Center, useProgress, Preload, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
-import { staticFile,spring,Easing } from 'remotion';
 import { FactScenario } from '../../types/schema';
 import { Theme } from '../../theme/palettes';
 import { InfiniteTunnel } from '../3d/InfiniteTunnel';
@@ -21,6 +30,16 @@ interface SceneProps {
     finalStopZ: number;
     TARGET_COORDINATE:any;
 }
+
+// A simple Grey Box to show while the real Slate is loading its video
+const SlateFallback = ({ width }: { width: number }) => {
+    const height = width * 0.5625;
+    return (
+        <RoundedBox args={[0, 0, height / 12]} radius={height / 18}>
+             <meshStandardMaterial color="#333333" transparent opacity={0.5} />
+        </RoundedBox>
+    );
+};
 
 export const SceneContent: React.FC<SceneProps> = ({ scenario, lockedDestinationY, finalStopZ,TARGET_COORDINATE  }) => {
     const frame = useCurrentFrame();
@@ -235,7 +254,7 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
 
     // Collision Detection: When Slate passes the Text
     const hasCollided = slateZ > HookTextPosZ; 
-    console.log(slateZ,camPos.z)
+    //console.log(slateZ,camPos.z)
     // Constants for the interaction sequence
     //const POST_SMASH_PAUSE = 0.5 * fps;
     //const CLICK_START_FRAME = DURATION_SEARCH + DURATION_SMASH + POST_SMASH_PAUSE;
@@ -243,7 +262,7 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
     // How many frames since the click started? (Negative if it hasn't started yet)
     const clickFrame = frame - CLICK_START_FRAME; 
     const isPlaying = frame >= (CLICK_START_FRAME);
-    console.log(theme.bg_gradient_inner);
+    //console.log(theme.bg_gradient_inner);
 
     // --- NEW: VERTICAL POSITIONING LOGIC ---
 
@@ -465,7 +484,7 @@ const keyLightInt = interpolate(
                     penumbra={0.5}
                     //distance={boxheight_plus_gap*20}
                     //decay={boxheight_plus_gap*0.1}
-                    castShadow
+                    
                 />)}
 
                   {/* {hasCollided && (<pointLight 
@@ -489,6 +508,7 @@ const keyLightInt = interpolate(
                 />
 
                 {/* ENVIRONMENT */}
+                <Suspense fallback={null}>
                 <group scale={[tunnelScale, tunnelScale, tunnelScale]}>
                     <InfiniteTunnel 
                         theme={theme} 
@@ -498,8 +518,12 @@ const keyLightInt = interpolate(
                         opacity={tunnelOpacity} // Ensure your tunnel materials use this
                     />
                 </group>
+                </Suspense>
 
                 {/* HOOK TEXT - THE OBSTACLE */}
+
+                <Suspense fallback={null}>
+
                 {!hasCollided && ( 
                     <Billboard position={[HookTextPosX+ vibrationX, HookTextPosY+ vibrationY, HookTextPosZ]}>
                      <Center    key={hookText}  > {/* Apply your desired position here */}   
@@ -536,11 +560,17 @@ const keyLightInt = interpolate(
                         </Center>
                     </Billboard>
                 )}
+                </Suspense>
+ 
 
                 {/* PARTICLE EXPLOSION (Simulated) [cite: 170] */}
+                
                 {hasCollided && frame <  SMASH_END_FRAME + TIMING.S1_EXPLOSION_DURATION && (
+                     <Suspense fallback={null}>
                      <Explosion origin={{ x: HookTextPosX, y: HookTextPosY, z: slateZ }} theme={theme} startTime={SMASH_END_FRAME} duration={TIMING.S1_EXPLOSION_DURATION} />
-                )}
+                    </Suspense>
+                )} 
+                
 
                 {/* THE KNOWLEDGE SLATE */}
                  <group 
@@ -552,6 +582,7 @@ const keyLightInt = interpolate(
                         1
                     ]}
                 >
+                    <Suspense fallback={<SlateFallback width={slateWidth} />}> 
                 <KnowledgeSlate 
                     theme={theme} 
                     position={[TARGET_COORDINATE.x, currentSlateY, slateZ]} // Centered X/Y, Moving Z
@@ -562,6 +593,7 @@ const keyLightInt = interpolate(
                     clickFrame={clickFrame}
                     scenario={scenario}
                 />
+                </Suspense> 
                 </group>
                 {/* SCENE 3 SPECIFIC ELEMENTS */}
                     {isCtaPhase && (
@@ -636,35 +668,3 @@ const Explosion = ({ origin, theme, startTime, duration }: any) => {
 };
 
 
-export const Scene1: React.FC<SceneProps> = ({ scenario, lockedDestinationY, finalStopZ,TARGET_COORDINATE }) => {
-    const theme = getTheme(scenario.meta.theme_seed+5);
-    const { width, height } = useVideoConfig();
-    //const variant = getVariant(scenario.meta.seed);
-    //console.log("ParticleSystem Variant:", variant);
-
-    //console.log(theme.bg[0],theme.bg[1])
-    //const audioSource = staticFile(scenario.assets.audio_url);
-
-    return (
-        <AbsoluteFill>
-            <ThreeCanvas
-                linear
-                width={width}
-                height={height}
-                style={{ backgroundColor: theme.bg_gradient_inner }}
-             >
-                {/*</ThreeCanvas><div style={{ width: '100%', height: '100%', background: `radial-gradient(circle, ${theme.bg[0]}, ${theme.bg[1]})` }}>
-                */}    
-            
-            
-            
-                
-                <SceneContent scenario={scenario} lockedDestinationY={lockedDestinationY} finalStopZ={finalStopZ} TARGET_COORDINATE={TARGET_COORDINATE}/>
-            </ThreeCanvas>
-            {/* Layer 100: The Ghost UI Overlay */}
-            {/*<Watermark scenario={scenario} />*/}
-        {/*</div>*/}
-       
-        </AbsoluteFill>  
-    );
-};

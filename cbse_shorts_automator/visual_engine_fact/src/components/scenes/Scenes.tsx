@@ -16,6 +16,8 @@ import { Audio } from 'remotion';
 import * as THREE from 'three';
 import { estimateExplanationLayout } from '../../utils/layout-utils';
 
+const TAN_HALF_FOV = 0.466307658
+
 export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
     const frame = useCurrentFrame();
     const { fps, width, height } = useVideoConfig();
@@ -173,7 +175,15 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
 
         const audioSource = staticFile(scenario.assets.audio_track);
 
-    return (
+        // Define visibility booleans
+        // Scene 1 is visible until the Outro takes over
+        const showScene1 = frame < tOutroFrame;
+        
+        // Scene 2 is technically "active" logic-wise only during its window,
+        // but we can keep it mounted. We just toggle visibility.
+        const showScene2 = frame >= tTitleFrame && frame < tCtaFrame;
+   
+        return (
         <AbsoluteFill style={{ 
             background: `radial-gradient(circle at center, ${theme.bg_gradient_inner} 0%, ${theme.bg_gradient_outer} 100%)`
         }}>
@@ -201,17 +211,20 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
 
              {/* <ParticleField color={theme.accent_secondary} count={50} />  */}
                 {/* We pass the pre-calculated anchors to Scene 1 */}
+                <group visible={showScene1}>
                 <SceneContent 
                     scenario={scenario} 
                     lockedDestinationY={lockedDestinationY} 
                     finalStopZ={finalStopZ}
                     TARGET_COORDINATE={TARGET_COORDINATE} 
                 />
+                </group>
 
                 
 
                 {/* We pass the SAME anchors to Scene 2 so pipes attach perfectly */}
-                {frame >= tTitleFrame && frame < tCtaFrame && (
+                {/* {frame >= tTitleFrame && frame < tCtaFrame && ( */}
+                    <group visible={showScene2}>
                     <Scene2_Fact 
                         scenario={scenario} 
                         layout={layoutInfo}
@@ -221,8 +234,9 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
                         cameraFinalX={finalCamX}
                         //cameraFinalY={finalCamY}
                     />
+                    </group>
                     
-                )}
+                {/*  )} */} 
             </ThreeCanvas>
             
                 {/* LAYER 2: THE 2D HTML OVERLAYS */}

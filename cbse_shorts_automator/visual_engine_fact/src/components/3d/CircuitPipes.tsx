@@ -98,7 +98,7 @@ export const CircuitPipes: React.FC<CircuitPipesProps> = ({
                         The '20' is the number of tubular segments.
                         The '8' is the number of radial segments (how round the pipe is).
                         */}
-                        <tubeGeometry args={[pipeCurve, 20, LAYOUT.S2_PIPES.RADIUS, 8, false]} />
+                        <tubeGeometry args={[pipeCurve, 12, LAYOUT.S2_PIPES.RADIUS, 6, false]} />
                        {/* GLASS SHELL: Uses secondary color (Atmosphere tint) */}
                        <meshPhysicalMaterial 
                             color={theme.accent_secondary} 

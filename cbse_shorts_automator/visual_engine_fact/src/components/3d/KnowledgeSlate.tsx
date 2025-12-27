@@ -1,7 +1,9 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect,useState } from 'react';
 import { RoundedBox, useVideoTexture, useTexture, Text } from '@react-three/drei';
 import { staticFile, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { Theme } from '../../theme/palettes';
+import { useFrame } from '@react-three/fiber';
+import { Group, VideoTexture, LinearFilter, DoubleSide } from 'three';
 import { FactScenario } from '../../types/schema';
 import { TIMING, LAYOUT } from '../../constants';
 import * as THREE from 'three';
@@ -28,27 +30,59 @@ export const KnowledgeSlate: React.FC<Props> = ({
     clickFrame 
 }) => {
     const { fps } = useVideoConfig();
+    const frame = useCurrentFrame();
     const height = slateWidth * 0.5625;
     const depth = height / 12;
+    const [videoTexture, setVideoTexture] = useState<VideoTexture | null>(null);
+    const videoUrl=scenario.assets.video_src;
+
+        // --- VIDEO LOADING ---
+    useEffect(() => {
+        console.log("UnResolved:",{videoUrl})
+        if (!videoUrl) return;
+        const resolvedSrc = staticFile(videoUrl);
+        const vid = document.createElement('video');
+        vid.src = resolvedSrc;
+        vid.crossOrigin = 'Anonymous';
+        vid.muted = true;
+        vid.playsInline = true;
+        console.log("Resolved1:",{resolvedSrc})
+        const texture = new VideoTexture(vid);
+        texture.minFilter = LinearFilter;
+        texture.magFilter = LinearFilter;
+        setVideoTexture(texture);
+
+        return () => { vid.remove(); };
+    }, [videoUrl]);
+
+        useFrame((state) => {
+        
+        if (videoTexture && videoTexture.image) {
+            const vid = videoTexture.image as HTMLVideoElement;
+            const targetTime = frame / fps;
+            if (Math.abs(vid.currentTime - targetTime) > 0.1) vid.currentTime = targetTime;
+            videoTexture.needsUpdate = true;
+        }
+    });
 
     // --- 1. ASSETS & TEXTURES ---
-    const texture = useVideoTexture(staticFile(scenario.assets.video_src), {
+   /*  const texture = useVideoTexture(staticFile(videoUrl), {
         muted: true,
         loop: false,
-    });
+    }); */
     const backTexture = useTexture(staticFile(scenario.assets.thumb_src));
 
     // Video Sync Logic
     const videoFrame = Math.max(0, clickFrame - TIMING.S1_CLICK_DURATION_FRAMES);
     const videoTime = videoFrame / fps;
-    const video = texture.image;
+    //const video = texture.image;
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (video && isPlaying && video.readyState >= 2) {
             video.pause();
             video.currentTime = videoTime;
         }
-    }, [video, isPlaying, videoTime]);
+    }, [video, isPlaying, videoTime]); */
 
     // --- 2. ANIMATIONS ---
     const buttonSpring = spring({
@@ -95,9 +129,9 @@ export const KnowledgeSlate: React.FC<Props> = ({
             </RoundedBox>
 
             {/* FRONT SCREEN */}
-            {Math.abs(RotationY) < Math.PI / 2 && (<mesh position={[0, 0, uiZOffset]}>
+            {Math.abs(RotationY) < Math.PI / 2 && videoTexture && (<mesh position={[0, 0, uiZOffset]}>
                 <planeGeometry args={[slateWidth * 0.90, height * 0.90]} />
-                <meshBasicMaterial map={texture} toneMapped={false} transparent />
+                <meshBasicMaterial map={videoTexture} toneMapped={false} transparent />
             </mesh>
             )}
 

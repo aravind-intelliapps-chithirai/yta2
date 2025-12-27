@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { Instance, Instances } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -7,7 +7,18 @@ import { SCENE_1_CONFIG } from '../../constants';
 import { Edges } from '@react-three/drei'
 import { FactScenario } from '../../types/schema';
 
-const createSVGTexture = (brandColor: string) => {
+// --- 1. DETERMINISTIC RANDOM HELPER ---
+// This ensures that "random" is exactly the same across all render threads.
+function mulberry32(a: number) {
+    return function() {
+      var t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    }
+}
+
+const createSVGTexture = (brandColor: string, randVal: number) => {
     const canvas = document.createElement('canvas');
     canvas.width = 256;
     canvas.height = 144;
@@ -26,17 +37,26 @@ const createSVGTexture = (brandColor: string) => {
     const classes = ['CLASS 8', 'CLASS 9', 'CLASS 10', 'CLASS 12'];
     const chapters = ['CH-01', 'CH-05', 'CH-07', 'CH-12', 'CH-15'];
 
-    const mode = Math.floor(Math.random() * 3);
+    const mode = Math.floor((randVal * 100) % 3);
     let topText = "";
     let emoji = "";
+    const pick = (arr: any[], seedOffset: number) => {
+        const idx = Math.floor(((randVal * seedOffset) % 1) * arr.length);
+        return arr[idx];
+    };
 
     if (mode === 0) {
-        const item = subjects[Math.floor(Math.random() * subjects.length)];
+        const item = pick(subjects, 7919);
+        //const item = subjects[Math.floor(Math.random() * subjects.length)];
         topText = item.name; emoji = item.emoji;
     } else if (mode === 1) {
-        topText = classes[Math.floor(Math.random() * classes.length)]; emoji = '🏫';
+        topText = pick(classes, 5323);
+        //topText = classes[Math.floor(Math.random() * classes.length)]; 
+        emoji = '🏫';
     } else {
-        topText = chapters[Math.floor(Math.random() * chapters.length)]; emoji = '📑';
+        topText = pick(chapters, 1237);
+        //topText = chapters[Math.floor(Math.random() * chapters.length)];
+        emoji = '📑';
     }
 
     // 2. Background
@@ -67,7 +87,7 @@ const createSVGTexture = (brandColor: string) => {
     ctx.fillRect(barPadding, barY, canvas.width - (barPadding * 2), barHeight);
 
     // Random Progress (25% to 65%)
-    const progressPercent = Math.random() * (0.65 - 0.25) + 0.25;
+    const progressPercent = ((randVal * 9973) % 1) * (0.65 - 0.25) + 0.25;
     const progressWidth = (canvas.width - (barPadding * 2)) * progressPercent;
 
     // Red Progress Bar
@@ -115,11 +135,56 @@ export const InfiniteTunnel: React.FC<{ theme: Theme;
     //const SPACING_Y = boxheight_plus_gap-boxheight;
     const SPACING_Z =  TUNNEL_LENGTH/GRID_Z_COUNT;
     const brandColor = theme.brand_youtube;
+    // --- SEEDING ---
+    // Create a PRNG function seeded by the scenario data.
+    // This function will return the SAME sequence of numbers on every render thread.
+    const seed = scenario.meta.theme_seed || 12345;
 
     // Create a larger pool of unique textures
-    const texturePool = useMemo(() => Array.from({ length: 20 }, () => createSVGTexture(brandColor)), [brandColor]);
+// We initialize texturePool ONLY ONCE using useState. 
+    // But inside, we generate them deterministically.
+    const [texturePool] = useState(() => {
+        const rand = mulberry32(seed); // Initialize PRNG
+        return Array.from({ length: 20 }, () => createSVGTexture(brandColor, rand()));
+    });
+    const gridData = useMemo(() => {
+        // Initialize 20 empty arrays
+        const groups: [number, number, number][][] = Array.from({ length: texturePool.length }, () => []);
+        // Re-initialize a fresh PRNG for placement so it's independent of texture generation
+        // using a slightly different seed to avoid correlation
+        const rand = mulberry32(seed + 999);
+        
+        for (let z = 0; z < GRID_Z_COUNT; z++) {
+            for (let y = 0; y < GRID_Y_COUNT; y++) {
+                for (let x = 0; x < GRID_X_COUNT; x++) {
+                    const textureIndex = Math.floor(rand() * texturePool.length);
+                    
+                    const pos: [number, number, number] = [
+                        (x - (GRID_X_COUNT - 1) / 2) * boxwidth_plus_gap,
+                        (y - (GRID_Y_COUNT - 1) / 2) * boxheight_plus_gap,
+                        -z * SPACING_Z
+                    ];
+                    
+                    groups[textureIndex].push(pos);
+                }
+            }
+        }
+        return groups;
+    }, []);
+//    }, [texturePool.length, GRID_X_COUNT, GRID_Y_COUNT, GRID_Z_COUNT, boxwidth_plus_gap, boxheight_plus_gap, SPACING_Z]);
+    // Shared Material Props for the dark casing (Materials 0,1,2,3,5)
+    const darkMaterialProps = {
+        color: theme.accent_secondary,
+        transparent: true,
+        opacity: opacity * 0.4,
+        emissive: "#000000",
+        emissiveIntensity: 0.15,
+        roughness: 0.2,
+        metalness: 0.2,
+        side: THREE.FrontSide // Optimization: Only render front faces
+    };
 
-    const gridItems = useMemo(() => {
+    /* const gridItems = useMemo(() => {
         const items = [];
         for (let z = 0; z < GRID_Z_COUNT; z++) {
             for (let y = 0; y < GRID_Y_COUNT; y++) {
@@ -136,7 +201,7 @@ export const InfiniteTunnel: React.FC<{ theme: Theme;
             }
         }
         return items;
-    }, [texturePool]);
+    }, [texturePool]); */
 
     // Procedural generation of cube positions
     /* const particles = useMemo(() => {
@@ -155,55 +220,42 @@ export const InfiniteTunnel: React.FC<{ theme: Theme;
         <group >
             {/* Volumetric Fog matching BG */}
             <fog attach="fog" args={[theme.bg_gradient_outer, 5, TUNNEL_LENGTH]} />
-            
-            {gridItems.map((item, i) => (
-                <mesh key={i} position={item.position as [number, number, number] }>
-                    <boxGeometry args={[boxwidth, boxheight, boxheight*0.05]} />
-                    
-                    {/* Sides of the block use theme accent */}
-                    <meshStandardMaterial attach="material-0" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity*0.4} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
-                    emissiveIntensity={0.15}            // Keep at 0. Let the PointLight/SpotLight reveal them.
-                    roughness={0.2}                  // Low roughness = High polish (Premium look)
-                    metalness={0.2}                  // High metalness = Catches realistic reflections
-                    />
-                    <meshStandardMaterial attach="material-1" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity*0.4} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
-                    emissiveIntensity={0.15}            // Keep at 0. Let the PointLight/SpotLight reveal them.
-                    roughness={0.2}                  // Low roughness = High polish (Premium look)
-                    metalness={0.2}                  // High metalness = Catches realistic reflections
-                    />
-                    <meshStandardMaterial attach="material-2" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity*.4} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
-                    emissiveIntensity={0.15}            // Keep at 0. Let the PointLight/SpotLight reveal them.
-                    roughness={0.2}                  // Low roughness = High polish (Premium look)
-                    metalness={0.2}                  // High metalness = Catches realistic reflections
-                    />
-                    <meshStandardMaterial attach="material-3" color={theme.accent_secondary} transparent={true}
-                    opacity={opacity*.4} emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
-                    emissiveIntensity={0.15}            // Keep at 0. Let the PointLight/SpotLight reveal them.
-                    roughness={0.2}                  // Low roughness = High polish (Premium look)
-                    metalness={0.2}                  // High metalness = Catches realistic reflections
-                    />
-                    
-                    {/* Front Face: White background SVG */}
+            {/* Render one Instances group per Texture Type */}
+            {texturePool.map((texture, i) => (
+                <Instances
+                    key={i}
+                    range={gridData[i].length} // Limit buffer to exact count
+                >
+                    {/* DEFINE GEOMETRY & MATERIALS ONCE PER GROUP */}
+                    <boxGeometry args={[boxwidth, boxheight, boxheight * 0.05]} />
+
+                    {/* Materials 0-3: Sides (Dark) */}
+                    <meshStandardMaterial attach="material-0" {...darkMaterialProps} />
+                    <meshStandardMaterial attach="material-1" {...darkMaterialProps} />
+                    <meshStandardMaterial attach="material-2" {...darkMaterialProps} />
+                    <meshStandardMaterial attach="material-3" {...darkMaterialProps} />
+
+                    {/* Material 4: The Unique Texture Face */}
                     <meshStandardMaterial 
                         attach="material-4" 
-                        map={item.texture} 
-                        roughness={0.4}
-                        metalness={0}
-                        transparent={true}
+                        map={texture} 
+                        roughness={0.4} 
+                        metalness={0} 
+                        transparent 
                         opacity={opacity} 
                     />
-                    
-                    {/* Back Face */}
-                    <meshStandardMaterial attach="material-5" color={theme.accent_secondary}  emissive="#000000"               // CRITICAL: Set to Black. Do not make background blocks glow.
-                    emissiveIntensity={0.15}            // Keep at 0. Let the PointLight/SpotLight reveal them.
-                    roughness={0.2}                  // Low roughness = High polish (Premium look)
-                    metalness={0.2}                  // High metalness = Catches realistic reflections
-                    />
-                </mesh>
+
+                    {/* Material 5: Back (Dark) */}
+                    <meshStandardMaterial attach="material-5" {...darkMaterialProps} />
+
+                    {/* LIGHTWEIGHT INSTANCES */}
+                    {gridData[i].map((pos, j) => (
+                        <Instance key={j} position={pos} />
+                    ))}
+                </Instances> 
             ))}
+            
+            
         </group>
     );
 };

@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "corrected emoji rendering and watermark issues in headless rendering"
+git commit -m "optimised tunnel generation and slate loading. initial blank frames in rendering still persists"
 
 # 3. Push the new commit to the remote GitHub repository
 git push
