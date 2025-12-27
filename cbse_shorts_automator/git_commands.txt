@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "implemented random target selection. integration with shorts_engine and test_all_templates.py completed"
+git commit -m "corrected emoji rendering and watermark issues in headless rendering"
 
 # 3. Push the new commit to the remote GitHub repository
 git push

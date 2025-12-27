@@ -23,7 +23,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
 
     // 1. Global Timings
     const tTitleFrame = Math.round(scenario.timings.t_title * fps);
-    const tCtaFrame = Math.round(scenario.timings.t_cta * fps);
+    const tCtaFrame = Math.ceil(scenario.timings.t_cta * fps);
     const tOutroFrame = Math.round(scenario.timings.t_outro * fps);
 
     // 2. SHARED 3D POSITIONS
@@ -123,7 +123,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
             const vWidth = vHeight * (width / height);
             
             // 1. Calculate Font Specs (Moved from Scene2_Fact)
-            const baseFontSize = vHeight * 0.08; 
+            const baseFontSize = vHeight * 0.06; 
             const fontSpecs = estimateExplanationLayout(
                 scenario.content.fact_title, 
                 vWidth * LAYOUT.S2_TITLE.MAX_WIDTH_PERCENT, 

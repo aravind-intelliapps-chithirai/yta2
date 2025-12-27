@@ -468,13 +468,13 @@ const keyLightInt = interpolate(
                     castShadow
                 />)}
 
-                  {hasCollided && (<pointLight 
+                  {/* {hasCollided && (<pointLight 
                     position={[TARGET_COORDINATE.x-0.5*boxwidth, currentSlateY-1.50*boxheight, slateZ-0.15]} 
                     intensity={isScene2Active ? 0.0 : 0.02} 
                     color={"white"} 
                     distance={boxheight_plus_gap*4}
                     decay={boxheight_plus_gap*0.01}
-                />)} 
+                />)}  */}
                  
 
                 {/* CAMERA */}

@@ -14,6 +14,8 @@ mkdir cbse_shorts_automator/logs/
 sudo apt-get update
 sudo apt-get install imagemagick
 sudo apt install ffmpeg
+sudo apt-get install fonts-noto-color-emoji
+
 pip install -r requirements.texttospeech
 
 pip install google-cloud-texttospeech

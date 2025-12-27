@@ -122,8 +122,12 @@ def run_full_test():
             # Validation Preview
             if template_type == 'quiz':
                 preview = f"Q: {script.get('question_visual', '')[:40]}..."
+                project_dir = "visual_engine_v3"
+                comp_id = "NCERT-Shorts-V3"
             elif template_type == 'fact':
                 preview = f"Fact: {script.get('fact_title', '')[:40]}..."
+                project_dir = "visual_engine_fact"
+                comp_id = "NCERT-Shorts-Fact"
             else:
                 preview = f"Tip: {script.get('tip_title', '')[:40]}..."
                 
@@ -184,9 +188,9 @@ def run_full_test():
     
         # 1. Define your variables
      # Replace with your desired path
-    comp_id = "NCERT-Shorts-V3"
+    
     entry_point = "src/index.ts"
-    project_dir = "visual_engine_v3"
+    
 
     # 2. Construct the command as a list (safer than a string)
     command = [
@@ -203,7 +207,7 @@ def run_full_test():
     # 3. Execute
     try:
         print(f"🚀 Starting Remotion render: {comp_id}...")
-        #subprocess.run(command, cwd=project_dir,check=True)
+        subprocess.run(command, cwd=project_dir,check=True)
         print("✅ Render completed successfully!")
     except subprocess.CalledProcessError as e:
         print(f"❌ Render failed with error code {e.returncode}")

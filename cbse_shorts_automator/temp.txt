@@ -1,3 +1,5 @@
 to do:
 pulp fiction--down hand color contrast
 particlefield
+emojis not rendering correctly in final renderingoptimise rendering duration
+watermark font size different in preview and rendering

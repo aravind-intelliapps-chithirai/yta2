@@ -16,7 +16,7 @@ export const S3_CTA_Overlay: React.FC<{
     const CONFIG = {
         // Layout
         SOCIAL_TOP: '15%',          // Y-Position of Social Pill
-        LINK_BOTTOM: '15%',         // Y-Position of Link Card
+        LINK_BOTTOM: '10%',         // Y-Position of Link Card
         LINK_WIDTH_VW: 0.85,        // Width of Link Card (85% of screen)
         
         // Font Sizes (Responsive but independent)
@@ -132,7 +132,7 @@ const localFrame = frame - tCtaFrame;
                 // Visuals
                 backgroundColor: '#FFE119', 
                 border: '5px solid black',
-                padding: '2.5vh',
+                padding: '2.0vh',
                 width: `${vid_width * CONFIG.LINK_WIDTH_VW}px`,
                 boxShadow: '15px 15px 0px black',
                 textAlign: 'center'
@@ -151,7 +151,7 @@ const localFrame = frame - tCtaFrame;
                     </div>
                 </div>
                 {/* Independent Bouncing Icon */}
-                <div style={{ fontSize: '8vh', marginTop: '1vh', transform: `translateY(${Math.sin(frame * 0.3) * 6}px)` ,
+                <div style={{ fontSize: '4vh', marginTop: '1vh', transform: `translateY(${Math.sin(frame * 0.3) * 6}px)` ,
                 
                 // --- NEW BACKGROUND STYLES ---
                     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Black with 50% opacity

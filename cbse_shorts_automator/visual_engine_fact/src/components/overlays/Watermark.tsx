@@ -13,7 +13,7 @@ export const Watermark: React.FC<WatermarkProps> = ({ scenario,cameraZ }) => {
 
     // --- 1. ASSET PATHS (LOCAL ONLY) ---
     const logoPath = staticFile('/assets/logo.png');
-    const fontPath = staticFile('/assets/font.woff');
+    const fontPath = staticFile('/assets/fonts/font.woff');
     const fontName = 'WatermarkFont';
 
     // --- 2. TIMING LOGIC ---
@@ -55,7 +55,7 @@ export const Watermark: React.FC<WatermarkProps> = ({ scenario,cameraZ }) => {
                     position: 'absolute',
                     top: '8%',
                     left: '5%',
-                    zIndex: cameraZ, // Layering Specification
+                    zIndex: 100, // Layering Specification
                     
                     // Layout
                     display: 'flex',
@@ -91,7 +91,7 @@ export const Watermark: React.FC<WatermarkProps> = ({ scenario,cameraZ }) => {
                         fontFamily: fontName,
                         color: 'teal',
                         fontWeight: 800,
-                        fontSize: '4vh', // Responsive to view height
+                        fontSize: '3vh', // Responsive to view height
                         letterSpacing: '0.05em',
                         textShadow: '0 2px 4px rgba(0,0,0,0.5)' // Increases legibility
                     }}

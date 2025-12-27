@@ -1,10 +1,10 @@
 {
   "meta": {
-    "theme_seed": 12345,
+    "theme_seed": 82233,
     "target_item": {
       "x": 3,
-      "y": 6,
-      "z": 14
+      "y": 1,
+      "z": 13
     },
     "config": {
       "resolution": {
@@ -26,24 +26,24 @@
     "logo_src": "assets/logo.png"
   },
   "timings": {
-    "t_title": 4.03,
-    "t_details": 5.54,
-    "detailsAudioDuration": 17.11,
-    "t_cta": 22.65,
-    "t_outro": 28.549999999999997,
-    "total_duration": 32.55
+    "t_title": 4.39,
+    "t_details": 6.1899999999999995,
+    "detailsAudioDuration": 14.04,
+    "t_cta": 20.229999999999997,
+    "t_outro": 27.669999999999998,
+    "total_duration": 31.669999999999998
   },
   "content": {
-    "hook_3d": "Battery\nReverse?",
-    "fact_title": "Daniell Cell Secret!",
-    "fact_body_html": "Daniell Cell: Eext > 1.1 V means it becomes electrolytic!",
+    "hook_3d": "Brain\nPower?!",
+    "fact_title": "Your Body's Electrochemistry!",
+    "fact_body_html": "Nerve signals, brain communication? All happen via electrochemical processes!",
     "cta_content": {
-      "social_text": "\u2728 SUBSCRIBE FOR ZERO BORING STUFF",
-      "link_text": "\ud83c\udfaf Complete Fast Revision in Link"
+      "social_text": "\ud83d\udcaf JOIN THE FAST LEARNERS CLUB",
+      "link_text": "\ud83d\udd25 No-Boring Full Video in Link"
     },
     "outro_content": {
-      "usp_line_1": "\ud83d\ude80 7-MINUTE CHAPTERS",
-      "usp_line_2": "\ud83d\udcda Every Concept, Zero Boredom"
+      "usp_line_1": "\ud83d\udcaf EXAM READY FAST",
+      "usp_line_2": "\u23f1\ufe0f Full Chapters in 7 Minutes"
     },
     "usp_badge_text": "NEW",
     "watermark_text": "@NCERTQuickPrep",

@@ -76,7 +76,7 @@ export const RemotionRoot: React.FC = () => {
     return (
         <>
             <Composition
-                id="MainAutomator"
+                id="NCERT-Shorts-FACT"
                 component={Scenes}
                 // --- DYNAMIC VALUES FROM JSON METADATA ---
                 durationInFrames={compData.durationInFrames}

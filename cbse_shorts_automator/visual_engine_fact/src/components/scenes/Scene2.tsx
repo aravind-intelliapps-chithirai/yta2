@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from 'remotion';
 import { FactScenario } from '../../types/schema';
 import { HTMLTextOverlay } from '../overlays/HTMLTextOverlay';
-import { CTAOverlay } from '../overlays/CTAOverlay';
+//import { CTAOverlay } from '../overlays/CTAOverlay';
 import { LAYOUT } from '../../constants';
 import { Theme } from '../../theme/palettes';
 
@@ -74,12 +74,12 @@ export const Scene2: React.FC<{
                 theme={theme}
             />
             {/* THE NEW CTA OVERLAY LAYER */}
-            {isCtaPhase && (
+            {/* {isCtaPhase && (
                 <CTAOverlay 
                     scenario={scenario} 
                     theme={theme} 
                 />
-            )}
+            )} */}
         </AbsoluteFill>
     );
 };
