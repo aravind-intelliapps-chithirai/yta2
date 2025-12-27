@@ -23,6 +23,7 @@ import { HandCursor } from '../3d/HandCursor';
 import { TIMING,LAYOUT,SCENE_1_CONFIG } from '../../constants';
 import { easings } from '../../utils/animation';
 import { getTheme } from '../../theme/palettes';
+import { fastSin,fastCos } from '../../utils/fast_trig';
 
 interface SceneProps {
     scenario?: FactScenario;
@@ -30,6 +31,8 @@ interface SceneProps {
     finalStopZ: number;
     TARGET_COORDINATE:any;
 }
+
+const TAN_HALF_FOV = 0.466307658
 
 // A simple Grey Box to show while the real Slate is loading its video
 const SlateFallback = ({ width }: { width: number }) => {
@@ -201,7 +204,7 @@ const fov = 50;
 // The final slateZ should be the Camera's final Z minus this distance
     // 1.4 THE SMASH LOGIC 
     // The Slate moves from behind text to Camera Z=0
-    const distToReach90Percent = (slateWidth / 0.9) / (2 * Math.tan((fov * Math.PI) / 180 / 2) * (9/16));
+    const distToReach90Percent = (slateWidth / 0.9) / (2 * TAN_HALF_FOV * (9/16));
 // 2. Project the text position along that look direction
 // This ensures the text is always dead-center of the frame
 //const TEXT_DISTANCE = 2;
@@ -362,8 +365,8 @@ const animatedScale = TEXT_SCALE_MAX * (responsiveScale / TEXT_SCALE_MAX);
     // This creates a "jitter" that never repeats visibly but is perfectly stable for video export.
     const shakeAmp = 0.020; // Strength of the vibration (in 3D units)
     
-    const vibrationX = (Math.sin(frame * 0.8) + Math.cos(frame * 1.3)) * shakeAmp;
-    const vibrationY = (Math.cos(frame * 0.9) + Math.sin(frame * 1.4)) * shakeAmp;
+    const vibrationX = (fastSin(frame * 0.8) + fastCos(frame * 1.3)) * shakeAmp;
+    const vibrationY = (fastCos(frame * 0.9) + fastSin(frame * 1.4)) * shakeAmp;
 
     const tCtaFrame = (scenario.timings.t_cta) * fps;
     const isCtaPhase = frame > tCtaFrame;
@@ -650,10 +653,13 @@ const Explosion = ({ origin, theme, startTime, duration }: any) => {
         <group position={[origin.x, origin.y, origin.z]}>
             {particles.map((p, i) => {
                 // Particles travel outward based on speed and progress
-                const currentPos = p.dir.clone().multiplyScalar(progress * p.speed);
-                
+                //const currentPos = p.dir.clone().multiplyScalar(progress * p.speed);
+                const dist = progress * p.speed;
+                const x = origin.x + (p.dir.x * dist);
+                const y = origin.y + (p.dir.y * dist);
+                const z = origin.z + (p.dir.z * dist);               
                 return (
-                    <mesh key={i} position={[currentPos.x, currentPos.y, currentPos.z]}>
+                    <mesh key={i} position={[x, y, z]}>
                         <boxGeometry args={[p.scale, p.scale, p.scale]} />
                         <meshBasicMaterial 
                             color={particleColor} 

@@ -27,7 +27,7 @@ import { estimateExplanationLayout } from '../../utils/layout-utils';
 
     return { fontSize, textWidth, lineHeight, padding };
 }; */
-
+const TAN_HALF_FOV = 0.466307658
 export const Scene2_Fact: React.FC<{ 
     scenario: FactScenario, 
     layout: any, // The layout object from Scenes.tsx

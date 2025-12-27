@@ -53,7 +53,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
     const cameraFinalZ = targetZ + (boxdepth_plus_gap * 0.75);
 
     // Slate moves to this Z depth to fill 90% of screen width
-    const distToReach90Percent = (slateWidth / 0.9) / (2 * Math.tan((fov * Math.PI) / 360) * (9/16));
+    const distToReach90Percent = (slateWidth / 0.9) / (2 * TAN_HALF_FOV * (9/16));
     const finalStopZ = cameraFinalZ - distToReach90Percent;
 
     // 3. CALCULATE CAMERA Y (Center of View)
@@ -71,7 +71,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
     const lockedDestinationY = useMemo(() => {
         // Calculate Viewport Height at the Slate's specific depth
         const distance = Math.abs(cameraFinalZ - finalStopZ);
-        const vHeightAtDepth = 2 * distance * Math.tan((fov * Math.PI) / 360);
+        const vHeightAtDepth = 2 * distance * TAN_HALF_FOV;
 
         // Determine the "Top of Screen" in World Coordinates
         // Since camera is looking at 'finalCamY', the top edge is finalCamY + (height / 2)
@@ -89,7 +89,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
     // DEBUGGING: COORDS & DIMENSIONS
     useMemo(() => {
         const distance = Math.abs(cameraFinalZ - finalStopZ);
-        const vHeightAtDepth = 2 * distance * Math.tan((fov * Math.PI) / 360);
+        const vHeightAtDepth = 2 * distance * TAN_HALF_FOV;
         const halfHeight = vHeightAtDepth / 2;
         const topEdge = finalCamY + halfHeight;
         
@@ -121,7 +121,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
         const layoutInfo = useMemo(() => {
             const fov = 50;
             const distToDepth = Math.abs(cameraFinalZ - finalStopZ);
-            const vHeight = 2 * distToDepth * Math.tan((fov * Math.PI) / 360);
+            const vHeight = 2 * distToDepth * TAN_HALF_FOV;
             const vWidth = vHeight * (width / height);
             
             // 1. Calculate Font Specs (Moved from Scene2_Fact)
@@ -145,7 +145,7 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
             const paddingWorldUnits = LAYOUT.S2_TITLE.PADDING_FROM_SLATE_BOTTOM * vHeight;
             const textAnchorY = slateBottomY - paddingWorldUnits;
 
-            const visibleWorldHeight = 2 * distToDepth * Math.tan((fov * Math.PI) / 360);
+            const visibleWorldHeight = 2 * distToDepth * TAN_HALF_FOV;
             const relativeY = textAnchorY - finalCamY;
             // 1. Where the Title top is
             const titleTopPercent = 0.5 - (relativeY / visibleWorldHeight);
