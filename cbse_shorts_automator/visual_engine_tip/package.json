@@ -1,0 +1,35 @@
+{
+  "name": "ncert-quickprep-visual-engine",
+  "version": "14.2.0",
+  "private": true,
+   "description": "NCERT QuickPrep Visual Engine",
+  "scripts": {
+    "start": "remotion preview --force-cache-clear",
+    "render": "remotion render",
+    "upgrade": "remotion upgrade"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.88.0",
+    "@react-three/fiber": "^8.15.0",
+    "@remotion/cli": "4.0.393",
+    "@remotion/media-utils": "4.0.393",
+    "@remotion/three": "4.0.393",
+    "@types/three": "^0.160.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "remotion": "4.0.393",
+    "simplex-noise": "^4.0.0",
+    "three": "^0.182.0",
+    "three-mesh-bvh": "^0.6.0",
+    "tinycolor2": "^1.6.0",
+    "typescript": "^5.9.3",
+    "uuid": "^9.0.1",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/three": "^0.158.0",
+    "@types/uuid": "^9.0.0",
+    "@types/tinycolor2": "^1.4.0"
+  }
+}

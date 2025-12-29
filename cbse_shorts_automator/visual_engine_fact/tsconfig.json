@@ -7,6 +7,8 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+     "types": ["@react-three/fiber", "remotion", "react"]
+  },
+  "include": ["src", "src/types/react-three-fiber.d.ts"]
 }

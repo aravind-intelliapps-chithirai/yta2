@@ -653,13 +653,13 @@ const Explosion = ({ origin, theme, startTime, duration }: any) => {
         <group position={[origin.x, origin.y, origin.z]}>
             {particles.map((p, i) => {
                 // Particles travel outward based on speed and progress
-                //const currentPos = p.dir.clone().multiplyScalar(progress * p.speed);
+                const currentPos = p.dir.clone().multiplyScalar(progress * p.speed);
                 const dist = progress * p.speed;
                 const x = origin.x + (p.dir.x * dist);
                 const y = origin.y + (p.dir.y * dist);
                 const z = origin.z + (p.dir.z * dist);               
                 return (
-                    <mesh key={i} position={[x, y, z]}>
+                    <mesh key={i} position={[currentPos.x, currentPos.y, currentPos.z]}>
                         <boxGeometry args={[p.scale, p.scale, p.scale]} />
                         <meshBasicMaterial 
                             color={particleColor} 
@@ -672,5 +672,4 @@ const Explosion = ({ origin, theme, startTime, duration }: any) => {
         </group>
     );
 };
-
 

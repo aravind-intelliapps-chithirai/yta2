@@ -8,6 +8,7 @@ import { S3_CTA_Overlay } from '../overlays/S3_CTA_Overlay';
 import { S4_Outro_Overlay } from '../overlays/S4_Outro_Overlay';
 import { Watermark } from '../overlays/Watermark';
 import { ThreeCanvas } from '@remotion/three';
+import { PerspectiveCamera } from '@react-three/drei';
 import { ParticleField } from '../3d/ParticleField';
 import { FactScenario } from '../../types/schema';
 import { getTheme } from '../../theme/palettes';
@@ -201,9 +202,11 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
                 width={width}
                 height={height}
                 style={{ background: 'transparent' }}
+                //gl={{ preserveDrawingBuffer: true, alpha: true }}
+                
                 //style={{ backgroundColor: theme.bg_gradient[0] }}
             >
-                
+               
                 {/* <TravelingBackground theme={theme} /> */}
 
             {/* 3. Add Fog to blend the Tunnel into the background gradient */}
@@ -211,20 +214,20 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
 
              {/* <ParticleField color={theme.accent_secondary} count={50} />  */}
                 {/* We pass the pre-calculated anchors to Scene 1 */}
-                <group visible={showScene1}>
+                 <group visible={showScene1}>
                 <SceneContent 
                     scenario={scenario} 
                     lockedDestinationY={lockedDestinationY} 
                     finalStopZ={finalStopZ}
                     TARGET_COORDINATE={TARGET_COORDINATE} 
                 />
-                </group>
+                </group> 
 
                 
 
                 {/* We pass the SAME anchors to Scene 2 so pipes attach perfectly */}
-                {/* {frame >= tTitleFrame && frame < tCtaFrame && ( */}
-                    <group visible={showScene2}>
+                {frame >= tTitleFrame && frame < tCtaFrame && (
+                    
                     <Scene2_Fact 
                         scenario={scenario} 
                         layout={layoutInfo}
@@ -234,9 +237,9 @@ export const Scenes: React.FC<{ scenario: FactScenario }> = ({ scenario }) => {
                         cameraFinalX={finalCamX}
                         //cameraFinalY={finalCamY}
                     />
-                    </group>
+                     
                     
-                {/*  )} */} 
+                )} 
             </ThreeCanvas>
             
                 {/* LAYER 2: THE 2D HTML OVERLAYS */}

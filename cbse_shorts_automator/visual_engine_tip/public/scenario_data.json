@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "theme_seed": 12346,
+    "config": { "resolution": { "w": 1080, "h": 1920 }, "fps": 30 }
+  },
+  "assets": {
+    "video_src": "assets/source_vid.mp4",
+    "thumb_src": "assets/thumbnail.jpg",
+    "logo_src": "assets/logo.png",
+    "audio_track": "assets/audio_track.mp3"
+  },
+  "timings": {
+    "hook": { "start_time": 0, "duration": 3.0 },
+    "tip_title": { "start_time": 3.0, "duration": 2.0 },
+    "tip_details": { "start_time": 5.0, "duration": 10.0 },
+    "bonus": { "start_time": 11.5, "duration": 3.5 },
+    "cta_social": { "start_time": 15.0, "duration": 2.0 },
+    "cta_link": { "start_time": 17.0, "duration": 2.0 },
+    "outro": { "start_time": 40.0, "duration": 2.0 },
+    "total_duration": 42.0
+  },
+  "content": {
+    "hook_text": "STOP\nMEMORIZING\nDERIVATIONS",
+    "tip_title": "Visual Proof Method",
+    "tip_details": "Visualize the slope as a physical tangent...",
+    "bonus_visual": "dy/dx = limit",
+    "cta_content": { "social_text": "@NCERTQuickPrep", "link_text": "Download Full Guide" },
+    "outro_content": { "usp_line_1": "Master Engineering", "usp_line_2": "In 60 Seconds" },
+    "usp_badge_text": "100% Free",
+    "watermark_text": "QuickPrep",
+    "copyright_text": "© 2025 NCERT QuickPrep"
+  }
+}

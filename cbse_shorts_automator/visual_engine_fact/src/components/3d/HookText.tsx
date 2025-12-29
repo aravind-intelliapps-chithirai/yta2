@@ -1,6 +1,8 @@
-{!hasCollided && ( 
+
+                {!hasCollided && ( 
                     <Billboard position={[HookTextPosX+ vibrationX, HookTextPosY+ vibrationY, HookTextPosZ]}>
                      <Center    key={hookText}  > {/* Apply your desired position here */}   
+                         <Suspense fallback={null}>
                          <Text3D
                             font={staticFile("assets/fonts/Anton.json")} 
                             size={1.3}
@@ -31,6 +33,35 @@
                                 roughness={0.4}
                             />
                         </Text3D>
+                        </Suspense>
                         </Center>
                     </Billboard>
                 )}
+
+
+
+
+                {/* { frame >1 && (
+                 <group 
+                    position={[0, 0, 0]} 
+                    // Apply both the global scale factor AND the dynamic scale-in value
+                    scale={[
+                        slateScale, 
+                        slateScale, 
+                        1
+                    ]}
+                >
+                    <Suspense fallback={<SlateFallback width={slateWidth} />}> 
+                <KnowledgeSlate 
+                    theme={theme} 
+                    position={[TARGET_COORDINATE.x, currentSlateY, slateZ]} // Centered X/Y, Moving Z
+                    isPlaying={isPlaying}
+                    slateWidth={slateWidth}
+                    tiltX={currentTiltX}
+                    RotationY={currentRotationY}
+                    clickFrame={clickFrame}
+                    scenario={scenario}
+                />
+                </Suspense> 
+                </group>
+                )} */}
