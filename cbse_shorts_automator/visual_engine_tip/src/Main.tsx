@@ -35,6 +35,7 @@ export const Main = ({ data }: { data: ExamScenario }) => {
   const width = meta.config.resolution.w;
   const height = meta.config.resolution.h;
   const cameraDistance = height / FOV_FACTOR;
+  const hookDurationFrames = timings.hook.duration;
 
   return (
     <AbsoluteFill style={{ backgroundColor: palette.C1_VOID }}>
@@ -50,16 +51,25 @@ export const Main = ({ data }: { data: ExamScenario }) => {
             height={height}
             style={{ background: 'transparent' }}
             dpr={[1, 2]}
-            gl={{ antialias: true }}
+            gl={{ antialias: true, alpha: true, depth: true }}
             // Fixed FOV 50, Dynamic Z
             camera={{ fov: 50, position: [0, 0, cameraDistance], near: 10, far: 200000 }}
         >
-            <SceneLighting palette={palette} />
+            <SceneLighting palette={palette} baseZ={cameraDistance} scene3Start={timings.cta_social.start_time}
+            outroStart={timings.outro.start_time} />
             {/* <NeuralWorkspace audioSrc={staticFile(assets.audio_track)} outroStart={timings.outro.start_time} palette={palette} 
             baseZ={cameraDistance} width={width}
             height={height}
             /> */}
-            {/* <SlateRig scene3Start={timings.cta_social.start_time} outroStart={timings.outro.start_time} thumbSrc={staticFile(assets.thumb_src)} /> */}
+            {/* 2. PASS VIDEO SOURCE TO RIG */}
+            <SlateRig 
+                scene3Start={timings.cta_social.start_time} 
+                outroStart={timings.outro.start_time} 
+                thumbSrc={staticFile(assets.thumb_src)}
+                videoSrc={staticFile(assets.video_src)} // <--- NEW PROP
+                hookDuration={hookDurationFrames}
+                
+            />
             {/* <AudioVisualizer audioSrc={staticFile(assets.audio_track)} palette={palette} /> */}
             <CameraRig totalDuration={timings.total_duration} scene2Start={timings.tip_title.start_time} 
                 scene3Start={timings.cta_social.start_time}

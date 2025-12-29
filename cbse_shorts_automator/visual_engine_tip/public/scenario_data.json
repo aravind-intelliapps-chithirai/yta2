@@ -20,7 +20,7 @@
     "total_duration": 42.0
   },
   "content": {
-    "hook_text": "STOP\nMEMORIZING\nDERIVATIONS",
+    "hook_text": "STOP\nMEMORIZING\nDERIVATIONS\nUnneccessarily!",
     "tip_title": "Visual Proof Method",
     "tip_details": "Visualize the slope as a physical tangent...",
     "bonus_visual": "dy/dx = limit",
