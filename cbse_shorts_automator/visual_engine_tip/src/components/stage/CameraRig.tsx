@@ -21,9 +21,9 @@ export const CameraRig = ({ totalDuration, scene2Start, scene3Start,
 
   useFrame(() => {
     // 1. Dolly Zoom (Z Position)
-    const camZFactor=0.9
-    const camStartZ=camZFactor * height;
-    const camEndZ=camZFactor * height;
+    //const camZFactor=0.9
+    //const camStartZ=camZFactor * height;
+    //const camEndZ=camZFactor * height;
     const zPos = interpolate(
       frame,
       [0, totalDuration],

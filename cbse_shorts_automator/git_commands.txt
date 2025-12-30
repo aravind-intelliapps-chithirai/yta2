@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "background,lighting,camera,videoslate and thumbnail implemented to one level for TIP template"
+git commit -m "Scene 2 and audio visualizer implemented to one level for TIP template"
 
 # 3. Push the new commit to the remote GitHub repository
 git push

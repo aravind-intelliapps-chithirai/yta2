@@ -510,7 +510,7 @@ class ShortsEngine:
             #if t_type == 'quiz': from template_quiz import QuizTemplate; template = QuizTemplate(self)
             if t_type == 'quiz': from template_quiz_json_generator import QuizTemplate; template = QuizTemplate(self)
             elif t_type == 'fact': from template_fact_json_ffmpeg import FactTemplate; template = FactTemplate(self)
-            elif t_type == 'tip': from template_tip import TipTemplate; template = TipTemplate(self)
+            elif t_type == 'tip': from template_tip_json_ffmpeg import TipTemplate; template = TipTemplate(self)
             else: raise ValueError(f"Unknown template: {t_type}")
             
             result = template.generate(video_path, script, config, output_path)

@@ -19690,5 +19690,185 @@
     "voice": "ArjunNeural2",
     "video_id": null,
     "cost_usd": 0.004352
+  },
+  {
+    "timestamp": "2025-12-30T05:11:34.636594",
+    "account": "account1",
+    "provider": "google",
+    "chars": 20,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.00032
+  },
+  {
+    "timestamp": "2025-12-30T05:11:34.673491",
+    "account": "account1",
+    "provider": "google",
+    "chars": 78,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001248
+  },
+  {
+    "timestamp": "2025-12-30T05:11:34.733426",
+    "account": "account1",
+    "provider": "google",
+    "chars": 73,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001168
+  },
+  {
+    "timestamp": "2025-12-30T05:11:34.807609",
+    "account": "account1",
+    "provider": "google",
+    "chars": 112,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001792
+  },
+  {
+    "timestamp": "2025-12-30T05:11:35.790846",
+    "account": "account1",
+    "provider": "google",
+    "chars": 247,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.003952
+  },
+  {
+    "timestamp": "2025-12-30T05:16:10.212122",
+    "account": "account1",
+    "provider": "google",
+    "chars": 13,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.000208
+  },
+  {
+    "timestamp": "2025-12-30T05:16:10.291268",
+    "account": "account1",
+    "provider": "google",
+    "chars": 93,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001488
+  },
+  {
+    "timestamp": "2025-12-30T05:16:10.345758",
+    "account": "account1",
+    "provider": "google",
+    "chars": 87,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001392
+  },
+  {
+    "timestamp": "2025-12-30T05:16:10.548735",
+    "account": "account1",
+    "provider": "google",
+    "chars": 68,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.001088
+  },
+  {
+    "timestamp": "2025-12-30T05:16:11.773672",
+    "account": "account1",
+    "provider": "google",
+    "chars": 251,
+    "voice": "RajeshNeural2",
+    "video_id": null,
+    "cost_usd": 0.004016
+  },
+  {
+    "timestamp": "2025-12-30T05:26:15.106898",
+    "account": "account1",
+    "provider": "google",
+    "chars": 21,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000336
+  },
+  {
+    "timestamp": "2025-12-30T05:26:15.155908",
+    "account": "account1",
+    "provider": "google",
+    "chars": 56,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.000896
+  },
+  {
+    "timestamp": "2025-12-30T05:26:15.221467",
+    "account": "account1",
+    "provider": "google",
+    "chars": 86,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.001376
+  },
+  {
+    "timestamp": "2025-12-30T05:26:15.282270",
+    "account": "account1",
+    "provider": "google",
+    "chars": 111,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.001776
+  },
+  {
+    "timestamp": "2025-12-30T05:26:15.969710",
+    "account": "account1",
+    "provider": "google",
+    "chars": 295,
+    "voice": "ArjunNeural2",
+    "video_id": null,
+    "cost_usd": 0.00472
+  },
+  {
+    "timestamp": "2025-12-30T05:32:12.472368",
+    "account": "account1",
+    "provider": "google",
+    "chars": 82,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.001312
+  },
+  {
+    "timestamp": "2025-12-30T05:32:12.484396",
+    "account": "account1",
+    "provider": "google",
+    "chars": 55,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.00088
+  },
+  {
+    "timestamp": "2025-12-30T05:32:12.508196",
+    "account": "account1",
+    "provider": "google",
+    "chars": 21,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.000336
+  },
+  {
+    "timestamp": "2025-12-30T05:32:12.703354",
+    "account": "account1",
+    "provider": "google",
+    "chars": 80,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.00128
+  },
+  {
+    "timestamp": "2025-12-30T05:32:13.961894",
+    "account": "account1",
+    "provider": "google",
+    "chars": 310,
+    "voice": "PriyaNeural2",
+    "video_id": null,
+    "cost_usd": 0.00496
   }
 ]

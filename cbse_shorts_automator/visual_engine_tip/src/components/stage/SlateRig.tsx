@@ -11,10 +11,13 @@ interface SlateRigProps {
     thumbSrc: string;
     videoSrc: string;
     hookDuration: number; // NEW PROP
+    baseZ: number;
 }
 
-export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDuration }: SlateRigProps) => {
-  const { height, width } = useThree().viewport;
+export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDuration, baseZ }: SlateRigProps) => {
+  //const { height, width } = useThree().viewport;
+  const { height, width: viewportWidth } = useThree().viewport;
+  //const threeCam = useThree().camera as THREE.PerspectiveCamera;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const groupRef = useRef<THREE.Group>(null);
@@ -39,10 +42,25 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
   }, [videoElement]);
 
   const thumbTexture = useMemo(() => new THREE.TextureLoader().load(thumbSrc), [thumbSrc]);
+// --- FIX: EXPLICIT WIDTH CALCULATION ---
+  // We calculate the exact visible width at Z=0 based on the Camera's Z position.
+  // This bypasses any potential 'viewport' state desyncs.
+  const aspect = useThree().size.width / useThree().size.height;
+  
+  // 1. Get exact distance from Camera to Z=0
+  //const camDist = threeCam.position.z; 
+  
+  // 2. Calculate Visible Height at Z=0: 2 * dist * tan(FOV/2)
+  //const vFovRad = (threeCam.fov * Math.PI) / 180;
+  const visibleHeight = 0.9326 * baseZ;
+  
+  // 3. Calculate Visible Width
+  const visibleWidth = visibleHeight * aspect;
 
-  // --- GEOMETRY CONSTANTS ---
-  const SLATE_W = width * SPATIAL_MAP.SLATE_W;
-  const SLATE_H = height * SPATIAL_MAP.SLATE_H;
+  // 4. Set Slate Width (Fallback to viewportWidth if camDist is 0/initializing)
+  const safeWidth = visibleWidth > 0 ? visibleWidth : viewportWidth;
+  const SLATE_W = visibleWidth * SPATIAL_MAP.SLATE_W;
+  const SLATE_H = SLATE_W*0.5625;
   const BOX_DEPTH = SLATE_H/25;
   const FACE_OFFSET = (BOX_DEPTH / 2) + 0.01*BOX_DEPTH; // Slight offset to prevent z-fighting
 
@@ -71,7 +89,7 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
   const entranceZ = interpolate(
       frame,
       [0, slamDuration],
-      [-2000*BOX_DEPTH, 0],
+      [-20000*BOX_DEPTH, 0],
       { 
           easing: Easing.out(Easing.exp), // Fast Slam
           extrapolateRight: "clamp" 

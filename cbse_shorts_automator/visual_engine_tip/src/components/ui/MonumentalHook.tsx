@@ -46,7 +46,7 @@ export const MonumentalHook = ({ text, timing, palette }: { text: string, timing
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: `${height * 0.25}px 0`, // 10% Vertical Padding
+          padding: `${height * 0.18}px 0`, // 10% Vertical Padding
           boxSizing: 'border-box',
           
           // Animation

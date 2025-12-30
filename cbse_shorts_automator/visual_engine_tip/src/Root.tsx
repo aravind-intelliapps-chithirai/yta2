@@ -34,7 +34,7 @@ export const RemotionRoot: React.FC = () => {
 
   return (
     <Composition
-      id="ExamTip"
+      id="NCERT-Shorts-Tip"
       component={Main}
       durationInFrames={durationInFrames}
       fps={scenarioData.meta.config.fps}

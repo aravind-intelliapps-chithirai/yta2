@@ -176,7 +176,7 @@ class GeminiManager:
             max_output_tokens=4096 
         )
         
-        models = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-2.0-flash-exp']
+        models = ['gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-2.5-flash-lite']
         
         for m in models:
             try:

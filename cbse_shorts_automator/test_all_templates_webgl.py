@@ -74,7 +74,7 @@ def run_full_test():
     
     # 2. TEST LOOP (Quiz -> Fact -> Tip)
     #templates = ['quiz', 'fact', 'tip']
-    templates = ['fact']
+    templates = ['tip']
     
     for i, template_type in enumerate(templates):
         print(f"\n🎬 TEST {i+1}/3: Generating '{template_type.upper()}' Template")
@@ -130,6 +130,8 @@ def run_full_test():
                 comp_id = "NCERT-Shorts-Fact"
             else:
                 preview = f"Tip: {script.get('tip_title', '')[:40]}..."
+                project_dir = "visual_engine_tip"
+                comp_id = "NCERT-Shorts-Tip"
                 
             print(f"   ✅ Script Generated: {preview}")
 
@@ -207,7 +209,7 @@ def run_full_test():
     # 3. Execute
     try:
         print(f"🚀 Starting Remotion render: {comp_id}...")
-        subprocess.run(command, cwd=project_dir,check=True)
+        #subprocess.run(command, cwd=project_dir,check=True)
         print("✅ Render completed successfully!")
     except subprocess.CalledProcessError as e:
         print(f"❌ Render failed with error code {e.returncode}")

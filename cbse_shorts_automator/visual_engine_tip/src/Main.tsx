@@ -57,10 +57,10 @@ export const Main = ({ data }: { data: ExamScenario }) => {
         >
             <SceneLighting palette={palette} baseZ={cameraDistance} scene3Start={timings.cta_social.start_time}
             outroStart={timings.outro.start_time} />
-            {/* <NeuralWorkspace audioSrc={staticFile(assets.audio_track)} outroStart={timings.outro.start_time} palette={palette} 
+            <NeuralWorkspace audioSrc={staticFile(assets.audio_track)} outroStart={timings.outro.start_time} palette={palette} 
             baseZ={cameraDistance} width={width}
-            height={height}
-            /> */}
+            height={height} seed={meta.theme_seed}
+            />
             {/* 2. PASS VIDEO SOURCE TO RIG */}
             <SlateRig 
                 scene3Start={timings.cta_social.start_time} 
@@ -68,9 +68,10 @@ export const Main = ({ data }: { data: ExamScenario }) => {
                 thumbSrc={staticFile(assets.thumb_src)}
                 videoSrc={staticFile(assets.video_src)} // <--- NEW PROP
                 hookDuration={hookDurationFrames}
+                baseZ={cameraDistance}
                 
             />
-            {/* <AudioVisualizer audioSrc={staticFile(assets.audio_track)} palette={palette} /> */}
+            <AudioVisualizer audioSrc={staticFile(assets.audio_track)} palette={palette} />
             <CameraRig totalDuration={timings.total_duration} scene2Start={timings.tip_title.start_time} 
                 scene3Start={timings.cta_social.start_time}
                 baseZ={cameraDistance}

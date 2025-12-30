@@ -1,7 +1,7 @@
 export const SPATIAL_MAP = {
-  SLATE_TOP_PAD: 0.05,
-  SLATE_W: 0.90,
-  SLATE_H: 0.285,
+  //SLATE_TOP_PAD: 0.001,
+  SLATE_W: 0.9,
+  //SLATE_H: 0.285,
   SLATE_BTM_Y: 0.335,
   SLATE_INST_Y: 0.19,
   HOOK_STACK: 0.50,
@@ -13,7 +13,7 @@ export const SPATIAL_MAP = {
   CTA_THUMB_Y: 0.50,
   CTA_LNK_Y: 0.80,
   SAFE_ZONE: 0.22,
-  VISUALIZER_Y: 0.96,
+  VISUALIZER_Y: 0.90,
 };
 
 export const toThreeY = (fraction: number, viewHeight: number) => (0.5 - fraction) * viewHeight;
