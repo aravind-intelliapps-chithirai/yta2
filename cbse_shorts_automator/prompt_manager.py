@@ -148,11 +148,12 @@ class PromptManager:
             {{
             "filename_slug": "[STRICTLY 1-word subject different from the chapter name for filename: e.g., 'bodmas', 'dates']",
             "hook_spoken": "[Hook: e.g., 'Struggling with [Topic]?' - Max 15 words]",
-            "hook_visual": "[Hook for SCREEN. Use proper notation. Max 4 wordss]",
+            "hook_visual": "[Hook for SCREEN. Use proper notation. Max 4 words]",
             "tip_title": "[The Concept Name - STRICTLY Max 4 words]",
             "tip_visual": "[The Memory Hack/Formula for SCREEN. Use proper notation. Max 20 words]",
             "tip_spoken": "[The Memory Hack/Strategy for AUDIO. Use phonetic rules. Approx 50 words. Explain the mnemonic clearly.]",
-            "bonus": "[A 'Did You Know' or 'Pro Insight' related to the tip - Max 15 words]",
+            "bonus_spoken": "[A 'Did You Know' or 'Pro Insight' related to the tip - Max 15 words]",
+            "bonus_visual": "[The SCREEN version of the 'bonus'. Use proper notation. Max 15 words]",
             "cta_spoken": "[Social Action + Link Directive - Max 25 words]"
             }}
             """

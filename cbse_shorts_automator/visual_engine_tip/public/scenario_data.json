@@ -1,10 +1,10 @@
 {
   "meta": {
-    "theme_seed": 87153,
+    "theme_seed": 39766,
     "config": {
       "resolution": {
-        "w": 1080,
-        "h": 1920
+        "w": 540,
+        "h": 960
       },
       "fps": 30
     }
@@ -18,48 +18,48 @@
   "timings": {
     "hook": {
       "start_time": 0.0,
-      "duration": 4.78
+      "duration": 5.23
     },
     "tip_title": {
-      "start_time": 4.78,
-      "duration": 1.58
+      "start_time": 5.23,
+      "duration": 1.85
     },
     "tip_details": {
-      "start_time": 6.36,
-      "duration": 18.96
+      "start_time": 7.08,
+      "duration": 16.61
     },
     "bonus": {
-      "start_time": 25.32,
-      "duration": 3.26
+      "start_time": 23.689999999999998,
+      "duration": 4.75
     },
     "cta_social": {
-      "start_time": 28.58,
-      "duration": 2.45
+      "start_time": 28.439999999999998,
+      "duration": 2.64
     },
     "cta_link": {
-      "start_time": 31.029999999999998,
-      "duration": 2.45
+      "start_time": 31.08,
+      "duration": 2.64
     },
     "outro": {
-      "start_time": 33.48,
+      "start_time": 33.72,
       "duration": 4.0
     },
-    "total_duration": 37.48
+    "total_duration": 37.72
   },
   "content": {
-    "hook_text": "Daniell\nCell\nVoltage\nTrick",
-    "tip_title": "External Voltage Flip",
-    "tip_details": "Eext < 1.1V: Normal. Eext = 1.1V: Stop. Eext > 1.1V: Reverse!",
-    "bonus_visual": "⭐ At one point one Volts the Gibbs energy change is zero.",
+    "hook_text": "Daniell\nCell\n1.1V\nSecret",
+    "tip_title": "The 1.1 Volt Rule",
+    "tip_details": "Eext < 1.1V: Galvanic. Eext > 1.1V: Electrolytic. Eext = 1.1V: Stop.",
+    "bonus_visual": "Eext > 1.1V: Zn deposits!",
     "cta_content": {
-      "social_text": "⏱️ SUBSCRIBE FOR QUICK PREP",
+      "social_text": "🎯 SUBSCRIBE FOR RAPID MASTERY",
       "link_text": "🚀 Rapid Full Video in Link"
     },
     "outro_content": {
-      "usp_line_1": "🚀 7-MINUTE CHAPTERS",
-      "usp_line_2": "📚 Every Concept, Zero Boredom"
+      "usp_line_1": "💥 RAPID MASTERY",
+      "usp_line_2": "📖 Subscribe for Quick Prep"
     },
-    "usp_badge_text": "🎯 FAST BRAIN",
+    "usp_badge_text": "💥 QUICK RECALL",
     "watermark_text": "@NCERT_QuickPrep",
     "copyright_text": "© 2025 NCERT QuickPrep"
   }

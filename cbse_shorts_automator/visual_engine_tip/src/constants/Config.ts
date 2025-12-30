@@ -11,7 +11,7 @@ export const SPATIAL_MAP = {
   BONUS_Y: 0.45,
   CTA_SOC_Y: 0.20,
   CTA_THUMB_Y: 0.50,
-  CTA_LNK_Y: 0.80,
+  CTA_LNK_Y: 0.70,
   SAFE_ZONE: 0.22,
   VISUALIZER_Y: 0.90,
 };

@@ -15,7 +15,7 @@ import { TipDetails } from "./components/ui/TipDetails";
 import { BonusPane } from "./components/ui/BonusPane";
 import { CTA_Scene } from "./components/ui/CTA_Scene";
 import { Outro } from "./components/ui/Outro";
-import { VideoUI } from "./components/overlay/VideoUI";
+import { Watermark } from "./components/overlay/Watermark";
 
 const FOV_FACTOR = 0.9326;
 export const Main = ({ data }: { data: ExamScenario }) => {
@@ -85,9 +85,12 @@ export const Main = ({ data }: { data: ExamScenario }) => {
       <TipDetails text={content.tip_details} startTime={timings.tip_details.start_time} exitTime={scene2Exit} />
       <BonusPane text={content.bonus_visual} startTime={timings.bonus.start_time} exitTime={scene2Exit} palette={palette} />
       <CTA_Scene content={content.cta_content} startTime={timings.cta_social.start_time} exitTime={scene3Exit} palette={palette} />
-      <Outro content={content.outro_content} startTime={timings.outro.start_time} palette={palette} />
+      <Outro content={content.outro_content} startTime={timings.outro.start_time} palette={palette} 
+      copyrightText={content.copyright_text}
+      logoSrc={assets.logo_src}
+      />
 
-      <VideoUI />
+      <Watermark scenario={data} cameraZ={cameraDistance}/>
 
     </AbsoluteFill>
   );

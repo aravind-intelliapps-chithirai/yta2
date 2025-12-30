@@ -19870,5 +19870,50 @@
     "voice": "PriyaNeural2",
     "video_id": null,
     "cost_usd": 0.00496
+  },
+  {
+    "timestamp": "2025-12-30T17:48:09.771871",
+    "account": "account1",
+    "provider": "google",
+    "chars": 92,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.001472
+  },
+  {
+    "timestamp": "2025-12-30T17:48:09.812106",
+    "account": "account1",
+    "provider": "google",
+    "chars": 17,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.000272
+  },
+  {
+    "timestamp": "2025-12-30T17:48:09.817826",
+    "account": "account1",
+    "provider": "google",
+    "chars": 89,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.001424
+  },
+  {
+    "timestamp": "2025-12-30T17:48:09.926734",
+    "account": "account1",
+    "provider": "google",
+    "chars": 99,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.001584
+  },
+  {
+    "timestamp": "2025-12-30T17:48:11.646689",
+    "account": "account1",
+    "provider": "google",
+    "chars": 308,
+    "voice": "NeeraNeural2",
+    "video_id": null,
+    "cost_usd": 0.004928
   }
 ]

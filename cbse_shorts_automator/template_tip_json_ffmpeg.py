@@ -116,7 +116,7 @@ class TipTemplate:
             'hook': script.get('hook_spoken', script.get('hook_text', '')), 
             'title': script['tip_title'],
             'content': script['tip_spoken'],
-            'bonus': script['bonus'],
+            'bonus': script['bonus_spoken'],
             'cta': script['cta_spoken']
         }
         
@@ -146,11 +146,11 @@ class TipTemplate:
         # ---------------------------------------------------------------------
         # We calculate precise start times for the timeline
         t_hook = 0.0
-        t_title = t_hook + aud_hook.duration
+        t_title = t_hook + aud_hook.duration + 0.5
         t_content = t_title + aud_title.duration
-        t_bonus = t_content + aud_content.duration
-        t_cta = t_bonus + aud_bonus.duration
-        t_outro = t_cta + aud_cta.duration
+        t_bonus = t_content + aud_content.duration + 0.5
+        t_cta = t_bonus + aud_bonus.duration + 1
+        t_outro = t_cta + aud_cta.duration + 2
         
         OUTRO_DURATION = 4.0
         total_dur = t_outro + OUTRO_DURATION
@@ -277,7 +277,7 @@ class TipTemplate:
                 "hook_text": formatted_hook,              # [cite: 76]
                 "tip_title": script['tip_title'],            # [cite: 77]
                 "tip_details": script['tip_visual'],         # [cite: 78] (Visual text for screen)
-                "bonus_visual": script.get('bonus_visual', f"⭐ {script['bonus']}"), # [cite: 79]
+                "bonus_visual": script['bonus_visual'], # [cite: 79]
                 "cta_content": {
                     "social_text": social_txt,               # [cite: 73] (From USP)
                     "link_text": link_txt                    # [cite: 73] (From USP)
