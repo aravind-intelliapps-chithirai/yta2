@@ -4,6 +4,7 @@ import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
 import { SPATIAL_MAP, toThreeY } from '../../constants/Config';
 import { useCentripetalExit } from '../../logic/useCentripetalExit';
 import * as THREE from 'three';
+import { PlayerUI } from './PlayerUI';
 
 interface SlateRigProps {
     scene3Start: number;
@@ -153,6 +154,8 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
             <meshStandardMaterial color="#1a1a1a" roughness={0.5} emissive="#1a1a1a" emissiveIntensity={0.9}/>
         </mesh>
 
+        <group position={[0, 0, FACE_OFFSET]}>
+
         {/* Front Face (Video) */}
         <mesh position={[0, 0, FACE_OFFSET]}>
             <planeGeometry args={[SLATE_W, SLATE_H]} />
@@ -164,6 +167,9 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
                 toneMapped={false} 
             />
         </mesh>
+        {/* 2. Player UI Overlay (Imported) */}
+            <PlayerUI width={SLATE_W} height={SLATE_H} depth={BOX_DEPTH}/>
+        </group>
 
         {/* Back Face (Thumb) */}
         <mesh position={[0, 0, -FACE_OFFSET]} rotation={[Math.PI,0,  0]}>
