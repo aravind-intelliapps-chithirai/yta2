@@ -2,11 +2,14 @@ import { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Text, Points, PointMaterial, Box } from '@react-three/drei';
 import * as THREE from 'three';
+
 import { useCurrentFrame,staticFile, random } from 'remotion';
 import { ThemeColors } from '../../constants/Palette';
 import { useAudioProcessor } from '../../logic/useAudioProcessor';
 import { useCentripetalExit } from '../../logic/useCentripetalExit';
 
+// CONSTANTS
+const FOV_FACTOR = 0.9326; // 2 * tan(25 degrees) for 50deg FOV
 // 1. EXPANDED EDU-TECH TOKENS
 const RAW_TOKENS = [
   // Math & Physics
@@ -43,35 +46,40 @@ const EQ_L3 = ["1+1", "x²", "a+b", "sin(θ)", "π"];
 const fontUrl = staticFile("assets/fonts/Inter-Bold.ttf");
 //preloadFont(FONT_URL);
 
-const EquationLayer = ({ equations, startZ, speedFactor, opacity, color,  width, height, baseZ, seed }: any) => {
+const EquationLayer = ({ equations, startZ, baseZ, speedFactor, opacity, color, height, seed }: any) => {
     const groupRef = useRef<THREE.Group>(null);
-    //const { width, height } = viewport;
     const frame = useCurrentFrame();
-    //const fontUrl = staticFile("assets/fonts/Inter-Bold.ttf");
 
-    // 1. FIX: Stable Random Generation
-    // We generate positions once on mount, so they don't jitter on re-render
- const equationData = useMemo(() => {
+    // 1. ALGEBRAIC FRUSTUM CALCULATION
+    const distance = baseZ - startZ; 
+    const visibleHeight = distance * FOV_FACTOR; 
+    const visibleWidth = visibleHeight * 0.5625;
+
+    // 2. CYLINDER PARAMETERS
+    const radiusX = visibleWidth / 2;
+    const radiusZ = Math.abs(startZ)/2;
+    const ySpread = visibleHeight;
+
+    const equationData = useMemo(() => {
         return equations.map((eq: string, i: number) => {
-            // FIX: Use Deterministic Randomness (Remotion 'random')
-            // Using 'seed + i' ensures each item gets a unique but FIXED position.
-            // Even if the component re-renders, these numbers will be identical.
+            const theta = random(seed + i * 11.1) * Math.PI * 2;
             
-            // Generate unique seeds for each property
-            const rngX = random(seed + i * 11.1);
-            const rngY = random(seed + i * 22.2);
-            const rngZ = random(seed + i * 33.3);
-            const rngS = random(seed + i * 44.4);
+            const rxVariance = 0.1 + (random(seed + i) * 2.0); 
+            const rx = radiusX * rxVariance;
 
-            return {
-                text: eq,
-                x: (rngX - 0.5) * width * 1.1,
-                y: (rngY - 0.5) * height * 1.1,
-                zOffset: rngZ * (baseZ * 0.5),
-                scale: 0.3 + (rngS * 0.7) 
-            };
+            const rzVariance = 0.0 + (random(seed + i) * 3.0); 
+            const rz = radiusZ * rzVariance;
+
+            const x = rx * Math.cos(theta);
+            const z = rz * Math.sin(theta);
+            
+            const y = (random(seed + i * 33.3) - 0.5) * ySpread * 0.5; 
+            
+            const scale = 0.4 + (random(seed + i * 55.5) * 0.9);
+
+            return { text: eq, x, y, z, scale };
         });
-    }, [equations, width, height, baseZ, seed]); // Depend on stable seed
+    }, [equations, radiusX, ySpread,radiusZ, seed]);
     
     useFrame(() => {
         if (!groupRef.current) return;
@@ -90,14 +98,15 @@ const EquationLayer = ({ equations, startZ, speedFactor, opacity, color,  width,
         // Apply position relative to startZ
         groupRef.current.position.z = currentZ; 
     });
+    const { viewport } = useThree();
 
     return (
         <group ref={groupRef} position={[0, 0, startZ]}>
             {equationData.map((item: any, i: number) => (
-               
-                <Text
+               <Text
                     key={i}
-                    position={[item.x, item.y, item.zOffset]}
+                    position={[item.x, item.y, item.z]}
+                    rotation={[0, Math.PI, 0]}
                     fontSize={height * 0.03 * item.scale}
                     color={color}
                     fillOpacity={opacity}
@@ -105,7 +114,7 @@ const EquationLayer = ({ equations, startZ, speedFactor, opacity, color,  width,
                     //transparent // Required for opacity to work
                 >
                     {item.text}
-                </Text> 
+                </Text>  
                 
             ))}
         </group>
@@ -122,6 +131,17 @@ const EquationLayer = ({ equations, startZ, speedFactor, opacity, color,  width,
                 >
                     {item.text}
                 </Text> */}
+                 {/* <Text
+                    key={i}
+                    position={[item.x, item.y, item.z]}
+                    fontSize={height * 0.03 * item.scale*100}
+                    color={color}
+                    fillOpacity={opacity}
+                    font={fontUrl}
+                    //transparent // Required for opacity to work
+                >
+                    {item.text}
+                </Text>  */}
 export const NeuralWorkspace = ({ audioSrc, outroStart, palette, width, height, baseZ,seed }: { audioSrc: string, outroStart: number, palette: ThemeColors, width: number, height: number, baseZ: number, seed:number }) => {
   //const viewport = useThree().viewport;
   const containerRef = useRef<THREE.Group>(null);
@@ -145,7 +165,7 @@ export const NeuralWorkspace = ({ audioSrc, outroStart, palette, width, height, 
       };
   }, [seed]); // Only re-run if global seed changes
   const initialRotationY = useMemo(() => {
-    return random(seed) * Math.PI / 4;
+    return random(seed) * Math.PI *2 ;
   }, [seed]);
   // Audio Reactive Opacity 
   const pulseOpacity = 0+(0.15 + (subBass * 0.15));
@@ -153,7 +173,7 @@ export const NeuralWorkspace = ({ audioSrc, outroStart, palette, width, height, 
   // We want ~95% fog opacity at the deepest layer (40 * height)
   // Formula: density = 1.73 / (Depth_in_Units)
   const depthLimit = 5.0 * (baseZ *2);
-  const fogDensity = 1.8 / depthLimit;
+  const fogDensity = 1.0 / (baseZ * 5.0);
 
   // 3. FIX: Stable Points Generation
   const particlePositions = useMemo(() => {
@@ -177,13 +197,13 @@ useFrame(() => {
     
     if(containerRef.current) {
         containerRef.current.rotation.y = initialRotationY+frame * 0.005; 
-        containerRef.current.scale.setScalar(scale);
+        //containerRef.current.scale.setScalar(scale);
     }
   });
 
   return (
     <group ref={containerRef}>
-      <fogExp2 attach="fog" args={[palette.C1_VOID, fogDensity]} /> 
+      {/* <fogExp2 attach="fog" args={[palette.C1_VOID, fogDensity]} />  */}
       {/* <Box args={[width * 0.5, width * 0.5, width * 0.1]} position={[0, 0, 0]}>
          <meshBasicMaterial color="red" wireframe={true} />
       </Box> */}
