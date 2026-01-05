@@ -33,10 +33,10 @@ export const KnowledgeSlate: React.FC<Props> = ({
     const frame = useCurrentFrame();
     const height = slateWidth * 0.5625;
     const depth = height / 12;
-    const [videoTexture, setVideoTexture] = useState<VideoTexture | null>(null);
-    const videoUrl=scenario.assets.video_src;
+    //const [videoTexture, setVideoTexture] = useState<VideoTexture | null>(null);
+    //const videoUrl=scenario.assets.video_src;
 
-        // --- VIDEO LOADING ---
+    /*     // --- VIDEO LOADING ---
     useEffect(() => {
         console.log("UnResolved:",{videoUrl})
         if (!videoUrl) return;
@@ -51,11 +51,42 @@ export const KnowledgeSlate: React.FC<Props> = ({
         texture.minFilter = LinearFilter;
         texture.magFilter = LinearFilter;
         setVideoTexture(texture);
+        // Seek to correct frame timestamp
+        const targetTime = frame / fps;
+        
+        const handleSeek = () => {
+            vid.currentTime = targetTime;
+            vid.pause(); // Ensure it stays paused
+            texture.needsUpdate = true;
+            setVideoTexture(texture);
+        };
+        
+        if (vid.readyState >= 2) {
+            handleSeek();
+        } else {
+            vid.addEventListener('loadedmetadata', handleSeek, { once: true });
+        }
 
-        return () => { vid.remove(); };
-    }, [videoUrl]);
+        return () => {
+            vid.pause();
+            vid.removeAttribute('src');
+            vid.load();
+            texture.dispose();
+        };
+    }, [videoUrl, frame, fps]); */
 
-        useFrame((state) => {
+        const videoFrameTexture = useMemo(() => {
+            // Calculate which frame of the source video to display
+            const videoStartFrame = Math.max(0, clickFrame - TIMING.S1_CLICK_DURATION_FRAMES);
+            const frameNumber = Math.floor(videoStartFrame) + 1; // FFmpeg outputs start at 1
+            const framePath = `/assets/video_frames/frame_${String(frameNumber).padStart(4, '0')}.jpg`;
+            
+            return staticFile(framePath);
+        }, [clickFrame, fps]); // Add fps dependency
+
+        const texture = useTexture(videoFrameTexture);
+
+        /*useFrame((state) => {
         
         if (videoTexture && videoTexture.image) {
             const vid = videoTexture.image as HTMLVideoElement;
@@ -63,7 +94,7 @@ export const KnowledgeSlate: React.FC<Props> = ({
             if (Math.abs(vid.currentTime - targetTime) > 0.1) vid.currentTime = targetTime;
             videoTexture.needsUpdate = true;
         }
-    });
+    }); */
 
     // --- 1. ASSETS & TEXTURES ---
    /*  const texture = useVideoTexture(staticFile(videoUrl), {
@@ -129,9 +160,9 @@ export const KnowledgeSlate: React.FC<Props> = ({
             </RoundedBox>
 
             {/* FRONT SCREEN */}
-            {Math.abs(RotationY) < Math.PI / 2 && videoTexture && (<mesh position={[0, 0, uiZOffset]}>
+            {Math.abs(RotationY) < Math.PI / 2 && texture && (<mesh position={[0, 0, uiZOffset]}>
                 <planeGeometry args={[slateWidth * 0.90, height * 0.90]} />
-                <meshBasicMaterial map={videoTexture} toneMapped={false} transparent />
+                <meshBasicMaterial map={texture} toneMapped={false} transparent />
             </mesh>
             )}
 
@@ -139,7 +170,7 @@ export const KnowledgeSlate: React.FC<Props> = ({
             <mesh position={[0, 0, -uiZOffset]} rotation={[0, Math.PI, 0]}>
                 <planeGeometry args={[slateWidth * 0.92, height * 0.92]} />
                 <meshStandardMaterial map={backTexture} roughness={0.2} metalness={0.5} />
-            </mesh>
+            </mesh> 
             
 
             {/* INTERACTION UI (Play Button) */}

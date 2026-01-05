@@ -14,11 +14,11 @@ export const estimateQuestionHeight = (text: string, maxWidth: number, viewportW
 
     // Font Shrink Logic
     let finalFontSize = baseFontSize;
-    if (estimatedLines > 3 && estimatedLines <= 5) finalFontSize = baseFontSize * 0.80;
-    else if (estimatedLines > 5) finalFontSize = baseFontSize * 0.65;
+    if (estimatedLines > 2 && estimatedLines <= 4) finalFontSize = baseFontSize * 0.80;
+    else if (estimatedLines > 4) finalFontSize = baseFontSize * 0.65;
 
     const finalLineHeight = finalFontSize * 1.5;
-    const padding = maxWidth * 0.02;
+    const padding = maxWidth * 0.025;
     
     // Recalculate lines with final font size
     const finalAvgCharWidth = finalFontSize * 0.7;
@@ -53,7 +53,7 @@ export const TypewriterQuestion: React.FC<TypewriterQuestionProps> = ({
     const layout = useMemo(() => {
         // 1. Setup Constraints
         const maxBoxWidth = viewportWidth * 0.85; 
-        const padding = maxBoxWidth * 0.02;
+        const padding = maxBoxWidth * 0.025;
         const textMaxWidth = maxBoxWidth - (padding * 2);
         const baseFontSize = viewportWidth * 0.07; // Standard Large Size
 
@@ -68,20 +68,21 @@ export const TypewriterQuestion: React.FC<TypewriterQuestionProps> = ({
         
         // If it fits in 3 lines or less, keep it BIG.
         // If it needs 4+ lines, shrink it to prevent covering the whole screen.
-        if (estimatedLines > 3 && estimatedLines <= 5) {
+        if (estimatedLines > 2 && estimatedLines <= 4) {
             finalFontSize = baseFontSize * 0.8; // Moderate Shrink
-        } else if (estimatedLines > 5) {
+        } else if (estimatedLines > 4) {
             finalFontSize = baseFontSize * 0.65; // Aggressive Shrink
         }
 
         // 4. Recalculate Box Height based on Final Decision
-        const finalLineHeight = finalFontSize * 0.9;
+        //const finalLineHeight = finalFontSize * 0.9;
         // Recalculate lines with new font size to get accurate box height
-        const finalAvgCharWidth = finalFontSize * 0.6;
-        const finalCharsPerLine = textMaxWidth / finalAvgCharWidth;
-        const finalLines = Math.ceil(text.length / finalCharsPerLine);
+        //const finalAvgCharWidth = finalFontSize * 0.6;
+        //const finalCharsPerLine = textMaxWidth / finalAvgCharWidth;
+        //const finalLines = Math.ceil(text.length / finalCharsPerLine);
         
-        const boxHeight = (finalLines * finalLineHeight) + (padding * 2 );
+        //const boxHeight = (finalLines * finalLineHeight) + (padding * 2 );
+        const boxHeight =  estimateQuestionHeight(text, maxBoxWidth, viewportWidth)
 
         return {
             fontSize: finalFontSize,

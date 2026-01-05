@@ -1,10 +1,13 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState, useRef } from 'react';
 import { useCurrentFrame, useVideoConfig, interpolate, Easing, spring } from 'remotion';
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { ThreeCanvas } from '@remotion/three';
 import { AbsoluteFill,staticFile } from 'remotion';
 import { Audio } from '@remotion/media';
-import { PerspectiveCamera, Environment, OrbitControls } from '@react-three/drei';
+import { useVideoTexture,PerspectiveCamera, Environment, OrbitControls, Preload } from '@react-three/drei';
+import { continueRender, delayRender } from 'remotion';
+import { useLoader } from '@react-three/fiber';
+import { FontLoader } from 'three-stdlib';
 import { VisualScenario } from './types/schema';
 import { getTheme, getVariant } from './utils/theme';
 import { ZONES } from './utils/animation';
@@ -22,14 +25,29 @@ import { OutroStage } from './components/OutroStage';
 
 
 
+
+
 interface SceneProps {
-    scenario: VisualScenario;
+    scenario: VisualScenario; handle: number;
 }
 
 // Internal component to access the R3F Context (useThree)
-const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
+const SceneContent: React.FC<SceneProps> = ({ scenario, handle }) => {
+
     const frame = useCurrentFrame();
     const { fps } = useVideoConfig();
+    const { width, height: viewportHeight } = useThree((state) => state.viewport);
+    //console.log("Attempting to load video from(without staticFile wrapper):", scenario.assets.video_source_url);
+    //console.log("Attempting to load video from (with staticFile wrapper):", staticFile(scenario.assets.video_source_url));
+
+z
+        // Wait for Pixel Data (ReadyState 3) + Layout
+        if (video.readyState >= 3 && video.videoWidth > 0) {
+             //console.log(`[Scene] 🧹 Clear handle: ${handle}`)
+             continueRender(handle);
+        }
+    });
+
     const { height : unscaledheight} = useThree((state) => state.viewport); // Dynamic Viewport Height
     const currentTime = frame / fps;
 
@@ -50,10 +68,17 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     // SAFE ACCESS: timeline.outro might be undefined in older JSON versions
     const t_outro_start = timeline.outro?.start_time ?? (t_cta_start + 4);
 
+    const viewportWidth = height * (9/16); // Assuming Vertical 9:16 Video
+
+    const GAP = height * 0.015; // 3% vertical gap
+
 
     // --- DYNAMIC LAYOUT CALCULATIONS ---
     // 1. Stage Center: Average of Top (1.0) and Bridge Top (0.65)
-    const stageY = nvuToWorld((ZONES.STAGE_TOP + ZONES.STAGE_BOTTOM) / 2);
+    const StageWidth=viewportWidth*0.9
+    const StageHeight=StageWidth*9/16
+    //const stageY = nvuToWorld((ZONES.STAGE_TOP + ZONES.STAGE_BOTTOM) / 2);
+    const stageY = nvuToWorld((ZONES.STAGE_TOP)) -GAP - (StageHeight) / 2;
     
     
     // 2. Question Anchor: Slightly above the bottom of the Bridge zone
@@ -141,7 +166,6 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     }
 
 
-    const viewportWidth = height * (9/16); // Assuming Vertical 9:16 Video
     const questionText = timeline.quiz.question.text;
     const explanationText = timeline.answer.explanation_text; 
     
@@ -151,16 +175,17 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
     const SAFE_OFFSET_X = 0; 
     
     // Width: 0.9 - 0.1 = 0.8 (80% of screen width)
-    const SAFE_MAX_WIDTH = viewportWidth * 0.80;
+    const SAFE_MAX_WIDTH = viewportWidth * 0.85;
     // 2. DYNAMIC HEIGHT CALCULATION (Auto-Stack)
     const questionHeight = estimateQuestionHeight(questionText, SAFE_MAX_WIDTH, viewportWidth);
     
     // 3. ANCHOR POINTS
     // Question Center Y
-    const questionY = nvuToWorld(ZONES.BRIDGE_BOTTOM + 0.03); 
+    //const questionY = nvuToWorld(ZONES.BRIDGE_BOTTOM + 0.03); 
+    //const questionY = nvuToWorld(ZONES.STAGE_BOTTOM) - GAP*0 - (questionHeight / 2)*0
+    const questionY = stageY - (StageHeight) / 2 - GAP - (questionHeight / 2)
     
     // Options Start Y: Question Y - Half Question Height - Padding
-    const GAP = height * 0.03; // 3% vertical gap
     // 1. Calculate Question Bottom (The ceiling for the dock)
     const questionBottomWorld = questionY - (questionHeight / 2);
     const optionsStartY = questionY - (questionHeight / 2) - GAP;
@@ -219,45 +244,79 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 
     const [explCardHeight, setExplCardHeight] = useState(0.6); // Default fallback
 
+
+    // --- FIX: CAMERA STABILIZER ---
+    // Force the camera to look at center immediately every frame
+    // This replaces OrbitControls without the overhead
+    useFrame((state) => {
+        state.camera.lookAt(0, 0, -2000); 
+    });
+
     
 
     return (
         <>
+            
            {/* CAMERA: ANXIETY SHAKE + Z-PULL */}
             <PerspectiveCamera 
                 makeDefault 
                 position={cameraPosition} // Dynamic position applied here
                 fov={50} 
+                near={0.1}
                 
             />
             {/* Use OrbitControls to define the target point for the default camera */}
-            <OrbitControls 
+            {/* <OrbitControls 
                 // You want the target to be [cameraPosition[0], 0, 0]
                 target={[cameraPosition[0], 0, -2000]} 
                 // Disable user interaction if you only want it to manage the target
                 enableRotate={false} 
                 enableZoom={false} 
                 enablePan={false}
-            />
+            /> */}
             {/* LIGHTING: THE BLACKOUT */}
             <ambientLight intensity={ambientIntensity} /> 
             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
 
-            {/* 1. PARTICLE SYSTEM */}
-            
-            <ParticleSystem variant={variant} color={theme.primary} 
-            
-                // This is the ExplanationCard's expected Y-Center. ParticleSystem will calculate height.
-            />
 
-            {/* 2. THE STAGE (Dynamic Positioning) */}
-            <group position={[0, stageY, 0]}>
-                <Suspense fallback={null}>
-                     <ThreeStage videoUrl={scenario.assets.video_source_url} overlayProgress={0.2} 
-                     width={viewportWidth*0.9} // <--- Makes it 50% bigger
-                     />
-                </Suspense>
-            </group>
+            <Suspense fallback={null}>
+                {/* 1. PARTICLE SYSTEM */}
+                
+                <ParticleSystem variant={variant} color={theme.primary} 
+                
+                    // This is the ExplanationCard's expected Y-Center. ParticleSystem will calculate height.
+                />
+
+
+                {/* 5. HOOK (Overlay) - DYNAMIC ANIMATION */}
+                {showHook && (
+                    
+                    //{/* <AssetPreloader fontUrl={scenario.assets.font_url} /> */}
+                    <AnimatedHook 
+                        text={timeline.hook.text_content}
+                        seed={scenario.meta.seed+0}
+                        theme={theme}
+                        fontSize={height * 0.05}
+                        fontUrl={scenario.assets.font_url}
+                        maxAvailableWidth={viewportWidth}
+                    />
+                    //{/* <ConsistencyGuard handle={handle} /> */}
+                    
+                )}
+
+                {/* 2. THE STAGE (Dynamic Positioning) */}
+                <group position={[0, stageY, 0]}>
+                    {/* <Suspense fallback={null}> */}
+                        <ThreeStage videoUrl={sharedVideoUrl} overlayProgress={0.2} 
+                        width={StageWidth} // 
+                        />
+                    {/* </Suspense> */}
+                    
+                </group>
+            </Suspense>
+
+
+
 
             {/* 3. TIMER VISUAL (New Component) */}
             {isTiming && (
@@ -365,6 +424,7 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 
            {/* 7. SCENE 6: THE GRAND FINALE (Encapsulated in a single component) */}
             {currentTime >= t_cta_start && (
+                <Suspense fallback={null}>
                 <SceneFinale
                     scenario={scenario}
                     fps={fps}
@@ -380,27 +440,19 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
                     explanationCardHeight={EXPLANATION_CARD_HEIGHT}
                     CARD_COLOR={CARD_COLOR}
                 />
+                </Suspense>
             )}
 
             {/* --- NEW: SCENE 7 (OUTRO STAGE) --- */}
+            <Suspense fallback={null}>
             <OutroStage 
                 scenario={scenario}
                 fps={fps}
                 t_outro_start={t_outro_start}
             />
+            </Suspense>
 
 
-            {/* 5. HOOK (Overlay) - DYNAMIC ANIMATION */}
-            {showHook && (
-                <AnimatedHook 
-                    text={timeline.hook.text_content}
-                    seed={scenario.meta.seed+0}
-                    theme={theme}
-                    fontSize={height * 0.05}
-                    fontUrl={scenario.assets.font_url}
-                    maxAvailableWidth={viewportWidth}
-                />
-            )}
 
             <Environment preset="city" />
         </>
@@ -408,6 +460,27 @@ const SceneContent: React.FC<SceneProps> = ({ scenario }) => {
 };
 
 export const Scene: React.FC<SceneProps> = ({ scenario }) => {
+
+    // 1. CREATE LOCK ONCE (Strict Mode Safe)
+    const handleRef = useRef<number | null>(null);
+    
+    // Lazy Initialization in Render Body:
+    // This blocks Frame 0 immediately. 
+    // The "if null" check ensures we reuse the same handle during Strict Mode double-render.
+    if (handleRef.current === null) {
+        handleRef.current = delayRender("Parent-Lock");
+        console.log(`[Scene] 🔒 Lock Created: ${handleRef.current}`);
+    }
+
+    // 2. CLEANUP
+    useEffect(() => {
+        return () => {
+            if (handleRef.current !== null) {
+                console.log(`[Scene] 🧹 Cleanup: ${handleRef.current}`);
+                continueRender(handleRef.current);
+            }
+        };
+    }, []);
     const theme = getTheme(scenario.meta.seed+5);
     const { width, height } = useVideoConfig();
     const variant = getVariant(scenario.meta.seed);
@@ -430,7 +503,7 @@ export const Scene: React.FC<SceneProps> = ({ scenario }) => {
             height={height}            
             >
                 
-                <SceneContent scenario={scenario} />
+                <SceneContent scenario={scenario} handle={handleRef.current!}/>
             </ThreeCanvas>
             {/* Layer 100: The Ghost UI Overlay */}
             <Watermark scenario={scenario} />

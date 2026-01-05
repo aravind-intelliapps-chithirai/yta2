@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "version": "1.0.0",
+        "resolution": {
+            "w": 540,
+            "h": 960
+        },
+        "seed": 7619,
+        "duration_seconds": 48.92
+    },
+    "assets": {
+        "audio_url": "/assets/TEST_FULL_QUIZ_V1_final_audio.mp3",
+        "video_source_url": "/assets/source_video.mp4",
+        "thumbnail_url": "/assets/thumbnail.jpg",
+        "channel_logo_url": "/assets/logo.png",
+        "font_url": "/assets/font.woff",
+        "env_map_url": "/assets/environment.hdr",
+        "cloud_map_url": "/assets/cloud.png"
+    },
+    "timeline": {
+        "hook": {
+            "start_time": 0,
+            "text_content": "\u23f1\ufe0f EXAM READY IN 60 SECONDS \u23f1\ufe0f"
+        },
+        "quiz": {
+            "question": {
+                "text": "What happens in a Daniell cell when Eext > 1.1 V?",
+                "start_time": 4.03
+            },
+            "options": [
+                {
+                    "id": "A",
+                    "text": "Current is zero",
+                    "start_time": 9.09
+                },
+                {
+                    "id": "B",
+                    "text": "Cell becomes Electrolytic",
+                    "start_time": 10.719999999999999
+                },
+                {
+                    "id": "C",
+                    "text": "Zinc dissolves",
+                    "start_time": 12.899999999999999
+                },
+                {
+                    "id": "D",
+                    "text": "Voltage stays 1.1 V",
+                    "start_time": 14.459999999999999
+                }
+            ]
+        },
+        "timer": {
+            "start_time": 17.099999999999998,
+            "duration": 3.0,
+            "label_text": "\ud83d\udca8 RAPID FIRE"
+        },
+        "answer": {
+            "start_time": 20.099999999999998,
+            "correct_option_id": "B",
+            "explanation_text": "Flow reverses: Electrons move Cu to Zn. Cell is now electrolytic.",
+            "celebration_text": "Great job!"
+        },
+        "cta": {
+            "start_time": 35.92,
+            "social_text": "\u2728 SUBSCRIBE FOR ZERO BORING STUFF",
+            "link_text": "\u26a1 Quick Full Chapter in Description"
+        },
+        "outro": {
+            "start_time": 41.92,
+            "line_1": "\ud83c\udfaf QUICK CONCEPTS",
+            "line_2": "\ud83d\udcaa Big Scores, Short Videos"
+        }
+    },
+    "yt_overlay": {
+        "progress_start": 4.03,
+        "progress_end": 21.099999999999998
+    }
+}

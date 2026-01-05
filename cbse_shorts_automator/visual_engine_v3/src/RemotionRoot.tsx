@@ -64,7 +64,7 @@ export const RemotionRoot: React.FC = () => {
     return (
         <>
             <Composition
-                id="NCERT-Shorts-V3"
+                id="NCERT-Shorts-Quiz"
                 // Pass the MainVideo component
                 component={MainVideo} 
                 

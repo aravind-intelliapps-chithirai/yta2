@@ -31,7 +31,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ variant, color }
                     noise={0.2}
                 />
             )}
-
+            
             {/* Variant 1: Digital Rain (Downward Sparkles) */}
             {variant === 1 && (
                 <Sparkles 
@@ -49,7 +49,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ variant, color }
             {variant === 0 && (
                 <>
                     <Stars radius={25} depth={10} count={500} factor={4} saturation={0} fade speed={0.5} />
-                    /*<Cloud opacity={0.1} speed={0} bounds={[10, 2, 50]} volume={6} segments={4} color={color} fade={10} />*/
+                    <Cloud opacity={0.1} speed={0} bounds={[10, 2, 50]} volume={6} segments={4} color={color} fade={10} />
                 </>
             )}
         </group>

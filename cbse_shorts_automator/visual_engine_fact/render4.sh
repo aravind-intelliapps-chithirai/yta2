@@ -34,7 +34,14 @@ TEMP_OUT="output/out_video.mp4"
 
 #CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --gl=angle --log=info"
 #CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --gl=angle --log=verbose --enable-multiprocess-on-linux" 
-CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --concurrency=1 --enable-multiprocess-on-linux --log=verbose --chromium-options=\" --enable-unsafe-swiftshader --gl=angle \" " 
+CMD="npx remotion render src/index.ts NCERT-Shorts-Fact $TEMP_OUT 
+        --concurrency=75% --enable-multiprocess-on-linux --log=verbose --jpeg-quality=80
+        --chromium-options=\"--no-sandbox --disable-setuid-sandbox --enable-unsafe-swiftshader 
+        --gl=swangle --disable-gpu-watchdog --disable-video-capture-use-gpu-memory-buffer 
+        --disable-gpu-rasterization --disable-zero-copy --disable-dev-shm-usage 
+        --disable-accelerated-video-decode --disable-accelerated-video-encode 
+        --disable-gpu-compositing --enable-features=SharedImageFactory 
+        --enable-webgl --disable-features=Vulkan\" " 
 #CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --concurrency=2 --enable-multiprocess-on-linux --log=verbose --chromium-options="--enable-unsafe-swiftshader" --timeout=120000" 
 #CMD="npx remotion render src/index.ts NCERT-Shorts-FACT $TEMP_OUT --gl=vulkan --log=verbose"
 
@@ -58,7 +65,7 @@ DURATION=$((END_TIME - START_TIME))
 # 4. Save Output
 FINAL_PATH="$OUTPUT_ROOT/$TARGET_NAME"
 echo "💾 Saving to Drive: $FINAL_PATH"
-cp "$TEMP_OUT" "$FINAL_PATH"
+#cp "$TEMP_OUT" "$FINAL_PATH"
 
 echo "------------------------------------------------"
 echo "✅ RENDER SUCCESS"

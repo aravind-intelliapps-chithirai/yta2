@@ -5,8 +5,8 @@
             "w": 540,
             "h": 960
         },
-        "seed": 1135,
-        "duration_seconds": 47.44
+        "seed": 3552,
+        "duration_seconds": 51.04
     },
     "assets": {
         "audio_url": "/assets/TEST_FULL_QUIZ_V1_final_audio.mp3",
@@ -20,60 +20,60 @@
     "timeline": {
         "hook": {
             "start_time": 0,
-            "text_content": "\u26a1 7-MINUTE CHAPTER MASTERY \u26a1"
+            "text_content": "\u26a1 SPEED LEARNING MODE ON \u26a1"
         },
         "quiz": {
             "question": {
-                "text": "What happens in Daniell cell when E_ext = 1.1 V?",
-                "start_time": 4.1
+                "text": "If Eext > 1.1 V, what happens to the Zinc electrode?",
+                "start_time": 4.2
             },
             "options": [
                 {
                     "id": "A",
-                    "text": "Electrons flow Zn to Cu",
-                    "start_time": 8.23
+                    "text": "Zn dissolves",
+                    "start_time": 9.36
                 },
                 {
                     "id": "B",
-                    "text": "Reaction reverses",
-                    "start_time": 10.65
+                    "text": "Zn deposits",
+                    "start_time": 10.989999999999998
                 },
                 {
                     "id": "C",
-                    "text": "No current, no reaction",
-                    "start_time": 12.33
+                    "text": "No reaction",
+                    "start_time": 12.769999999999998
                 },
                 {
                     "id": "D",
-                    "text": "Zinc deposits on electrode",
-                    "start_time": 14.59
+                    "text": "Current stops",
+                    "start_time": 14.429999999999998
                 }
             ]
         },
         "timer": {
-            "start_time": 16.87,
+            "start_time": 16.13,
             "duration": 3.0,
-            "label_text": "\ud83d\udca5 QUICK RECALL"
+            "label_text": "\ud83c\udfaf FAST BRAIN"
         },
         "answer": {
-            "start_time": 19.87,
-            "correct_option_id": "C",
-            "explanation_text": "At E_ext = 1.1 V, external potential balances cell, stopping all activity.",
+            "start_time": 19.13,
+            "correct_option_id": "B",
+            "explanation_text": "Eext > 1.1 V reverses the reaction. Zn deposits at the electrode.",
             "celebration_text": "Great job!"
         },
         "cta": {
-            "start_time": 33.620000000000005,
-            "social_text": "\ud83d\udd14 SUBSCRIBE FOR 7-MIN CHAPTERS",
-            "link_text": "\u23f1\ufe0f Speed Through Full Chapter Below"
+            "start_time": 38.04,
+            "social_text": "\u23f1\ufe0f SUBSCRIBE FOR QUICK PREP",
+            "link_text": "\ud83d\udd25 No-Boring Full Video in Link"
         },
         "outro": {
-            "start_time": 40.440000000000005,
-            "line_1": "\ud83d\udca5 RAPID MASTERY",
-            "line_2": "\ud83d\udcd6 Subscribe for Quick Prep"
+            "start_time": 44.04,
+            "line_1": "\ud83d\ude80 7-MINUTE CHAPTERS",
+            "line_2": "\ud83d\udcda Every Concept, Zero Boredom"
         }
     },
     "yt_overlay": {
-        "progress_start": 4.1,
-        "progress_end": 20.87
+        "progress_start": 4.2,
+        "progress_end": 20.13
     }
 }

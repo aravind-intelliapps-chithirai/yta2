@@ -51,7 +51,8 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
     useEffect(() => {
         //console.log("UnResolved:",{videoUrl})
         if (!videoUrl) return;
-        const resolvedSrc = staticFile(videoUrl);
+        //const resolvedSrc = staticFile(videoUrl);
+        const resolvedSrc = videoUrl;
         const vid = document.createElement('video');
         vid.src = resolvedSrc;
         vid.crossOrigin = 'Anonymous';

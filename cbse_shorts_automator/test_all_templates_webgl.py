@@ -27,8 +27,13 @@ from voice_manager import VoiceManager
 
 TEST_PDF_URL = "https://ncert.nic.in/textbook/pdf/lech102.pdf"
 TEST_VIDEO_URL = "https://drive.google.com/file/d/1K78uJRddxY0ewzCHVloQWdOdfYxJT30-/view?usp=drive_link"
-OUTPUT_DIR = "shorts"
-TEMP_DIR = "temp"
+# 1. Get current working directory
+current_dir = os.getcwd() 
+
+# 2. Join it with your folder name
+
+OUTPUT_DIR = os.path.join(current_dir, "shorts")
+TEMP_DIR = os.path.join(current_dir, "temp")
 
 # Ensure directories exist
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -207,12 +212,12 @@ def run_full_test():
     ]  
 
     # 3. Execute
-    try:
-        print(f"🚀 Starting Remotion render: {comp_id}...")
+    #try:
+        #print(f"🚀 Starting Remotion render: {comp_id}...")
         #subprocess.run(command, cwd=project_dir,check=True)
-        print("✅ Render completed successfully!")
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Render failed with error code {e.returncode}")
+        #print("✅ Render completed successfully!")
+    #except subprocess.CalledProcessError as e:
+        #print(f"❌ Render failed with error code {e.returncode}")
 
 
 

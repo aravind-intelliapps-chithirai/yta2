@@ -6,7 +6,7 @@ export const SPRING_CONFIG = {
 
 // Normalized Viewport Units (NVU) - Y Axis
 export const ZONES = {
-    STAGE_TOP: 1.0,
+    STAGE_TOP: 0.97,
     STAGE_BOTTOM: 0.65,
     BRIDGE_TOP: 0.65,
     BRIDGE_BOTTOM: 0.58,

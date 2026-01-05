@@ -1,52 +1,52 @@
 {
-  "meta": {
-    "theme_seed": 82233,
-    "target_item": {
-      "x": 3,
-      "y": 1,
-      "z": 13
+    "meta": {
+        "theme_seed": 73280,
+        "target_item": {
+            "x": 0,
+            "y": 7,
+            "z": 10
+        },
+        "config": {
+            "resolution": {
+                "w": 1080,
+                "h": 1920
+            },
+            "fps": 30,
+            "grid_counts": {
+                "x": 5,
+                "y": 9,
+                "z": 20
+            }
+        }
     },
-    "config": {
-      "resolution": {
-        "w": 1080,
-        "h": 1920
-      },
-      "fps": 30,
-      "grid_counts": {
-        "x": 5,
-        "y": 9,
-        "z": 20
-      }
+    "assets": {
+        "video_src": "/assets/source_video.mp4",
+        "audio_track": "/assets/TEST_FULL_FACT_V1_final_audio.mp3",
+        "thumb_src": "assets/thumbnail.jpg",
+        "logo_src": "assets/logo.png"
+    },
+    "timings": {
+        "t_title": 4.03,
+        "t_details": 5.9,
+        "detailsAudioDuration": 16.63,
+        "t_cta": 22.53,
+        "t_outro": 27.09,
+        "total_duration": 31.09
+    },
+    "content": {
+        "hook_3d": "Battery\nSecret\nRevealed!",
+        "fact_title": "The 1.1 Volt Flip",
+        "fact_body_html": "When Eext > 1.1 V, the Daniell Cell REVERSES! Zn deposits and Cu dissolves.",
+        "cta_content": {
+            "social_text": "\ud83d\ude80 HIT SUBSCRIBE FOR SPEED REVISION",
+            "link_text": "\ud83c\udfaf Complete Fast Revision in Link"
+        },
+        "outro_content": {
+            "usp_line_1": "\ud83d\ude80 7-MINUTE CHAPTERS",
+            "usp_line_2": "\ud83d\udcda Every Concept, Zero Boredom"
+        },
+        "usp_badge_text": "NEW",
+        "watermark_text": "@NCERTQuickPrep",
+        "copyright_text": "\u00a9 2025 NCERT QuickPrep"
     }
-  },
-  "assets": {
-    "video_src": "assets/source_vid.mp4",
-    "audio_track": "assets/audio_track.mp3",
-    "thumb_src": "assets/thumbnail.jpg",
-    "logo_src": "assets/logo.png"
-  },
-  "timings": {
-    "t_title": 4.39,
-    "t_details": 6.1899999999999995,
-    "detailsAudioDuration": 14.04,
-    "t_cta": 20.229999999999997,
-    "t_outro": 27.669999999999998,
-    "total_duration": 31.669999999999998
-  },
-  "content": {
-    "hook_3d": "Brain\nPower?!",
-    "fact_title": "Your Body's Electrochemistry!",
-    "fact_body_html": "Nerve signals, brain communication? All happen via electrochemical processes!",
-    "cta_content": {
-      "social_text": "\ud83d\udcaf JOIN THE FAST LEARNERS CLUB",
-      "link_text": "\ud83d\udd25 No-Boring Full Video in Link"
-    },
-    "outro_content": {
-      "usp_line_1": "\ud83d\udcaf EXAM READY FAST",
-      "usp_line_2": "\u23f1\ufe0f Full Chapters in 7 Minutes"
-    },
-    "usp_badge_text": "NEW",
-    "watermark_text": "@NCERTQuickPrep",
-    "copyright_text": "\u00a9 2025 NCERT QuickPrep"
-  }
 }

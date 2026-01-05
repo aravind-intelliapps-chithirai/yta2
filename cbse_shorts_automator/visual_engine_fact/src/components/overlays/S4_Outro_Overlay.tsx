@@ -63,6 +63,7 @@ export const S4_Outro_Overlay: React.FC<{
                     color: theme.outro_primary, 
                     textTransform: 'uppercase',
                     letterSpacing: '2px',
+                    textAlign: 'center',
                     fontWeight: 900
                 }}>
                     {scenario.content.outro_content.usp_line_1}
@@ -74,6 +75,7 @@ export const S4_Outro_Overlay: React.FC<{
                     transform: `translateY(${interpolate(usp2Ent, [0, 1], [15, 0])}px)`,
                     fontSize: vid_height * 0.038,
                     color: theme.text_body_light, 
+                    textAlign: 'center',
                     fontWeight: 500
                 }}>
                     {scenario.content.outro_content.usp_line_2}

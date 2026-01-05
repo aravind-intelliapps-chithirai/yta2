@@ -8,6 +8,7 @@ that drives the Remotion Engine.
 
 import os
 import json
+import glob
 import random
 import subprocess
 import concurrent.futures
@@ -15,6 +16,7 @@ from moviepy.editor import AudioFileClip, CompositeAudioClip, VideoFileClip
 from voice_manager import VoiceManager
 from sfx_manager import SFXManager
 from video_scheduler import VideoScheduler 
+from remotion_renderer import render_remotion_video
 import re  #
 # Import the USP helper
 from usp_content_variations import USPContent
@@ -108,6 +110,28 @@ class TipTemplate:
         # Select Voice
         selected_voice_key = voice_name if voice_name else voice_mgr.get_random_voice_name()
         print(f"   🎤 Using voice: {selected_voice_key}")
+         
+            
+        # Define the base directory for public assets and the corrected JSON path
+        BASE_PUBLIC_DIR = PUBLIC_DIR
+        FINAL_ASSETS_DIR = f"{BASE_PUBLIC_DIR}/assets"
+        
+        # CORRECTED JSON OUTPUT PATH: directly in public folder
+        JSON_OUTPUT_PATH = f"{BASE_PUBLIC_DIR}/scenario_data.json" 
+      
+        # Define asset file paths (relative to BASE_PUBLIC_DIR/assets)
+        FINAL_AUDIO_FILENAME = f"{vid_id}_final_audio.mp3"
+        FINAL_AUDIO_PATH = f"{FINAL_ASSETS_DIR}/{FINAL_AUDIO_FILENAME}"
+
+
+        SOURCE_VIDEO_FILENAME = "source_video.mp4"
+
+        SOURCE_VIDEO_PATH = f"{FINAL_ASSETS_DIR}/{SOURCE_VIDEO_FILENAME}"
+        # Asset URLs (All relative to the public root)
+        FINAL_AUDIO_URL = f"/assets/{FINAL_AUDIO_FILENAME}"
+        SOURCE_VIDEO_URL = f"/assets/{SOURCE_VIDEO_FILENAME}" 
+        CHANNEL_LOGO_URL = "/assets/logo.png"
+        THUMBNAIL_URL = "/assets/thumbnail.jpg"
 
         # 2. Audio Generation (Parallel TTS)
         # ---------------------------------------------------------------------
@@ -121,7 +145,7 @@ class TipTemplate:
         }
         
         generated_audio_paths = {}
-        audio_files_to_cleanup = []
+        audio_files = []
 
         def generate_single_audio(key, text):
             path = f"{temp_dir}/{vid_id}_{key}.mp3"
@@ -133,7 +157,7 @@ class TipTemplate:
             for future in concurrent.futures.as_completed(futures):
                 k, path = future.result()
                 generated_audio_paths[k] = path
-                audio_files_to_cleanup.append(path)
+                audio_files.append(path)
 
         # Load Audio Clips for Duration Calculation
         aud_hook = AudioFileClip(generated_audio_paths['hook'])
@@ -189,9 +213,9 @@ class TipTemplate:
         final_audio = self.engine.add_background_music(composite_voice_sfx, total_dur)
 
         # D. Export Master Audio Asset
-        master_audio_filename = "audio_track.mp3"
-        master_audio_path = os.path.join(assets_dir, master_audio_filename)
-        final_audio.write_audiofile(master_audio_path, fps=44100, verbose=False, logger=None)
+        #master_audio_filename = "audio_track.mp3"
+        #master_audio_path = os.path.join(assets_dir, master_audio_filename)
+        final_audio.write_audiofile(FINAL_AUDIO_PATH, fps=44100, verbose=False, logger=None)
 
         # 5. Video Asset Preparation
         # ---------------------------------------------------------------------
@@ -204,7 +228,7 @@ class TipTemplate:
         scheduler = VideoScheduler(temp_dir=temp_dir)
         schedule = scheduler.schedule_clips(video_path, total_dur, script)
         
-        final_video_filename = "source_vid.mp4"
+        final_video_filename = SOURCE_VIDEO_FILENAME
         final_video_path = os.path.join(assets_dir, final_video_filename)
         
         self.process_video_ffmpeg(video_path, schedule, final_video_path, temp_dir)
@@ -237,10 +261,10 @@ class TipTemplate:
             },
             "assets": {
                 # In Remotion, staticFile() wraps paths relative to the public folder
-                "video_src": f"/assets/source_vid.mp4", # [cite: 54]
-                "thumb_src": "/assets/thumbnail.jpg",    # [cite: 55] (Placeholder/Static)
-                "logo_src": "/assets/logo.png",# [cite: 56]
-                "audio_track": f"/assets/audio_track.mp3"# [cite: 57]
+                "video_src": SOURCE_VIDEO_URL,
+                "thumb_src": THUMBNAIL_URL, 
+                "logo_src": CHANNEL_LOGO_URL,
+                "audio_track": FINAL_AUDIO_URL
             },
             "timings": {
                 "hook": {
@@ -295,11 +319,84 @@ class TipTemplate:
         # 7. Write JSON Output
         # ---------------------------------------------------------------------
         # --- 8. WRITE JSON ---
-        json_path = os.path.join(PUBLIC_DIR, "scenario_data.json")
-        with open(json_path, 'w', encoding='utf-8') as f:
+        #json_path = os.path.join(PUBLIC_DIR, "scenario_data.json")
+        with open(JSON_OUTPUT_PATH, 'w', encoding='utf-8') as f:
             json.dump(scenario_data, f, indent=2, ensure_ascii=False)
 
-        print(f"✅ Scenario generated: {output_path}")
+        print(f"✅ Scenario generated: {JSON_OUTPUT_PATH}")
+
+
+        try:
+            #self.engine.render_with_effects(final_raw, script, output_path)
+            print(f"  Trying:")
+                    # 1. Define your variables
+     # Replace with your desired path
+
+            project_dir = "visual_engine_tip"
+            comp_id = "NCERT-Shorts-Tip"
+    
+            entry_point = "src/index.ts"
+            
+
+            # 2. Construct the command as a list (safer than a string)
+            command = [
+                "npx", 
+                "remotion", 
+                "render", 
+                entry_point, 
+                comp_id, 
+                output_path, 
+                "--enable-multiprocess-on-linux",                 
+            ]  
+
+            # 3. Execute
+            try:
+                render_remotion_video(
+                    project_dir=project_dir,
+                    comp_id=comp_id,
+                    output_path=output_path,
+                    entry_point=entry_point,
+                    start_frame=None,
+                    end_frame=None
+                )
+                # Returns duration or success metadata
+                # (Assuming total_dur was calculated earlier in your script)
+                return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}
+            except subprocess.CalledProcessError as e:
+                print(f"❌ Render failed with error code {e.returncode}")
+        finally:
+            # --- CLEANUP LOGIC ---
+            # This runs whether the render succeeded or failed
+            if self.engine.config.get('DELETE_TEMP_FILES', True):
+                print("🧹 Cleaning up temporary files...")
+                
+                # Clean specific audio files list
+                if 'audio_files' in locals():
+                    for f in audio_files:
+                        if os.path.exists(f): 
+                            try: os.remove(f)
+                            except OSError: pass
+                
+                # Clean glob patterns (vid_id based)
+                # Ensure vid_id and temp_dir are defined in this scope
+                if 'vid_id' in locals() and 'temp_dir' in locals():
+                    patterns = [
+                        os.path.join(temp_dir, f'{vid_id}*'), 
+                        f'{vid_id}*TEMP_*'
+                    ]
+                    for pattern in patterns:
+                        for temp_file in glob.glob(pattern):
+                            try: os.remove(temp_file)
+                            except OSError: pass
+        
+        return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}
+
+        # 7. Cleanup (Clean intermediate voice tracks)
+        if self.engine.config.get('DELETE_TEMP_FILES', True):
+            for f in audio_files:
+                if os.path.exists(f): os.remove(f)
+
+        return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}
 
         # 8. Cleanup Temp Files
         # ---------------------------------------------------------------------
@@ -308,4 +405,4 @@ class TipTemplate:
                 try: os.remove(f)
                 except: pass
 
-        return {'duration': total_dur, 'json_path': output_path}
+        return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}

@@ -19,7 +19,7 @@ export const MonumentalHook = ({ text, timing, palette }: { text: string, timing
   
   // Calculate Layout Constants
   // 5% Padding on each side = 90% usable width
-  const usableWidth = width * 0.90; 
+  const usableWidth = width * 0.8; 
 
   // Animation: Exit Slide Up
   const yOffset = interpolate(
@@ -62,7 +62,7 @@ export const MonumentalHook = ({ text, timing, palette }: { text: string, timing
             // Cap the size so short words don't become taller than the screen
             // Max height per word = (80% of screen height) / word count
             const maxVerticalSize = (height * 0.8) / words.length;
-            const finalSize = Math.min(estimatedSize, maxVerticalSize);
+            const finalSize = Math.min(estimatedSize, maxVerticalSize); //7795245751
 
             // CHAOS LOGIC
             // Use 'frame + i * 100' to decouple the words completely.

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "theme_seed": 39766,
+    "theme_seed": 84928,
     "config": {
       "resolution": {
         "w": 540,
@@ -10,56 +10,56 @@
     }
   },
   "assets": {
-    "video_src": "/assets/source_vid.mp4",
+    "video_src": "/assets/source_video.mp4",
     "thumb_src": "/assets/thumbnail.jpg",
     "logo_src": "/assets/logo.png",
-    "audio_track": "/assets/audio_track.mp3"
+    "audio_track": "/assets/TEST_FULL_TIP_V1_final_audio.mp3"
   },
   "timings": {
     "hook": {
       "start_time": 0.0,
-      "duration": 5.23
+      "duration": 4.54
     },
     "tip_title": {
-      "start_time": 5.23,
-      "duration": 1.85
+      "start_time": 5.04,
+      "duration": 1.27
     },
     "tip_details": {
-      "start_time": 7.08,
-      "duration": 16.61
+      "start_time": 6.3100000000000005,
+      "duration": 18.29
     },
     "bonus": {
-      "start_time": 23.689999999999998,
-      "duration": 4.75
+      "start_time": 25.1,
+      "duration": 5.16
     },
     "cta_social": {
-      "start_time": 28.439999999999998,
-      "duration": 2.64
+      "start_time": 31.26,
+      "duration": 2.53
     },
     "cta_link": {
-      "start_time": 31.08,
-      "duration": 2.64
+      "start_time": 33.79,
+      "duration": 2.53
     },
     "outro": {
-      "start_time": 33.72,
+      "start_time": 38.32,
       "duration": 4.0
     },
-    "total_duration": 37.72
+    "total_duration": 42.32
   },
   "content": {
-    "hook_text": "Daniell\nCell\n1.1V\nSecret",
-    "tip_title": "The 1.1 Volt Rule",
-    "tip_details": "Eext < 1.1V: Galvanic. Eext > 1.1V: Electrolytic. Eext = 1.1V: Stop.",
-    "bonus_visual": "Eext > 1.1V: Zn deposits!",
+    "hook_text": "Anode\nvs\nCathode\nHack",
+    "tip_title": "The LOAN Mnemonic",
+    "tip_details": "LOAN: Left, Oxidation, Anode, Negative",
+    "bonus_visual": "Eext > 1.1V: Cell Flips!",
     "cta_content": {
-      "social_text": "🎯 SUBSCRIBE FOR RAPID MASTERY",
+      "social_text": "🚀 HIT SUBSCRIBE FOR SPEED REVISION",
       "link_text": "🚀 Rapid Full Video in Link"
     },
     "outro_content": {
       "usp_line_1": "💥 RAPID MASTERY",
       "usp_line_2": "📖 Subscribe for Quick Prep"
     },
-    "usp_badge_text": "💥 QUICK RECALL",
+    "usp_badge_text": "💨 RAPID FIRE",
     "watermark_text": "@NCERT_QuickPrep",
     "copyright_text": "© 2025 NCERT QuickPrep"
   }

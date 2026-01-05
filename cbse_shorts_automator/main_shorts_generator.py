@@ -352,6 +352,8 @@ def process_row(engine, gemini, row, row_idx):
             chapter_title, gen_config['template'], script, vid_id, DIRS['SHORTS_OUT']
         )
         output_path = os.path.join(DIRS['SHORTS_OUT'], output_filename)
+        with open('vid_out_filename.txt', 'w', encoding='utf-8') as f:
+            f.write(output_path)
         
         result = engine.generate_short(
             video_path=temp_vid,

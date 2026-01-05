@@ -7,6 +7,7 @@ UPDATED: Integrated USPContent for dynamic brand messaging.
 
 import os
 import json
+import glob
 import random
 import subprocess
 import concurrent.futures
@@ -14,6 +15,7 @@ from moviepy.editor import CompositeAudioClip, AudioFileClip
 from voice_manager import VoiceManager
 from sfx_manager import SFXManager
 from video_scheduler import VideoScheduler 
+from remotion_renderer import render_remotion_video
 import re  #
 
 # --- NEW INTEGRATION ---
@@ -23,6 +25,7 @@ from usp_content_variations import USPContent
 WIDTH = 1080
 HEIGHT = 1920
 PUBLIC_DIR = "./visual_engine_fact/public"
+AUDIO_SAMPLE_RATE = 44100 
 
 class FactTemplate:
     def __init__(self, engine):
@@ -67,7 +70,7 @@ class FactTemplate:
                 f.write(f"file '{os.path.abspath(chunk)}'\n")
 
         # 3. CONCATENATE
-        print(f"   🎞️  Stitching final video -> {os.path.basename(output_path)}")
+        """ print(f"   🎞️  Stitching final video -> {os.path.basename(output_path)}")
         concat_cmd = [
             'ffmpeg', '-y',
             '-f', 'concat',
@@ -77,6 +80,39 @@ class FactTemplate:
             output_path
         ]
         subprocess.call(concat_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        """
+        # NEW: Get source video FPS
+        """ def get_video_fps(video_path):
+            cmd = ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
+                '-show_entries', 'stream=r_frame_rate', '-of', 'default=noprint_wrappers=1:nokey=1',
+                video_path]
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            num, den = map(int, result.stdout.strip().split('/'))
+            return num / den """
+
+        #source_fps = get_video_fps(output_path)
+        main_video_fps = 30  # Set this to your composition FPS
+
+        # NEW: Extract frames
+        
+        frames_dir = os.path.join(PUBLIC_DIR, "assets/video_frames")
+        if os.path.exists(frames_dir):
+            import shutil
+            shutil.rmtree(frames_dir)
+        os.makedirs(frames_dir, exist_ok=True)
+
+        extract_cmd = [
+            'ffmpeg', '-y',
+            '-f', 'concat',
+            '-safe', '0',
+            '-i', concat_list_path,
+            '-vf', f'fps={main_video_fps},scale=1080:-1',
+            '-q:v', '5',
+            f'{frames_dir}/frame_%05d.jpg'
+        ]
+        subprocess.call(extract_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        print(f"Extracted frames at {main_video_fps} fps to {frames_dir}")
 
         # 4. CLEANUP CHUNKS
         if os.path.exists(concat_list_path): os.remove(concat_list_path)
@@ -99,23 +135,56 @@ class FactTemplate:
         sfx_mgr = SFXManager()
         selected_voice_key = config.get('voice') or voice_mgr.get_random_voice_name()
         temp_dir = self.engine.config['DIRS']['TEMP']
+        audio_files = [] 
+        vid_id = os.path.basename(output_path).split('.')[0]
+        
+
+        BASE_PUBLIC_DIR = PUBLIC_DIR
+        FINAL_ASSETS_DIR = f"{BASE_PUBLIC_DIR}/assets"
+        
+        # CORRECTED JSON OUTPUT PATH: directly in public folder
+        JSON_OUTPUT_PATH = f"{BASE_PUBLIC_DIR}/scenario_data.json" 
+        
+        # Define asset file paths (relative to BASE_PUBLIC_DIR/assets)
+        FINAL_AUDIO_FILENAME = f"{vid_id}_final_audio.mp3"
+        FINAL_AUDIO_PATH = f"{FINAL_ASSETS_DIR}/{FINAL_AUDIO_FILENAME}"
+
+
+        SOURCE_VIDEO_FILENAME = "source_video.mp4"
+
+        SOURCE_VIDEO_PATH = f"{FINAL_ASSETS_DIR}/{SOURCE_VIDEO_FILENAME}"
+        # Asset URLs (All relative to the public root)
+        FINAL_AUDIO_URL = f"/assets/{FINAL_AUDIO_FILENAME}"
+        SOURCE_VIDEO_URL = f"/assets/{SOURCE_VIDEO_FILENAME}" 
 
         # --- 2. AUDIO GENERATION ---
         print("   🎙️  Synthesizing Audio...")
+        generated_audio_paths = {}
         
         audio_tasks = {
             'hook': script['hook_spoken'],
             'title': script['fact_title'],
             'cta': script['cta_spoken']
         }
+
+        
+        
+        def generate_single_audio(key, text):
+            path = f"{temp_dir}/{vid_id}_{key}.mp3"
+            voice_mgr.generate_audio_with_specific_voice(text, path, selected_voice_key, provider='google')
+            return key, path
         
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            futures = {executor.submit(voice_mgr.generate_audio_with_specific_voice, text, f"{temp_dir}/{k}.mp3", selected_voice_key): k for k, text in audio_tasks.items()}
-            for f in concurrent.futures.as_completed(futures): pass
+            futures = [executor.submit(generate_single_audio, k, t) for k, t in audio_tasks.items()]
+            #futures = {executor.submit(voice_mgr.generate_audio_with_specific_voice, text, f"{temp_dir}/{k}.mp3", selected_voice_key): k for k, text in audio_tasks.items()}
+            for future in concurrent.futures.as_completed(futures): 
+                k, path = future.result()
+                generated_audio_paths[k] = path
+                audio_files.append(path)    
 
-        aud_hook = AudioFileClip(f"{temp_dir}/hook.mp3")
-        aud_title = AudioFileClip(f"{temp_dir}/title.mp3")
-        aud_cta = AudioFileClip(f"{temp_dir}/cta.mp3")
+        aud_hook = AudioFileClip(generated_audio_paths['hook'])
+        aud_title = AudioFileClip(generated_audio_paths['title'])
+        aud_cta = AudioFileClip(generated_audio_paths['cta'])
         
         voice_mgr.generate_audio_with_specific_voice(script['fact_spoken'], f"{temp_dir}/details.mp3", selected_voice_key)
         aud_details = AudioFileClip(f"{temp_dir}/details.mp3")
@@ -133,7 +202,7 @@ class FactTemplate:
         scheduler = VideoScheduler(temp_dir=temp_dir)
         schedule = scheduler.schedule_clips(video_path, total_dur, script)
         
-        final_video_filename = "source_vid.mp4"
+        final_video_filename = SOURCE_VIDEO_FILENAME
         final_video_path = os.path.join(assets_dir, final_video_filename)
         
         self.process_video_ffmpeg(video_path, schedule, final_video_path, temp_dir)
@@ -147,9 +216,16 @@ class FactTemplate:
         ] + sfx_clips
         
         final_audio = self.engine.add_background_music(CompositeAudioClip(full_stack), total_dur)
+
+        # FIX: Explicitly set the sampling frequency (fps)
+        final_audio.fps = AUDIO_SAMPLE_RATE 
         
-        final_audio_path = os.path.join(assets_dir, "audio_track.mp3")
-        final_audio.write_audiofile(final_audio_path, fps=44100, verbose=False, logger=None)
+        # Write the final audio
+        os.makedirs(os.path.dirname(FINAL_AUDIO_PATH), exist_ok=True)
+        final_audio.write_audiofile(FINAL_AUDIO_PATH, logger=None)
+        print(f"   ✅ Final audio saved to {FINAL_AUDIO_PATH}")
+        #final_audio_path = os.path.join(assets_dir, "audio_track.mp3")
+        #final_audio.write_audiofile(final_audio_path, fps=44100, verbose=False, logger=None)
 
        # --- 6. USP CONTENT & FORMATTING ---
         usp_hook = script['hook_visual']
@@ -184,7 +260,7 @@ class FactTemplate:
         }
 
         # --- 3. UPDATED JSON DATA CONTRACT ---
-        data = {
+        scenario_data = {
             "meta": {
                 "theme_seed": theme_seed,
                 "target_item": target_item, # The selected index
@@ -200,8 +276,8 @@ class FactTemplate:
                 }
             },
             "assets": {
-                "video_src": "assets/source_vid.mp4",
-                "audio_track": "assets/audio_track.mp3",
+                "video_src": SOURCE_VIDEO_URL,
+                "audio_track": FINAL_AUDIO_URL,
                 "thumb_src": "assets/thumbnail.jpg",
                 "logo_src": "assets/logo.png"
             },
@@ -234,10 +310,88 @@ class FactTemplate:
             }
         }
 
+        # 6. WRITE JSON FILE TO TARGET PATH
+        # Ensure the 'public' directory exists
+        os.makedirs(os.path.dirname(JSON_OUTPUT_PATH), exist_ok=True)
+        with open(JSON_OUTPUT_PATH, 'w', encoding='utf-8') as f:
+            json.dump(scenario_data, f, indent=4)
+
         # --- 8. WRITE JSON ---
-        json_path = os.path.join(PUBLIC_DIR, "scenario_data.json")
-        with open(json_path, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2)
+        #json_path = os.path.join(PUBLIC_DIR, "scenario_data.json")
+        #with open(json_path, 'w', encoding='utf-8') as f:
+            #json.dump(data, f, indent=2)
             
-        print(f"   ✅ JSON written to: {json_path}")
-        return {'json_path': json_path}
+        print(f"   ✅ JSON written to: {JSON_OUTPUT_PATH}")
+        #return {'json_path': json_path}
+
+        try:
+            #self.engine.render_with_effects(final_raw, script, output_path)
+            print(f"  Trying:")
+                    # 1. Define your variables
+     # Replace with your desired path
+
+            project_dir = "visual_engine_fact"
+            comp_id = "NCERT-Shorts-Fact"
+    
+            entry_point = "src/index.ts"
+            
+
+            # 2. Construct the command as a list (safer than a string)
+            command = [
+                "npx", 
+                "remotion", 
+                "render", 
+                entry_point, 
+                comp_id, 
+                output_path, 
+                "--enable-multiprocess-on-linux",                 
+            ]  
+
+            # 3. Execute
+            try:
+                render_remotion_video(
+                    project_dir=project_dir,
+                    comp_id=comp_id,
+                    output_path=output_path,
+                    entry_point=entry_point,
+                    start_frame=None,
+                    end_frame=None
+                )
+                # Returns duration or success metadata
+                # (Assuming total_dur was calculated earlier in your script)
+                return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}
+            except subprocess.CalledProcessError as e:
+                print(f"❌ Render failed with error code {e.returncode}")
+        finally:
+            # --- CLEANUP LOGIC ---
+            # This runs whether the render succeeded or failed
+            if self.engine.config.get('DELETE_TEMP_FILES', True):
+                print("🧹 Cleaning up temporary files...")
+                
+                # Clean specific audio files list
+                if 'audio_files' in locals():
+                    for f in audio_files:
+                        if os.path.exists(f): 
+                            try: os.remove(f)
+                            except OSError: pass
+                
+                # Clean glob patterns (vid_id based)
+                # Ensure vid_id and temp_dir are defined in this scope
+                if 'vid_id' in locals() and 'temp_dir' in locals():
+                    patterns = [
+                        os.path.join(temp_dir, f'{vid_id}*'), 
+                        f'{vid_id}*TEMP_*'
+                    ]
+                    for pattern in patterns:
+                        for temp_file in glob.glob(pattern):
+                            try: os.remove(temp_file)
+                            except OSError: pass
+        
+        return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}
+
+        # 7. Cleanup (Clean intermediate voice tracks)
+        if self.engine.config.get('DELETE_TEMP_FILES', True):
+            for f in audio_files:
+                if os.path.exists(f): os.remove(f)
+
+        return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}

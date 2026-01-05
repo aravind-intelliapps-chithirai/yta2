@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "corrected the background equation texts poitioning and orientation"
+git commit -m "done one more level of integration with test_all_templates. correct frame-0 blankness in quiz template. implemented independent common render module for consistent usage across multiple files."
 
 # 3. Push the new commit to the remote GitHub repository
 git push

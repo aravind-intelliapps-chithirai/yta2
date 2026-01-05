@@ -39,7 +39,7 @@ const SlateFallback = ({ width }: { width: number }) => {
     const height = width * 0.5625;
     return (
         <RoundedBox args={[0, 0, height / 12]} radius={height / 18}>
-             <meshStandardMaterial color="#333333" transparent opacity={0.5} />
+             <meshStandardMaterial color="#333333" transparent opacity={1.5} />
         </RoundedBox>
     );
 };
