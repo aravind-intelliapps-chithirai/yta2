@@ -168,7 +168,7 @@ export const NeuralWorkspace = ({ audioSrc, outroStart, palette, width, height, 
     return random(seed) * Math.PI *2 ;
   }, [seed]);
   // Audio Reactive Opacity 
-  const pulseOpacity = 0+(0.15 + (subBass * 0.15));
+  const pulseOpacity = 0+(0.55 + (subBass * 0.15));
   // DYNAMIC FOG CALCULATION:
   // We want ~95% fog opacity at the deepest layer (40 * height)
   // Formula: density = 1.73 / (Depth_in_Units)

@@ -70,7 +70,7 @@ class FactTemplate:
                 f.write(f"file '{os.path.abspath(chunk)}'\n")
 
         # 3. CONCATENATE
-        """ print(f"   🎞️  Stitching final video -> {os.path.basename(output_path)}")
+        print(f"   🎞️  Stitching final video -> {os.path.basename(output_path)}")
         concat_cmd = [
             'ffmpeg', '-y',
             '-f', 'concat',
@@ -80,7 +80,7 @@ class FactTemplate:
             output_path
         ]
         subprocess.call(concat_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        """
+       
         # NEW: Get source video FPS
         """ def get_video_fps(video_path):
             cmd = ['ffprobe', '-v', 'error', '-select_streams', 'v:0',
@@ -354,8 +354,9 @@ class FactTemplate:
                     comp_id=comp_id,
                     output_path=output_path,
                     entry_point=entry_point,
-                    start_frame=None,
-                    end_frame=None
+                    scenario_json_path=JSON_OUTPUT_PATH,
+                    start_frame=0,
+                    end_frame=200
                 )
                 # Returns duration or success metadata
                 # (Assuming total_dur was calculated earlier in your script)

@@ -69,7 +69,7 @@ export const Main = ({ data }: { data: ExamScenario }) => {
                 videoSrc={staticFile(assets.video_src)} // <--- NEW PROP
                 hookDuration={hookDurationFrames}
                 baseZ={cameraDistance}
-                
+                useGPU={data.meta.config.use_gpu}
             />
             <AudioVisualizer audioSrc={staticFile(assets.audio_track)} palette={palette} />
             <CameraRig totalDuration={timings.total_duration} scene2Start={timings.tip_title.start_time} 

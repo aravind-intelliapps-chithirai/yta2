@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export interface Resolution { w: number; h: number; }
-export interface Config { resolution: Resolution; fps: number; }
+export interface Config { resolution: Resolution; fps: number; use_gpu: boolean;}
 export interface Meta { theme_seed: number; config: Config; }
 
 export interface Assets {
@@ -58,6 +58,7 @@ export const examScenarioSchema = z.object({
     config: z.object({
       resolution: z.object({ w: z.number(), h: z.number() }),
       fps: z.number(),
+      use_gpu: z.boolean()
     }),
   }),
   assets: z.object({

@@ -1,6 +1,7 @@
 import { useRef, useMemo, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useCurrentFrame, useVideoConfig, interpolate, Easing } from 'remotion';
+import {   useTexture } from '@react-three/drei';
+import { useCurrentFrame, useVideoConfig, interpolate, Easing, staticFile } from 'remotion';
 import { SPATIAL_MAP, toThreeY } from '../../constants/Config';
 import { useCentripetalExit } from '../../logic/useCentripetalExit';
 import * as THREE from 'three';
@@ -13,9 +14,10 @@ interface SlateRigProps {
     videoSrc: string;
     hookDuration: number; // NEW PROP
     baseZ: number;
+    useGPU: boolean;
 }
 
-export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDuration, baseZ }: SlateRigProps) => {
+export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDuration, baseZ,useGPU }: SlateRigProps) => {
   //const { height, width } = useThree().viewport;
   const { height, width: viewportWidth } = useThree().viewport;
   //const threeCam = useThree().camera as THREE.PerspectiveCamera;
@@ -25,6 +27,7 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
   
   // --- VIDEO & TEXTURE SETUP (Preserved) ---
   const [videoElement] = useState(() => {
+    if (!useGPU) return null;
     const vid = document.createElement('video');
     vid.src = videoSrc;
     vid.crossOrigin = 'Anonymous';
@@ -35,12 +38,25 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
   });
 
   const videoTexture = useMemo(() => {
+    if (!useGPU || !videoElement) return null;
     const tex = new THREE.VideoTexture(videoElement);
     tex.minFilter = THREE.LinearFilter;
     tex.magFilter = THREE.LinearFilter;
     tex.format = THREE.RGBAFormat;
     return tex;
-  }, [videoElement]);
+  }, [useGPU,videoElement]);
+
+  // CPU Path: Image Sequence Texture
+const currentFramePath = useMemo(() => {
+    if (useGPU) return null;
+    const frameNumber = Math.floor(frame) + 1;
+    return staticFile(`/assets/video_frames/frame_${String(frameNumber).padStart(5, '0')}.jpg`);
+}, [useGPU, frame]);
+
+const imageTexture = currentFramePath ? useTexture(currentFramePath) : null;
+
+// Select appropriate texture
+const frontTexture = useGPU ? videoTexture : imageTexture;
 
   const thumbTexture = useMemo(() => new THREE.TextureLoader().load(thumbSrc), [thumbSrc]);
 // --- FIX: EXPLICIT WIDTH CALCULATION ---
@@ -121,9 +137,11 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
     if (!groupRef.current) return;
 
     // Video Sync
-    const targetTime = frame / fps;
-    if (videoElement.duration && Math.abs(videoElement.currentTime - (targetTime % videoElement.duration)) > 3/fps) {
-         videoElement.currentTime = targetTime % videoElement.duration;
+    if (useGPU && videoElement) {
+      const targetTime = frame / fps;
+      if (videoElement.duration && Math.abs(videoElement.currentTime - (targetTime % videoElement.duration)) > 3/fps) {
+          videoElement.currentTime = targetTime % videoElement.duration;
+      }
     }
 
     // Scene 3 Flip Logic (Preserved)
@@ -157,16 +175,18 @@ export const SlateRig = ({ scene3Start, outroStart, thumbSrc, videoSrc, hookDura
         <group position={[0, 0, FACE_OFFSET]}>
 
         {/* Front Face (Video) */}
-        <mesh position={[0, 0, FACE_OFFSET]}>
-            <planeGeometry args={[SLATE_W, SLATE_H]} />
-            <meshStandardMaterial 
-                map={videoTexture} 
-                emissiveMap={videoTexture} 
-                emissive="white" 
-                emissiveIntensity={0.2} 
-                toneMapped={false} 
-            />
-        </mesh>
+        {frontTexture && (
+            <mesh position={[0, 0, FACE_OFFSET]}>
+                <planeGeometry args={[SLATE_W, SLATE_H]} />
+                <meshStandardMaterial 
+                    map={frontTexture}
+                    emissiveMap={frontTexture}
+                    emissive="white" 
+                    emissiveIntensity={0.2} 
+                    toneMapped={false} 
+                />
+            </mesh>
+        )}
         {/* 2. Player UI Overlay (Imported) */}
             <PlayerUI width={SLATE_W} height={SLATE_H} depth={BOX_DEPTH}/>
         </group>

@@ -87,6 +87,30 @@ class QuizTemplate:
         ]
         subprocess.call(concat_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+        main_video_fps = 30  # Set this to your composition FPS
+
+        # NEW: Extract frames
+        
+        frames_dir = os.path.join(PUBLIC_DIR, "assets/video_frames")
+        if os.path.exists(frames_dir):
+            import shutil
+            shutil.rmtree(frames_dir)
+        os.makedirs(frames_dir, exist_ok=True)
+
+        extract_cmd = [
+            'ffmpeg', '-y',
+            '-f', 'concat',
+            '-safe', '0',
+            '-i', concat_list_path,
+            '-vf', f'fps={main_video_fps},scale=1080:-1',
+            '-q:v', '5',
+            f'{frames_dir}/frame_%05d.jpg'
+        ]
+        subprocess.call(extract_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        print(f"Extracted frames at {main_video_fps} fps to {frames_dir}")
+
+
         # 4. CLEANUP CHUNKS
         if os.path.exists(concat_list_path): os.remove(concat_list_path)
         for chunk in chunk_files:
@@ -280,7 +304,8 @@ class QuizTemplate:
                 "version": config.get('version', '1.0.0'), 
                 "resolution": {"w": WIDTH, "h": HEIGHT},
                 "seed": config.get('seed', random.randint(1000, 9999)),
-                "duration_seconds": round(total_dur, 2),
+                "duration_seconds": round(total_dur, 2), 
+                "config": {"use_gpu": False},
             },
             "assets": {
                 "audio_url": FINAL_AUDIO_URL,
@@ -352,8 +377,9 @@ class QuizTemplate:
                     comp_id=comp_id,
                     output_path=output_path,
                     entry_point=entry_point,
-                    start_frame=None,
-                    end_frame=None
+                    scenario_json_path=JSON_OUTPUT_PATH,
+                    start_frame=0,
+                    end_frame=200
                 )
                 # Returns duration or success metadata
                 # (Assuming total_dur was calculated earlier in your script)

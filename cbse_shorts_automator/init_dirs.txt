@@ -15,6 +15,7 @@ sudo apt-get update
 sudo apt-get install imagemagick
 sudo apt install ffmpeg
 sudo apt-get install fonts-noto-color-emoji
+sudo apt-get install -y jq
 
 pip install -r requirements.texttospeech
 

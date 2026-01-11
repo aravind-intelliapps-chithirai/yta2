@@ -32,16 +32,37 @@ def has_gpu():
     except subprocess.CalledProcessError:
         return False
 
-def render_remotion_video(project_dir, comp_id, output_path, entry_point="src/index.ts", 
+def render_remotion_video(project_dir, comp_id, scenario_json_path, output_path, entry_point="src/index.ts", 
     start_frame=None, 
     end_frame=None):
     """
     Executes Remotion render with robust GPU enforcement for Headless Linux (Colab/Docker).
     """
+    import time
+    import json 
     env = detect_environment()
     gpu_available = has_gpu()
     
     print(f"⚙️  Environment: {env.upper()} | GPU Present: {gpu_available}")
+
+    # --- NEW: Update GPU flag in JSON ---
+    try:
+        with open(scenario_json_path, 'r') as f:
+            scenario_data = json.load(f)
+        
+        # Update ONLY the use_gpu field
+        scenario_data['meta']['config']['use_gpu'] = gpu_available
+        
+        with open(scenario_json_path, 'w') as f:
+            json.dump(scenario_data, f, indent=2)
+        
+        print(f"✏️  Updated {scenario_json_path} → use_gpu: {gpu_available}")
+    
+    except Exception as e:
+        print(f"⚠️  Warning: Could not update GPU flag in JSON: {e}")
+        # Continue anyway - render will use default behavior
+    
+    # --- END NEW SECTION ---
 
     command = [
         "npx", "remotion", "render",
@@ -81,9 +102,29 @@ def render_remotion_video(project_dir, comp_id, output_path, entry_point="src/in
         # This prevents "missing driver" crashes and starts faster on CPU
         print("💻 No GPU / CPU-only: Using Software Rendering (Swangle)")
         command.append("--gl=swangle")
+        chrome_flags = [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--enable-unsafe-swiftshader",
+            "--disable-gpu-watchdog",
+            "--disable-video-capture-use-gpu-memory-buffer",
+            "--disable-gpu-rasterization",
+            "--disable-zero-copy",
+            "--disable-dev-shm-usage",
+            "--disable-accelerated-video-decode",
+            "--disable-accelerated-video-encode",
+            "--disable-gpu-compositing",
+            "--enable-features=SharedImageFactory",
+            "--enable-webgl",
+            "--disable-features=Vulkan"
+        ]
         
-        if env in ['colab', 'kaggle', 'codespaces']:
-             command.append("--chromium-options=--no-sandbox,--disable-setuid-sandbox")
+    command.append(f"--chromium-options={','.join(chrome_flags)}")
+    
+
+        
+        #if env in ['colab', 'kaggle', 'codespaces']:
+             #command.append("--chromium-options=--no-sandbox,--disable-setuid-sandbox")
 
     # --- 2. Multi-Process (Always required for Linux speed) ---
     command.append("--enable-multiprocess-on-linux")
@@ -93,14 +134,22 @@ def render_remotion_video(project_dir, comp_id, output_path, entry_point="src/in
         command.append("--concurrency=75%") # Prevent OOM kills
 
     # --- Execution ---
+    # Execute with timing
+    start_time = time.time()
     try:
         print(f"🚀 Starting Render: {comp_id}")
         # print(f"DEBUG Command: {' '.join(command)}") 
         subprocess.run(command, cwd=project_dir, check=True)
-        print("✅ Render completed successfully!")
-        return True
+        duration = time.time() - start_time
+        minutes, seconds = int(duration // 60), int(duration % 60)
+        
+        print(f"✅ Render completed!")
+        print(f"⏱️  Duration: {minutes}m {seconds}s ({duration:.2f}s total)")
+        
+        return True, duration
     except subprocess.CalledProcessError as e:
-        print(f"❌ Render failed with error code {e.returncode}")
+        duration = time.time() - start_time
+        print(f"❌ Render failed after {duration:.2f}s (code {e.returncode})")
         raise e
 
 def check_remotion_gpu(project_dir):

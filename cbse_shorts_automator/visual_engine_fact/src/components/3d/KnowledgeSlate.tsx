@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect,useState } from 'react';
 import { RoundedBox, useVideoTexture, useTexture, Text } from '@react-three/drei';
-import { staticFile, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
+import { staticFile, spring, useCurrentFrame, useVideoConfig, interpolate, delayRender, continueRender  } from 'remotion';
 import { Theme } from '../../theme/palettes';
 import { useFrame } from '@react-three/fiber';
 import { Group, VideoTexture, LinearFilter, DoubleSide } from 'three';
@@ -33,19 +33,25 @@ export const KnowledgeSlate: React.FC<Props> = ({
     const frame = useCurrentFrame();
     const height = slateWidth * 0.5625;
     const depth = height / 12;
-    //const [videoTexture, setVideoTexture] = useState<VideoTexture | null>(null);
+    const useGPU = scenario.meta.config.use_gpu;
+    const [videoTexture, setVideoTexture] = useState<VideoTexture | null>(null);
     //const videoUrl=scenario.assets.video_src;
 
-    /*     // --- VIDEO LOADING ---
+         // --- VIDEO LOADING ---
     useEffect(() => {
+        if (!useGPU) return; // Skip if CPU mode
+        const videoUrl = scenario.assets.video_src;
         console.log("UnResolved:",{videoUrl})
         if (!videoUrl) return;
+        const handle = delayRender('Loading video texture');
         const resolvedSrc = staticFile(videoUrl);
         const vid = document.createElement('video');
         vid.src = resolvedSrc;
         vid.crossOrigin = 'Anonymous';
         vid.muted = true;
         vid.playsInline = true;
+        vid.loop = false;
+        vid.preload = 'auto';
         console.log("Resolved1:",{resolvedSrc})
         const texture = new VideoTexture(vid);
         texture.minFilter = LinearFilter;
@@ -54,17 +60,26 @@ export const KnowledgeSlate: React.FC<Props> = ({
         // Seek to correct frame timestamp
         const targetTime = frame / fps;
         
-        const handleSeek = () => {
+        const handleReady = () => {
+            vid.currentTime = targetTime;
+            vid.pause();
+            texture.needsUpdate = true;
+            setVideoTexture(texture);
+            continueRender(handle);
+        };
+
+
+     /*    const handleSeek = () => {
             vid.currentTime = targetTime;
             vid.pause(); // Ensure it stays paused
             texture.needsUpdate = true;
             setVideoTexture(texture);
-        };
+        }; */
         
         if (vid.readyState >= 2) {
-            handleSeek();
+            handleReady();
         } else {
-            vid.addEventListener('loadedmetadata', handleSeek, { once: true });
+            vid.addEventListener('loadedmetadata', handleReady, { once: true });
         }
 
         return () => {
@@ -73,18 +88,33 @@ export const KnowledgeSlate: React.FC<Props> = ({
             vid.load();
             texture.dispose();
         };
-    }, [videoUrl, frame, fps]); */
+    }, [useGPU,scenario.assets.video_src, frame, fps]); 
 
-        const videoFrameTexture = useMemo(() => {
-            // Calculate which frame of the source video to display
-            const videoStartFrame = Math.max(0, clickFrame - TIMING.S1_CLICK_DURATION_FRAMES);
-            const frameNumber = Math.floor(videoStartFrame) + 1; // FFmpeg outputs start at 1
-            const framePath = `/assets/video_frames/frame_${String(frameNumber).padStart(4, '0')}.jpg`;
-            
-            return staticFile(framePath);
+        // CPU Path: Image Sequence
+    const imageFrameTexture = useMemo(() => {
+        if (useGPU) return null; // Skip if GPU mode
+        
+        const videoStartFrame = Math.max(0, clickFrame - TIMING.S1_CLICK_DURATION_FRAMES);
+        const frameNumber = Math.floor(videoStartFrame) + 1;
+        const framePath = `/assets/video_frames/frame_${String(frameNumber).padStart(4, '0')}.jpg`;
+        
+        return staticFile(framePath);
+    }, [useGPU, clickFrame]);
+
+    const imageTexture = useGPU ? null : useTexture(imageFrameTexture);
+        // Select appropriate texture
+    const frontTexture = useGPU ? videoTexture : imageTexture;
+
+    /* const videoFrameTexture = useMemo(() => {
+        // Calculate which frame of the source video to display
+        const videoStartFrame = Math.max(0, clickFrame - TIMING.S1_CLICK_DURATION_FRAMES);
+        const frameNumber = Math.floor(videoStartFrame) + 1; // FFmpeg outputs start at 1
+        const framePath = `/assets/video_frames/frame_${String(frameNumber).padStart(4, '0')}.jpg`;
+        
+        return staticFile(framePath);
         }, [clickFrame, fps]); // Add fps dependency
 
-        const texture = useTexture(videoFrameTexture);
+    const texture = useTexture(videoFrameTexture); */
 
         /*useFrame((state) => {
         
@@ -160,9 +190,9 @@ export const KnowledgeSlate: React.FC<Props> = ({
             </RoundedBox>
 
             {/* FRONT SCREEN */}
-            {Math.abs(RotationY) < Math.PI / 2 && texture && (<mesh position={[0, 0, uiZOffset]}>
+            {Math.abs(RotationY) < Math.PI / 2 && frontTexture && (<mesh position={[0, 0, uiZOffset]}>
                 <planeGeometry args={[slateWidth * 0.90, height * 0.90]} />
-                <meshBasicMaterial map={texture} toneMapped={false} transparent />
+                <meshBasicMaterial map={frontTexture} toneMapped={false} transparent />
             </mesh>
             )}
 

@@ -68,6 +68,7 @@ class TipTemplate:
                 f.write(f"file '{os.path.abspath(chunk)}'\n")
 
         # 3. CONCATENATE
+        """ 
         print(f"   🎞️  Stitching final video -> {os.path.basename(output_path)}")
         concat_cmd = [
             'ffmpeg', '-y',
@@ -78,6 +79,30 @@ class TipTemplate:
             output_path
         ]
         subprocess.call(concat_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        """
+        main_video_fps = 30  # Set this to your composition FPS
+
+        # NEW: Extract frames
+        
+        frames_dir = os.path.join(PUBLIC_DIR, "assets/video_frames")
+        if os.path.exists(frames_dir):
+            import shutil
+            shutil.rmtree(frames_dir)
+        os.makedirs(frames_dir, exist_ok=True)
+
+        extract_cmd = [
+            'ffmpeg', '-y',
+            '-f', 'concat',
+            '-safe', '0',
+            '-i', concat_list_path,
+            '-vf', f'fps={main_video_fps},scale=1080:-1',
+            '-q:v', '5',
+            f'{frames_dir}/frame_%05d.jpg'
+        ]
+        subprocess.call(extract_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        print(f"Extracted frames at {main_video_fps} fps to {frames_dir}")
+
 
         # 4. CLEANUP CHUNKS
         if os.path.exists(concat_list_path): os.remove(concat_list_path)
@@ -356,6 +381,7 @@ class TipTemplate:
                     comp_id=comp_id,
                     output_path=output_path,
                     entry_point=entry_point,
+                    scenario_json_path=JSON_OUTPUT_PATH,
                     start_frame=None,
                     end_frame=None
                 )

@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { RoundedBox, Text } from '@react-three/drei';
+import { RoundedBox, Text, useTexture } from '@react-three/drei';
 import { Group, VideoTexture, LinearFilter, DoubleSide } from 'three';
 import { useFrame } from '@react-three/fiber';
 import { staticFile, useCurrentFrame, useVideoConfig } from 'remotion'; 
+import * as THREE from 'three';
 
 interface ThreeStageProps {
     videoUrl: string;
@@ -10,6 +11,8 @@ interface ThreeStageProps {
     overlayProgress?: number;
     width?: number; // <--- CHANGED: Now accepts a target Width in World Units
     totalDuration?: number; 
+    useGPU: boolean;
+    onVideoReady?: () => void;
 }
 
 export const ThreeStage: React.FC<ThreeStageProps> = ({ 
@@ -17,7 +20,9 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
     progressEnd = 0.5, 
     overlayProgress,
     width = 1.0, // Default to 1 unit wide if not specified
-    totalDuration = 600 
+    totalDuration = 420 ,
+    useGPU,
+    onVideoReady
 }) => {
     const currentProgress = overlayProgress ?? progressEnd;
     const groupRef = useRef<Group>(null);
@@ -50,6 +55,12 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
     // --- VIDEO LOADING ---
     useEffect(() => {
         //console.log("UnResolved:",{videoUrl})
+        if (!useGPU) {
+            // CPU mode: No video to load, immediately ready
+            onVideoReady?.();
+            return;
+        }
+    
         if (!videoUrl) return;
         //const resolvedSrc = staticFile(videoUrl);
         const resolvedSrc = videoUrl;
@@ -62,10 +73,37 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
         const texture = new VideoTexture(vid);
         texture.minFilter = LinearFilter;
         texture.magFilter = LinearFilter;
-        setVideoTexture(texture);
+        // Wait for video to be ready
+        const handleCanPlay = () => {
+            console.log('[ThreeStage] 🎥 Video Ready');
+            setVideoTexture(texture);
+            onVideoReady?.(); // Notify parent
+        };
+        
+        if (vid.readyState >= 2) {
+            handleCanPlay();
+        } else {
+            vid.addEventListener('canplay', handleCanPlay, { once: true });
+        }
 
-        return () => { vid.remove(); };
-    }, [videoUrl]);
+        return () => {
+            vid.pause();
+            vid.removeAttribute('src');
+            vid.load();
+            texture.dispose();
+        };
+    }, [useGPU,videoUrl, onVideoReady]);
+
+    // --- IMAGE SEQUENCE (CPU Path) ---
+const currentFramePath = useMemo(() => {
+    if (useGPU) return null;
+    const frameNumber = Math.floor(frame) + 1;
+    return staticFile(`/assets/video_frames/frame_${String(frameNumber).padStart(5, '0')}.jpg`);
+}, [useGPU, frame]);
+
+const imageTexture = currentFramePath ? useTexture(currentFramePath) : null;
+// --- SELECT APPROPRIATE TEXTURE ---
+const screenTexture = useGPU ? videoTexture : imageTexture;
 
     // --- SYNC & ANIMATION ---
     useFrame((state) => {
@@ -73,7 +111,7 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
             groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.04) * 0.05;
             groupRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.08) * 0.02;
         }
-        if (videoTexture && videoTexture.image) {
+        if (useGPU &&videoTexture && videoTexture.image) {
             const vid = videoTexture.image as HTMLVideoElement;
             const targetTime = frame / fps;
             if (Math.abs(vid.currentTime - targetTime) > 0.1) vid.currentTime = targetTime;
@@ -102,10 +140,10 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
                      <planeGeometry args={[BOX_WIDTH - 0.03, BOX_HEIGHT - 0.03]} />
                      <meshBasicMaterial color="#000000" />
                 </mesh>
-                {videoTexture && (
+                {screenTexture && (
                     <mesh>
                         <planeGeometry args={[BOX_WIDTH - 0.04, BOX_HEIGHT - 0.04]} />
-                        <meshBasicMaterial map={videoTexture} toneMapped={false} side={DoubleSide}/>
+                        <meshBasicMaterial map={screenTexture} toneMapped={false} side={DoubleSide}/>
                     </mesh>
                 )}
             </group>

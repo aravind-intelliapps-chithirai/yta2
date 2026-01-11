@@ -79,7 +79,7 @@ def run_full_test():
     
     # 2. TEST LOOP (Quiz -> Fact -> Tip)
     #templates = ['quiz', 'fact', 'tip']
-    templates = ['tip']
+    templates = ['quiz']
     
     for i, template_type in enumerate(templates):
         print(f"\n🎬 TEST {i+1}/3: Generating '{template_type.upper()}' Template")

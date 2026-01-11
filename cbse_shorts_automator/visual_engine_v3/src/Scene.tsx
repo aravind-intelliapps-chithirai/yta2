@@ -28,25 +28,50 @@ import { OutroStage } from './components/OutroStage';
 
 
 interface SceneProps {
-    scenario: VisualScenario; handle: number;
+    scenario: VisualScenario; 
+}
+interface SceneContentProps {
+    scenario: VisualScenario;
+    onVideoReady: () => void;
 }
 
 // Internal component to access the R3F Context (useThree)
-const SceneContent: React.FC<SceneProps> = ({ scenario, handle }) => {
+const SceneContent: React.FC<SceneContentProps> = ({ scenario, onVideoReady }) => {
 
     const frame = useCurrentFrame();
     const { fps } = useVideoConfig();
     const { width, height: viewportHeight } = useThree((state) => state.viewport);
-    //console.log("Attempting to load video from(without staticFile wrapper):", scenario.assets.video_source_url);
-    //console.log("Attempting to load video from (with staticFile wrapper):", staticFile(scenario.assets.video_source_url));
+    // --- VIDEO READINESS TRACKING ---
+/*     const [isVideoReady, setIsVideoReady] = useState(false);
+    const handleRef = useRef<number | null>(null);
+    const useGPU = scenario.meta.config.use_gpu;
 
-z
-        // Wait for Pixel Data (ReadyState 3) + Layout
-        if (video.readyState >= 3 && video.videoWidth > 0) {
-             //console.log(`[Scene] 🧹 Clear handle: ${handle}`)
-             continueRender(handle);
+    // Create delay handle once
+    useEffect(() => {
+        if (useGPU && handleRef.current === null) {
+            handleRef.current = delayRender("Waiting for video to load");
+            console.log(`[SceneContent] 🔒 Video Load Lock Created: ${handleRef.current}`);
         }
-    });
+    }, [useGPU]);
+
+    // Release handle when video is ready (GPU mode only)
+    useEffect(() => {
+        if (useGPU && isVideoReady && handleRef.current !== null) {
+            console.log(`[SceneContent] ✅ Video Ready - Releasing Lock: ${handleRef.current}`);
+            continueRender(handleRef.current);
+            handleRef.current = null;
+        }
+    }, [useGPU, isVideoReady]);
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (handleRef.current !== null) {
+                console.log(`[SceneContent] 🧹 Cleanup - Releasing Lock: ${handleRef.current}`);
+                continueRender(handleRef.current);
+            }
+        };
+    }, []); */
 
     const { height : unscaledheight} = useThree((state) => state.viewport); // Dynamic Viewport Height
     const currentTime = frame / fps;
@@ -307,8 +332,9 @@ z
                 {/* 2. THE STAGE (Dynamic Positioning) */}
                 <group position={[0, stageY, 0]}>
                     {/* <Suspense fallback={null}> */}
-                        <ThreeStage videoUrl={sharedVideoUrl} overlayProgress={0.2} 
-                        width={StageWidth} // 
+                        <ThreeStage videoUrl={staticFile(scenario.assets.video_source_url)} overlayProgress={0.2} 
+                        width={StageWidth} useGPU={scenario.meta.config.use_gpu}
+                        onVideoReady={onVideoReady}// 
                         />
                     {/* </Suspense> */}
                     
@@ -461,18 +487,26 @@ z
 
 export const Scene: React.FC<SceneProps> = ({ scenario }) => {
 
-    // 1. CREATE LOCK ONCE (Strict Mode Safe)
+     // 1. CREATE LOCK ONCE (Strict Mode Safe)
     const handleRef = useRef<number | null>(null);
+    const [isVideoReady, setIsVideoReady] = useState(false);
     
     // Lazy Initialization in Render Body:
-    // This blocks Frame 0 immediately. 
-    // The "if null" check ensures we reuse the same handle during Strict Mode double-render.
     if (handleRef.current === null) {
-        handleRef.current = delayRender("Parent-Lock");
+        handleRef.current = delayRender("Waiting for video to load");
         console.log(`[Scene] 🔒 Lock Created: ${handleRef.current}`);
     }
 
-    // 2. CLEANUP
+    // 2. RELEASE LOCK when video is ready
+    useEffect(() => {
+        if (isVideoReady && handleRef.current !== null) {
+            console.log(`[Scene] ✅ Video Ready - Releasing Lock: ${handleRef.current}`);
+            continueRender(handleRef.current);
+            handleRef.current = null; // Clear reference after release
+        }
+    }, [isVideoReady]);
+
+    // 3. CLEANUP (in case component unmounts before video loads)
     useEffect(() => {
         return () => {
             if (handleRef.current !== null) {
@@ -503,7 +537,7 @@ export const Scene: React.FC<SceneProps> = ({ scenario }) => {
             height={height}            
             >
                 
-                <SceneContent scenario={scenario} handle={handleRef.current!}/>
+                <SceneContent scenario={scenario} onVideoReady={() => setIsVideoReady(true)}/>
             </ThreeCanvas>
             {/* Layer 100: The Ghost UI Overlay */}
             <Watermark scenario={scenario} />

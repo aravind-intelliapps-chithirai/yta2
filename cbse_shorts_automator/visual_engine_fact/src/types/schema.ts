@@ -18,6 +18,7 @@ export interface Config {
   resolution: Resolution;
   fps: number;
   grid_counts: GridCounts; // Added
+  use_gpu: boolean;
 }
 
 export interface Meta {

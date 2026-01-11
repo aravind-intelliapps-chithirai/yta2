@@ -4,6 +4,7 @@ export interface VisualScenario {
         resolution: { w: number; h: number };
         seed: number;
         duration_seconds: number;
+        config: { use_gpu: boolean; };
     };
     assets: {
         audio_url: string;

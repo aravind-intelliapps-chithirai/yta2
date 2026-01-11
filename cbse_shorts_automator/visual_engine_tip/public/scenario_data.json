@@ -1,12 +1,13 @@
 {
   "meta": {
-    "theme_seed": 84928,
+    "theme_seed": 98872,
     "config": {
       "resolution": {
         "w": 540,
         "h": 960
       },
-      "fps": 30
+      "fps": 30,
+      "use_gpu": false
     }
   },
   "assets": {
@@ -18,49 +19,49 @@
   "timings": {
     "hook": {
       "start_time": 0.0,
-      "duration": 4.54
+      "duration": 4.25
     },
     "tip_title": {
-      "start_time": 5.04,
+      "start_time": 4.75,
       "duration": 1.27
     },
     "tip_details": {
-      "start_time": 6.3100000000000005,
-      "duration": 18.29
+      "start_time": 6.02,
+      "duration": 14.54
     },
     "bonus": {
-      "start_time": 25.1,
-      "duration": 5.16
+      "start_time": 21.06,
+      "duration": 4.56
     },
     "cta_social": {
-      "start_time": 31.26,
-      "duration": 2.53
+      "start_time": 26.619999999999997,
+      "duration": 2.375
     },
     "cta_link": {
-      "start_time": 33.79,
-      "duration": 2.53
+      "start_time": 28.994999999999997,
+      "duration": 2.375
     },
     "outro": {
-      "start_time": 38.32,
+      "start_time": 33.37,
       "duration": 4.0
     },
-    "total_duration": 42.32
+    "total_duration": 37.37
   },
   "content": {
-    "hook_text": "Anode\nvs\nCathode\nHack",
+    "hook_text": "Anode\nvs\nCathode?",
     "tip_title": "The LOAN Mnemonic",
-    "tip_details": "LOAN: Left, Oxidation, Anode, Negative",
-    "bonus_visual": "Eext > 1.1V: Cell Flips!",
+    "tip_details": "L.O.A.N. = Left, Oxidation, Anode, Negative",
+    "bonus_visual": "If E ext > 1.1 V, Polarity Flips!",
     "cta_content": {
-      "social_text": "🚀 HIT SUBSCRIBE FOR SPEED REVISION",
-      "link_text": "🚀 Rapid Full Video in Link"
+      "social_text": "\u2728 SUBSCRIBE FOR ZERO BORING STUFF",
+      "link_text": "\u26a1 Quick Full Chapter in Description"
     },
     "outro_content": {
-      "usp_line_1": "💥 RAPID MASTERY",
-      "usp_line_2": "📖 Subscribe for Quick Prep"
+      "usp_line_1": "\ud83c\udfaf QUICK CONCEPTS",
+      "usp_line_2": "\ud83d\udcaa Big Scores, Short Videos"
     },
-    "usp_badge_text": "💨 RAPID FIRE",
+    "usp_badge_text": "\ud83d\udca5 QUICK RECALL",
     "watermark_text": "@NCERT_QuickPrep",
-    "copyright_text": "© 2025 NCERT QuickPrep"
+    "copyright_text": "\u00a9 2025 NCERT QuickPrep"
   }
 }

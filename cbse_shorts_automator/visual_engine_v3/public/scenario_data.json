@@ -1,79 +1,82 @@
 {
-    "meta": {
-        "version": "1.0.0",
-        "resolution": {
-            "w": 540,
-            "h": 960
-        },
-        "seed": 3552,
-        "duration_seconds": 51.04
+  "meta": {
+    "version": "1.0.0",
+    "resolution": {
+      "w": 540,
+      "h": 960
     },
-    "assets": {
-        "audio_url": "/assets/TEST_FULL_QUIZ_V1_final_audio.mp3",
-        "video_source_url": "/assets/source_video.mp4",
-        "thumbnail_url": "/assets/thumbnail.jpg",
-        "channel_logo_url": "/assets/logo.png",
-        "font_url": "/assets/font.woff",
-        "env_map_url": "/assets/environment.hdr",
-        "cloud_map_url": "/assets/cloud.png"
-    },
-    "timeline": {
-        "hook": {
-            "start_time": 0,
-            "text_content": "\u26a1 SPEED LEARNING MODE ON \u26a1"
-        },
-        "quiz": {
-            "question": {
-                "text": "If Eext > 1.1 V, what happens to the Zinc electrode?",
-                "start_time": 4.2
-            },
-            "options": [
-                {
-                    "id": "A",
-                    "text": "Zn dissolves",
-                    "start_time": 9.36
-                },
-                {
-                    "id": "B",
-                    "text": "Zn deposits",
-                    "start_time": 10.989999999999998
-                },
-                {
-                    "id": "C",
-                    "text": "No reaction",
-                    "start_time": 12.769999999999998
-                },
-                {
-                    "id": "D",
-                    "text": "Current stops",
-                    "start_time": 14.429999999999998
-                }
-            ]
-        },
-        "timer": {
-            "start_time": 16.13,
-            "duration": 3.0,
-            "label_text": "\ud83c\udfaf FAST BRAIN"
-        },
-        "answer": {
-            "start_time": 19.13,
-            "correct_option_id": "B",
-            "explanation_text": "Eext > 1.1 V reverses the reaction. Zn deposits at the electrode.",
-            "celebration_text": "Great job!"
-        },
-        "cta": {
-            "start_time": 38.04,
-            "social_text": "\u23f1\ufe0f SUBSCRIBE FOR QUICK PREP",
-            "link_text": "\ud83d\udd25 No-Boring Full Video in Link"
-        },
-        "outro": {
-            "start_time": 44.04,
-            "line_1": "\ud83d\ude80 7-MINUTE CHAPTERS",
-            "line_2": "\ud83d\udcda Every Concept, Zero Boredom"
-        }
-    },
-    "yt_overlay": {
-        "progress_start": 4.2,
-        "progress_end": 20.13
+    "seed": 6934,
+    "duration_seconds": 52.76,
+    "config": {
+      "use_gpu": false
     }
+  },
+  "assets": {
+    "audio_url": "/assets/TEST_FULL_QUIZ_V1_final_audio.mp3",
+    "video_source_url": "/assets/source_video.mp4",
+    "thumbnail_url": "/assets/thumbnail.jpg",
+    "channel_logo_url": "/assets/logo.png",
+    "font_url": "/assets/font.woff",
+    "env_map_url": "/assets/environment.hdr",
+    "cloud_map_url": "/assets/cloud.png"
+  },
+  "timeline": {
+    "hook": {
+      "start_time": 0,
+      "text_content": "💥 FAST TRACK TO SUCCESS 💥"
+    },
+    "quiz": {
+      "question": {
+        "text": "What happens in a Daniell Cell when Eext > 1.1 V?",
+        "start_time": 4.82
+      },
+      "options": [
+        {
+          "id": "A",
+          "text": "Reaction stops",
+          "start_time": 9.36
+        },
+        {
+          "id": "B",
+          "text": "Becomes Electrolytic",
+          "start_time": 11.28
+        },
+        {
+          "id": "C",
+          "text": "Zn dissolves",
+          "start_time": 13.799999999999999
+        },
+        {
+          "id": "D",
+          "text": "V increases",
+          "start_time": 16.099999999999998
+        }
+      ]
+    },
+    "timer": {
+      "start_time": 18.639999999999997,
+      "duration": 3.0,
+      "label_text": "🎯 FAST BRAIN"
+    },
+    "answer": {
+      "start_time": 21.639999999999997,
+      "correct_option_id": "B",
+      "explanation_text": "Reverses! Electrons flow Cu to Zn. Electrolytic cell.",
+      "celebration_text": "Great job!"
+    },
+    "cta": {
+      "start_time": 39.76,
+      "social_text": "⏱️ SUBSCRIBE FOR QUICK PREP",
+      "link_text": "⚡ Quick Full Chapter in Description"
+    },
+    "outro": {
+      "start_time": 45.76,
+      "line_1": "🎯 QUICK CONCEPTS",
+      "line_2": "💪 Big Scores, Short Videos"
+    }
+  },
+  "yt_overlay": {
+    "progress_start": 4.82,
+    "progress_end": 22.639999999999997
+  }
 }

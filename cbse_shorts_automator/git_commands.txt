@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "done one more level of integration with test_all_templates. correct frame-0 blankness in quiz template. implemented independent common render module for consistent usage across multiple files."
+git commit -m "quiz templated implented with frame image or video texturing based on gpu availability. also implemented delay render for correct rendering of frame-0."
 
 # 3. Push the new commit to the remote GitHub repository
 git push

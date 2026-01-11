@@ -20,7 +20,7 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ variant, color }
     return (
         <group ref={ref}>
             {/* Variant 0: Rising Bubbles (Sparkles) */}
-            {variant === 2 && (
+            {variant === 0 && (
                 <Sparkles 
                     count={100} 
                     scale={12} 
@@ -36,17 +36,17 @@ export const ParticleSystem: React.FC<ParticleSystemProps> = ({ variant, color }
             {variant === 1 && (
                 <Sparkles 
                     count={150} 
-                    scale={[0, 10, 10]} 
-                    size={3} 
-                    speed={-1} // Downward
+                    scale={[10, 10, 10]}  // Give it volume, not a flat plane
+                    size={2} 
+                    speed={1}  // Positive speed for animation
                     opacity={0.6}
-                    noise={0}
-                    color="#ffffff" 
+                    noise={[0, 2, 0]}  // Add vertical noise for falling effect
+                    color="#00ff00"  // Classic Matrix green
                 />
             )}
 
             {/* Variant 2: Cosmic Dust (Stars + Clouds) */}
-            {variant === 0 && (
+            {variant === 2 && (
                 <>
                     <Stars radius={25} depth={10} count={500} factor={4} saturation={0} fade speed={0.5} />
                     <Cloud opacity={0.1} speed={0} bounds={[10, 2, 50]} volume={6} segments={4} color={color} fade={10} />
