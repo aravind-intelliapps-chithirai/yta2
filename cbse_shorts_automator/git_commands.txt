@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "quiz templated implented with frame image or video texturing based on gpu availability. also implemented delay render for correct rendering of frame-0."
+git commit -m "updated .gitignore."
 
 # 3. Push the new commit to the remote GitHub repository
 git push
