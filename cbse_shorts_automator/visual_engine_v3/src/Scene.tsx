@@ -490,10 +490,13 @@ export const Scene: React.FC<SceneProps> = ({ scenario }) => {
      // 1. CREATE LOCK ONCE (Strict Mode Safe)
     const handleRef = useRef<number | null>(null);
     const [isVideoReady, setIsVideoReady] = useState(false);
+    const useGPU = scenario.meta.config.use_gpu;
     
     // Lazy Initialization in Render Body:
     if (handleRef.current === null) {
-        handleRef.current = delayRender("Waiting for video to load");
+        handleRef.current = delayRender("Waiting for video to load",{
+        timeoutInMilliseconds: 90000 // 60 seconds instead of default 28 seconds
+        });
         console.log(`[Scene] 🔒 Lock Created: ${handleRef.current}`);
     }
 
@@ -504,7 +507,7 @@ export const Scene: React.FC<SceneProps> = ({ scenario }) => {
             continueRender(handleRef.current);
             handleRef.current = null; // Clear reference after release
         }
-    }, [isVideoReady]);
+    }, [useGPU, isVideoReady]);
 
     // 3. CLEANUP (in case component unmounts before video loads)
     useEffect(() => {

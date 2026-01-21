@@ -3,3 +3,8 @@ pulp fiction--down hand color contrast
 particlefield
 emojis not rendering correctly in final renderingoptimise rendering duration
 watermark font size different in preview and rendering
+
+
+Error: Could not take a screenshot because Google Chrome ran out of memory or disk space. Decrease the concurrency to use less RAM.
+    at screenshotTask (/workspaces/yta2/cbse_shorts_automator/visual_engine_tip/node_modules/@remotion/renderer/dist/screenshot-task.js:81:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)

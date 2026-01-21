@@ -120,7 +120,7 @@ export const OptionCard: React.FC<OptionCardProps> = ({
                 return {
                     isCorrect: true, rimColor: theme.primary, rimEmissiveIntensity: 2.0,
                     faceColor: theme.primary, faceMetalness: 0.8, faceRoughness: 0.2,
-                    textColor: '#a0af4eff', opacity: 1, zOffset: 0.3
+                    textColor: '#a0af4e', opacity: 1, zOffset: 0.3
                 };
             case 'wrong':
                 return {

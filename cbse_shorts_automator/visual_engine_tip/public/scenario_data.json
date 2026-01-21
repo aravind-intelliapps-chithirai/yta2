@@ -1,10 +1,10 @@
 {
   "meta": {
-    "theme_seed": 98872,
+    "theme_seed": 88962,
     "config": {
       "resolution": {
-        "w": 540,
-        "h": 960
+        "w": 1080,
+        "h": 1920
       },
       "fps": 30,
       "use_gpu": false
@@ -14,53 +14,53 @@
     "video_src": "/assets/source_video.mp4",
     "thumb_src": "/assets/thumbnail.jpg",
     "logo_src": "/assets/logo.png",
-    "audio_track": "/assets/TEST_FULL_TIP_V1_final_audio.mp3"
+    "audio_track": "/assets/our_home_e_tip_venus_3952_V1_final_audio.mp3"
   },
   "timings": {
     "hook": {
       "start_time": 0.0,
-      "duration": 4.25
+      "duration": 3.31
     },
     "tip_title": {
-      "start_time": 4.75,
-      "duration": 1.27
+      "start_time": 3.81,
+      "duration": 1.32
     },
     "tip_details": {
-      "start_time": 6.02,
-      "duration": 14.54
+      "start_time": 5.13,
+      "duration": 16.66
     },
     "bonus": {
-      "start_time": 21.06,
-      "duration": 4.56
+      "start_time": 22.29,
+      "duration": 3.48
     },
     "cta_social": {
-      "start_time": 26.619999999999997,
-      "duration": 2.375
+      "start_time": 26.77,
+      "duration": 2.17
     },
     "cta_link": {
-      "start_time": 28.994999999999997,
-      "duration": 2.375
+      "start_time": 28.939999999999998,
+      "duration": 2.17
     },
     "outro": {
-      "start_time": 33.37,
+      "start_time": 33.11,
       "duration": 4.0
     },
-    "total_duration": 37.37
+    "total_duration": 37.11
   },
   "content": {
-    "hook_text": "Anode\nvs\nCathode?",
-    "tip_title": "The LOAN Mnemonic",
-    "tip_details": "L.O.A.N. = Left, Oxidation, Anode, Negative",
-    "bonus_visual": "If E ext > 1.1 V, Polarity Flips!",
+    "hook_text": "Hottest\nPlanet\nMystery?",
+    "tip_title": "The Venus Heat Trap",
+    "tip_details": "Venus (450\u00b0C) > Mercury",
+    "bonus_visual": "Crust = Apple Skin",
     "cta_content": {
-      "social_text": "\u2728 SUBSCRIBE FOR ZERO BORING STUFF",
-      "link_text": "\u26a1 Quick Full Chapter in Description"
+      "social_text": "\u26a1 SUBSCRIBE FOR QUICK CONCEPTS",
+      "link_text": "\ud83c\udfaf Complete Fast Revision in Link"
     },
     "outro_content": {
-      "usp_line_1": "\ud83c\udfaf QUICK CONCEPTS",
-      "usp_line_2": "\ud83d\udcaa Big Scores, Short Videos"
+      "usp_line_1": "\ud83d\ude80 7-MINUTE CHAPTERS",
+      "usp_line_2": "\ud83d\udcda Every Concept, Zero Boredom"
     },
-    "usp_badge_text": "\ud83d\udca5 QUICK RECALL",
+    "usp_badge_text": "\u26a1 LIGHTNING ROUND",
     "watermark_text": "@NCERT_QuickPrep",
     "copyright_text": "\u00a9 2025 NCERT QuickPrep"
   }

@@ -514,7 +514,21 @@ class ShortsEngine:
             else: raise ValueError(f"Unknown template: {t_type}")
             
             result = template.generate(video_path, script, config, output_path)
-            return {'success': True, 'output_path': output_path, 'duration': result.get('duration', 0)}
+            #return {'success': True, 'output_path': output_path, 'duration': result.get('duration', 0)}
+
+            if result.get('success'):
+                return {
+                    'success': True, 
+                    'output_path': output_path, 
+                    'duration': result.get('duration', 0)
+                }
+            else:
+                return {
+                    'success': False, 
+                    'error': result.get('error', 'Unknown error'),
+                    'duration': result.get('duration', 0)
+                }
+
         except Exception as e:
             import traceback; traceback.print_exc()
             return {'success': False, 'error': str(e)}

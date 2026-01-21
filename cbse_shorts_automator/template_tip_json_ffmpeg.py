@@ -376,7 +376,7 @@ class TipTemplate:
 
             # 3. Execute
             try:
-                render_remotion_video(
+                success, duration = render_remotion_video(
                     project_dir=project_dir,
                     comp_id=comp_id,
                     output_path=output_path,
@@ -385,11 +385,40 @@ class TipTemplate:
                     start_frame=None,
                     end_frame=None
                 )
-                # Returns duration or success metadata
-                # (Assuming total_dur was calculated earlier in your script)
-                return {'duration': total_dur, 'json_path': JSON_OUTPUT_PATH}
+                
+                if success:
+                    print(f"✅ Render completed successfully in {duration:.2f}s")
+                    return {
+                        'success': True,
+                        'duration': total_dur, 
+                        'json_path': JSON_OUTPUT_PATH,
+                        'render_duration': duration
+                    }
+                else:
+                    print(f"❌ Render failed")
+                    return {
+                        'success': False,
+                        'error': 'Render process failed',
+                        'duration': total_dur,
+                        'json_path': JSON_OUTPUT_PATH
+                    }
+                    
             except subprocess.CalledProcessError as e:
                 print(f"❌ Render failed with error code {e.returncode}")
+                return {
+                    'success': False,
+                    'error': f'Render subprocess failed with code {e.returncode}',
+                    'duration': total_dur,
+                    'json_path': JSON_OUTPUT_PATH
+                }
+            except Exception as e:
+                print(f"❌ Render failed with exception: {str(e)}")
+                return {
+                    'success': False,
+                    'error': str(e),
+                    'duration': total_dur,
+                    'json_path': JSON_OUTPUT_PATH
+                }
         finally:
             # --- CLEANUP LOGIC ---
             # This runs whether the render succeeded or failed

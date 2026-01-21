@@ -2,17 +2,17 @@
   "meta": {
     "version": "1.0.0",
     "resolution": {
-      "w": 540,
-      "h": 960
+      "w": 1080,
+      "h": 1920
     },
-    "seed": 6934,
-    "duration_seconds": 52.76,
+    "seed": 8740,
+    "duration_seconds": 49.71,
     "config": {
       "use_gpu": false
     }
   },
   "assets": {
-    "audio_url": "/assets/TEST_FULL_QUIZ_V1_final_audio.mp3",
+    "audio_url": "/assets/how_nature_quiz_ecology_3953_V1_final_audio.mp3",
     "video_source_url": "/assets/source_video.mp4",
     "thumbnail_url": "/assets/thumbnail.jpg",
     "channel_logo_url": "/assets/logo.png",
@@ -23,60 +23,60 @@
   "timeline": {
     "hook": {
       "start_time": 0,
-      "text_content": "💥 FAST TRACK TO SUCCESS 💥"
+      "text_content": "\ud83d\udd25 NO BORING LECTURES HERE \ud83d\udd25"
     },
     "quiz": {
       "question": {
-        "text": "What happens in a Daniell Cell when Eext > 1.1 V?",
-        "start_time": 4.82
+        "text": "Different populations sharing the same habitat form a...?",
+        "start_time": 4.75
       },
       "options": [
         {
           "id": "A",
-          "text": "Reaction stops",
-          "start_time": 9.36
+          "text": "Habitat",
+          "start_time": 10.51
         },
         {
           "id": "B",
-          "text": "Becomes Electrolytic",
-          "start_time": 11.28
+          "text": "Population",
+          "start_time": 11.83
         },
         {
           "id": "C",
-          "text": "Zn dissolves",
-          "start_time": 13.799999999999999
+          "text": "Community",
+          "start_time": 13.41
         },
         {
           "id": "D",
-          "text": "V increases",
-          "start_time": 16.099999999999998
+          "text": "Corridor",
+          "start_time": 14.870000000000001
         }
       ]
     },
     "timer": {
-      "start_time": 18.639999999999997,
+      "start_time": 16.21,
       "duration": 3.0,
-      "label_text": "🎯 FAST BRAIN"
+      "label_text": "\ud83d\udca8 RAPID FIRE"
     },
     "answer": {
-      "start_time": 21.639999999999997,
-      "correct_option_id": "B",
-      "explanation_text": "Reverses! Electrons flow Cu to Zn. Electrolytic cell.",
+      "start_time": 19.21,
+      "correct_option_id": "C",
+      "explanation_text": "Community = Biotic components (plants, animals, microbes) interacting in one habitat.",
       "celebration_text": "Great job!"
     },
     "cta": {
-      "start_time": 39.76,
-      "social_text": "⏱️ SUBSCRIBE FOR QUICK PREP",
-      "link_text": "⚡ Quick Full Chapter in Description"
+      "start_time": 36.71,
+      "social_text": "\ud83c\udfaf SUBSCRIBE FOR RAPID MASTERY",
+      "link_text": "\ud83d\udcaf Fast Complete Revision Below"
     },
     "outro": {
-      "start_time": 45.76,
-      "line_1": "🎯 QUICK CONCEPTS",
-      "line_2": "💪 Big Scores, Short Videos"
+      "start_time": 42.71,
+      "line_1": "\u2728 NO BORING LECTURES",
+      "line_2": "\ud83d\udd25 Subscribe for Speed Learning"
     }
   },
   "yt_overlay": {
-    "progress_start": 4.82,
-    "progress_end": 22.639999999999997
+    "progress_start": 4.75,
+    "progress_end": 20.21
   }
 }

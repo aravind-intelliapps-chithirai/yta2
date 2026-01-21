@@ -2,9 +2,9 @@
   "last_reset": "2026-01",
   "accounts": {
     "account1": {
-      "used_chars": 19659,
+      "used_chars": 24706,
       "quota_limit": 1000000,
-      "available": 980341
+      "available": 975294
     },
     "account2": {
       "used_chars": 0,

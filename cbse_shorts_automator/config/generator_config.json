@@ -20,7 +20,7 @@
   "DIRS": {
     "DOWNLOADS_VID": "downloads/yt_vids",
     "DOWNLOADS_PDF": "downloads/chap_pdfs",
-    "SHORTS_OUT": "shorts",
+    "SHORTS_OUT": "../shorts",
     "TEMP": "temp"
   },
 

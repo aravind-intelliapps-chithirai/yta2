@@ -67,7 +67,7 @@ def render_remotion_video(project_dir, comp_id, scenario_json_path, output_path,
     command = [
         "npx", "remotion", "render",
         entry_point, comp_id, output_path,
-        "--log=info" # Essential for debugging GPU initialization
+        "--log=verbose" # Essential for debugging GPU initialization
     ]
 
     if start_frame is not None and end_frame is not None:
@@ -90,12 +90,13 @@ def render_remotion_video(project_dir, comp_id, scenario_json_path, output_path,
         chrome_flags = [
             "--no-sandbox",
             "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
             "--ignore-gpu-blocklist",        # Force use of Server GPUs (Tesla T4, etc.)
             "--enable-gpu-rasterization",    # Offload 2D drawing to GPU
             "--enable-zero-copy"             # Speed up memory transfer
         ]
         
-        command.append(f"--chromium-options={','.join(chrome_flags)}")
+        #command.append(f"--chromium-options={','.join(chrome_flags)}")
 
     else:
         # Fallback for CPU-only (Swangle = Software ANGLE)
@@ -147,10 +148,15 @@ def render_remotion_video(project_dir, comp_id, scenario_json_path, output_path,
         print(f"⏱️  Duration: {minutes}m {seconds}s ({duration:.2f}s total)")
         
         return True, duration
+     
     except subprocess.CalledProcessError as e:
         duration = time.time() - start_time
         print(f"❌ Render failed after {duration:.2f}s (code {e.returncode})")
-        raise e
+        return False, duration  # Changed from 'raise e'
+    except Exception as e:
+        duration = time.time() - start_time if 'start_time' in locals() else 0
+        print(f"❌ Render failed with exception: {str(e)}")
+        return False, duration  # Added exception handling
 
 def check_remotion_gpu(project_dir):
     """Prints Remotion's perception of the GPU"""

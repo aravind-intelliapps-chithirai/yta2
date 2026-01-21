@@ -54,15 +54,21 @@ export const ThreeStage: React.FC<ThreeStageProps> = ({
 
     // --- VIDEO LOADING ---
     useEffect(() => {
+        console.log(`[ThreeStage] useGPU: ${useGPU}, videoUrl: ${videoUrl ? 'present' : 'missing'}`);
         //console.log("UnResolved:",{videoUrl})
         if (!useGPU) {
+            console.log('[ThreeStage] CPU mode - calling onVideoReady immediately');
             // CPU mode: No video to load, immediately ready
             onVideoReady?.();
             return;
         }
     
-        if (!videoUrl) return;
+        if (!videoUrl) {
+            console.log('[ThreeStage] No videoUrl provided');
+            return;
+        }
         //const resolvedSrc = staticFile(videoUrl);
+        console.log('[ThreeStage] GPU mode - loading video...');
         const resolvedSrc = videoUrl;
         const vid = document.createElement('video');
         vid.src = resolvedSrc;

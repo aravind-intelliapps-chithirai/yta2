@@ -96,7 +96,7 @@ export const KnowledgeSlate: React.FC<Props> = ({
         
         const videoStartFrame = Math.max(0, clickFrame - TIMING.S1_CLICK_DURATION_FRAMES);
         const frameNumber = Math.floor(videoStartFrame) + 1;
-        const framePath = `/assets/video_frames/frame_${String(frameNumber).padStart(4, '0')}.jpg`;
+        const framePath = `/assets/video_frames/frame_${String(frameNumber).padStart(5, '0')}.jpg`;
         
         return staticFile(framePath);
     }, [useGPU, clickFrame]);

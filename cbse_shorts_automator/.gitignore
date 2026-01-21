@@ -75,7 +75,7 @@ visual_engine_v3/out/
 visual_engine_v3/dist/
 visual_engine_v3/.cache/
 
-visual_engine_*/public/assets/video_frames/
+**/visual_engine_*/public/assets/video_frames/
 
 # Generated Mock Assets (These are re-created by test_mock_payload.py)
 visual_engine_v3/public/scenario_mock.json
