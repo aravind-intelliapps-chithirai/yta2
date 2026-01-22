@@ -1,10 +1,10 @@
 {
   "meta": {
-    "theme_seed": 22891,
+    "theme_seed": 26217,
     "target_item": {
       "x": 2,
-      "y": 2,
-      "z": 15
+      "y": 1,
+      "z": 18
     },
     "config": {
       "resolution": {
@@ -22,29 +22,29 @@
   },
   "assets": {
     "video_src": "/assets/source_video.mp4",
-    "audio_track": "/assets/ticking_cl_fact_leapyear_1871_V1_final_audio.mp3",
+    "audio_track": "/assets/different__fact_livingfort_1896_V1_final_audio.mp3",
     "thumb_src": "assets/thumbnail.jpg",
     "logo_src": "assets/logo.png"
   },
   "timings": {
-    "t_title": 4.54,
-    "t_details": 5.86,
-    "detailsAudioDuration": 15.62,
-    "t_cta": 21.48,
-    "t_outro": 27.6,
-    "total_duration": 31.6
+    "t_title": 3.96,
+    "t_details": 5.5,
+    "detailsAudioDuration": 14.95,
+    "t_cta": 20.45,
+    "t_outro": 24.869999999999997,
+    "total_duration": 28.869999999999997
   },
   "content": {
-    "hook_3d": "Only\n1\nBirthday?",
-    "fact_title": "The Leap Year Mystery",
-    "fact_body_html": "Leap Years occur every 4 years. They have 366 days instead of 365!",
+    "hook_3d": "Live\nIn\nA\nFort?",
+    "fact_title": "India's Golden Living Fort",
+    "fact_body_html": "Jaisalmer Fort is a 'Living Fort'. Built with golden sandstone. Featured in Satyajit Ray's 'Sonar Kella'.",
     "cta_content": {
-      "social_text": "\u2728 SUBSCRIBE FOR ZERO BORING STUFF",
-      "link_text": "\ud83d\udcaf Fast Complete Revision Below"
+      "social_text": "\ud83d\udcaf JOIN THE FAST LEARNERS CLUB",
+      "link_text": "\u23f1\ufe0f Speed Through Full Chapter Below"
     },
     "outro_content": {
-      "usp_line_1": "\u26a1 SPEED LEARNING",
-      "usp_line_2": "\ud83d\ude80 Fast, Fun, Effective"
+      "usp_line_1": "\ud83d\udcaf EXAM READY FAST",
+      "usp_line_2": "\u23f1\ufe0f Full Chapters in 7 Minutes"
     },
     "usp_badge_text": "NEW",
     "watermark_text": "@NCERTQuickPrep",

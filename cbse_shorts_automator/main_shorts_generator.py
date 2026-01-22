@@ -10,6 +10,7 @@ Updated:
 import imagemagick_setup
 import os
 import sys
+import shutil
 import json
 import time
 import re
@@ -28,6 +29,7 @@ import google.generativeai as genai
 from shorts_engine import ShortsEngine, generate_random_config
 from voice_manager import VoiceManager
 from prompt_manager import PromptManager  # <--- NEW IMPORT
+from drive_uploader import upload_file_to_drive
 
 CONFIG_FILE = "config/generator_config.json"
 
@@ -49,6 +51,7 @@ COL_IDX_TOPIC = COL_MAPPING.get('COL_INDEX_TOPIC', 18)
 COL_IDX_VIDEO = COL_MAPPING.get('COL_INDEX_VIDEO', 24)
 COL_IDX_STATUS = COL_MAPPING.get('COL_INDEX_STATUS', 39)
 COL_IDX_VOICE = COL_MAPPING.get('COL_INDEX_VOICE_SYSTEM', 49)
+COL_INDEX_SHORTS_DRIVE_URL=COL_MAPPING.get('COL_INDEX_SHORTS_DRIVE_URL', 50)
 
 # NEW: Metadata Columns (AR=43, AS=44, AT=45)
 COL_IDX_FILENAME = COL_MAPPING.get('COL_INDEX_FILENAME', 43)
@@ -368,15 +371,35 @@ def process_row(engine, gemini, row, row_idx):
             print(f"✅ Created: {output_filename}")
             # Get voice system used
             voice_system_used = engine.voice_manager.last_used_system or "Unknown"
-            
+
             # Return full metadata for Sheet update
             meta_data = {
                 "status": CONFIG['STATUS_SUCCESS'],
                 "filename": output_filename,
                 "template": gen_config['template'],
                 "duration": int(result.get('duration', 0)),
-                "voice_system": voice_system_used  # ADD THIS LINE
+                "voice_system": voice_system_used,  # ADD THIS LINE
+                "drive_url": "Pending"
             }
+            # 1. Initialize Drive Manager (it will handle auth only when needed)
+            # 1. Define Drive Path (from config or dynamic)
+            drive_folder = CONFIG['DRIVE_UPLOAD']['DRIVE_UPLOAD_FOLDER_PATH']
+            local_video = os.path.join(DIRS['SHORTS_OUT_PROJDIR'], meta_data['filename'])
+
+            # 2. Call the module
+            try:
+                public_url = upload_file_to_drive(
+                    local_video, 
+                    meta_data['filename'], 
+                    drive_folder, 
+                    CONFIG
+                )
+                print(f"✅ Drive Upload Successful: {public_url}")
+                meta_data['drive_url'] = public_url
+            except Exception as e:
+                print(f"⚠️ Drive Upload Error: {e}")
+                meta_data['drive_url'] = "Upload Failed"
+            
             return True, meta_data
         else:
             raise Exception(result.get('error', 'Unknown error'))
@@ -409,7 +432,8 @@ def main():
     gemini = GeminiManager()
     engine = ShortsEngine(CONFIG_FILE)
     
-    last_col = get_col_letter(COL_IDX_DURATION) # Ensure we read enough columns if needed
+    last_col = get_col_letter(max(COL_IDX_DURATION, COL_INDEX_SHORTS_DRIVE_URL)) # Ensure we read enough columns if needed
+    
     range_n = f"{CONFIG['SHEET_NAME']}!A:{last_col}"
     
     rows = sheets.spreadsheets().values().get(
@@ -458,6 +482,12 @@ def main():
             sheets.spreadsheets().values().update(
                 spreadsheetId=CONFIG['SPREADSHEET_ID'], range=voice_cell,
                 valueInputOption='USER_ENTERED', body={'values': [[meta_data['voice_system']]]}
+            ).execute()
+            # 4. Update Drive URL (Column AY / 50)
+            shorts_drive_url_cell = f"{CONFIG['SHEET_NAME']}!{get_col_letter(COL_INDEX_SHORTS_DRIVE_URL)}{i+1}"
+            sheets.spreadsheets().values().update(
+                spreadsheetId=CONFIG['SPREADSHEET_ID'], range=shorts_drive_url_cell,
+                valueInputOption='USER_ENTERED', body={'values': [[meta_data['drive_url']]]}
             ).execute()
         
         processed += 1

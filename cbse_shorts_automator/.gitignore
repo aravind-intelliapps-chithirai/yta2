@@ -9,6 +9,8 @@ logs/
 config/client_secret.json
 config/google_ai_api_keys.txt
 config/sheets_token.json
+config/drive_token.json
+config/drive_token_old1.json
 config/google_tts_account*.json
 
 # Keep config directory structure but ignore secrets

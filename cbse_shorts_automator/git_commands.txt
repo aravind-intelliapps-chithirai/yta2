@@ -2,7 +2,7 @@
 git add .
 
 # 2. Commit the staged changes with a message
-git commit -m "incorporated code for error propogation to the main caller. Also implemented some refinements in the visual generation scripts."
+git commit -m "included logics for auto uploading to google drive after successful generation of each video"
 
 # 3. Push the new commit to the remote GitHub repository
 git push

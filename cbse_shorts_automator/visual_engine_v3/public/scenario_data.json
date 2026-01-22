@@ -5,14 +5,14 @@
       "w": 1080,
       "h": 1920
     },
-    "seed": 8740,
-    "duration_seconds": 49.71,
+    "seed": 1606,
+    "duration_seconds": 45.12,
     "config": {
       "use_gpu": false
     }
   },
   "assets": {
-    "audio_url": "/assets/how_nature_quiz_ecology_3953_V1_final_audio.mp3",
+    "audio_url": "/assets/the_last_l_quiz_painting_1926_V1_final_audio.mp3",
     "video_source_url": "/assets/source_video.mp4",
     "thumbnail_url": "/assets/thumbnail.jpg",
     "channel_logo_url": "/assets/logo.png",
@@ -23,60 +23,60 @@
   "timeline": {
     "hook": {
       "start_time": 0,
-      "text_content": "\ud83d\udd25 NO BORING LECTURES HERE \ud83d\udd25"
+      "text_content": "\ud83d\udca5 FAST TRACK TO SUCCESS \ud83d\udca5"
     },
     "quiz": {
       "question": {
-        "text": "Different populations sharing the same habitat form a...?",
-        "start_time": 4.75
+        "text": "How many days was Behrman ill before he died?",
+        "start_time": 4.37
       },
       "options": [
         {
           "id": "A",
-          "text": "Habitat",
-          "start_time": 10.51
+          "text": "1 day",
+          "start_time": 7.4399999999999995
         },
         {
           "id": "B",
-          "text": "Population",
-          "start_time": 11.83
+          "text": "2 days",
+          "start_time": 8.639999999999999
         },
         {
           "id": "C",
-          "text": "Community",
-          "start_time": 13.41
+          "text": "3 days",
+          "start_time": 10.03
         },
         {
           "id": "D",
-          "text": "Corridor",
-          "start_time": 14.870000000000001
+          "text": "5 days",
+          "start_time": 11.52
         }
       ]
     },
     "timer": {
-      "start_time": 16.21,
+      "start_time": 13.059999999999999,
       "duration": 3.0,
-      "label_text": "\ud83d\udca8 RAPID FIRE"
+      "label_text": "\u26a1 THINK FAST"
     },
     "answer": {
-      "start_time": 19.21,
-      "correct_option_id": "C",
-      "explanation_text": "Community = Biotic components (plants, animals, microbes) interacting in one habitat.",
+      "start_time": 16.06,
+      "correct_option_id": "B",
+      "explanation_text": "Behrman died after just two days of pneumonia.",
       "celebration_text": "Great job!"
     },
     "cta": {
-      "start_time": 36.71,
+      "start_time": 32.12,
       "social_text": "\ud83c\udfaf SUBSCRIBE FOR RAPID MASTERY",
-      "link_text": "\ud83d\udcaf Fast Complete Revision Below"
+      "link_text": "\ud83d\ude80 Rapid Full Video in Link"
     },
     "outro": {
-      "start_time": 42.71,
-      "line_1": "\u2728 NO BORING LECTURES",
-      "line_2": "\ud83d\udd25 Subscribe for Speed Learning"
+      "start_time": 38.12,
+      "line_1": "\u26a1 SPEED LEARNING",
+      "line_2": "\ud83d\ude80 Fast, Fun, Effective"
     }
   },
   "yt_overlay": {
-    "progress_start": 4.75,
-    "progress_end": 20.21
+    "progress_start": 4.37,
+    "progress_end": 17.06
   }
 }

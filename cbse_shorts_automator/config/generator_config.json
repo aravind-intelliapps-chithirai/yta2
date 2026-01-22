@@ -14,6 +14,12 @@
   "SHEETS_TOKEN_FILE": "config/sheets_token.json",
   "SHEETS_SCOPES": ["https://www.googleapis.com/auth/spreadsheets"],
 
+  "DRIVE_UPLOAD":{
+    "DRIVE_TOKEN_FILE": "config/drive_token.json",
+    "DRIVE_SCOPES": ["https://www.googleapis.com/auth/drive.file"],
+    "DRIVE_UPLOAD_FOLDER_PATH": "NCERT/Shorts"
+  },
+
   "API_RETRY_ATTEMPTS": 3,
   "API_RETRY_DELAY": 3,
   
@@ -21,6 +27,7 @@
     "DOWNLOADS_VID": "downloads/yt_vids",
     "DOWNLOADS_PDF": "downloads/chap_pdfs",
     "SHORTS_OUT": "../shorts",
+    "SHORTS_OUT_PROJDIR": "shorts",
     "TEMP": "temp"
   },
 
@@ -36,7 +43,8 @@
     "COL_INDEX_FILENAME": 43,
     "COL_INDEX_TEMPLATE": 44,
     "COL_INDEX_DURATION": 45,
-    "COL_INDEX_VOICE_SYSTEM": 49 
+    "COL_INDEX_VOICE_SYSTEM": 49 ,
+    "COL_INDEX_SHORTS_DRIVE_URL": 50 
   },
   
   "STATUS_TO_PROCESS": "Not Generated",

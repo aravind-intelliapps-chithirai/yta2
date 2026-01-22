@@ -382,8 +382,8 @@ class TipTemplate:
                     output_path=output_path,
                     entry_point=entry_point,
                     scenario_json_path=JSON_OUTPUT_PATH,
-                    start_frame=None,
-                    end_frame=None
+                    start_frame=0,
+                    end_frame=450
                 )
                 
                 if success:
